@@ -18,7 +18,7 @@
     "deploy": "firebase deploy",
     "deploy:hosting": "firebase deploy --only hosting",
     "deploy:functions": "firebase deploy --only functions",
-    "emulators": "firebase emulators:start"
+    "emulators": "firebase emulators:start --project demo-test"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
