@@ -36,8 +36,13 @@ service cloud.firestore {
         return isGM() || isPlayer();
       }
 
-      // Games are readable by GM and players
-      allow read: if canReadGame();
+      // For list operations (queries), use resource.data directly
+      // For get operations (single document), use helper functions
+      allow get: if canReadGame();
+      allow list: if isAuthenticated() && (
+        resource.data.gmId == request.auth.uid ||
+        request.auth.uid in resource.data.playerIds
+      );
 
       // Games can be created by any authenticated user
       allow create: if isAuthenticated() &&

@@ -133,15 +133,29 @@ export function subscribeToUserGames(
     callback(allGames);
   };
 
-  const unsubGm = onSnapshot(gmQuery, (snapshot) => {
-    gmGames = snapshot.docs.map((doc) => doc.data() as Game);
-    updateGames();
-  });
+  const unsubGm = onSnapshot(
+    gmQuery,
+    (snapshot) => {
+      gmGames = snapshot.docs.map((doc) => doc.data() as Game);
+      console.log('GM games:', gmGames);
+      updateGames();
+    },
+    (error) => {
+      console.error('Error in GM games subscription:', error);
+    }
+  );
 
-  const unsubPlayer = onSnapshot(playerQuery, (snapshot) => {
-    playerGames = snapshot.docs.map((doc) => doc.data() as Game);
-    updateGames();
-  });
+  const unsubPlayer = onSnapshot(
+    playerQuery,
+    (snapshot) => {
+      playerGames = snapshot.docs.map((doc) => doc.data() as Game);
+      console.log('Player games:', playerGames);
+      updateGames();
+    },
+    (error) => {
+      console.error('Error in player games subscription:', error);
+    }
+  );
 
   // Return combined unsubscribe function
   return () => {

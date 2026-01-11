@@ -1,11 +1,11 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 // Initialize Firebase Admin
 admin.initializeApp();
 
 const db = admin.firestore();
-const FieldValue = admin.firestore.FieldValue;
 
 /**
  * Cloud Function: Create personal game for new user

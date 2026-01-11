@@ -17,15 +17,23 @@ export function useGames() {
       return;
     }
 
+    console.log('Subscribing to games for user:', firebaseUser.uid);
     setLoading(true);
     setError(null);
 
-    const unsubscribe = subscribeToUserGames(firebaseUser.uid, (updatedGames) => {
-      setGames(updatedGames);
-      setLoading(false);
-    });
+    try {
+      const unsubscribe = subscribeToUserGames(firebaseUser.uid, (updatedGames) => {
+        console.log('Games updated:', updatedGames);
+        setGames(updatedGames);
+        setLoading(false);
+      });
 
-    return unsubscribe;
+      return unsubscribe;
+    } catch (err) {
+      console.error('Error subscribing to games:', err);
+      setError('Failed to load games');
+      setLoading(false);
+    }
   }, [firebaseUser]);
 
   return { games, loading, error };
