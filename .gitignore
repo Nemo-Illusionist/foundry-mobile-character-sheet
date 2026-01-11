@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+lib/
+*.js
+*.js.map
+!vite.config.ts
+
+# Firebase
+.firebase/
+.runtimeconfig.json
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+ui-debug.log
+functions/lib/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+coverage/
+.nyc_output
+
+# Temporary
+.cache/
+.temp/
+.tmp/
+
+# Archives
+*.tar.gz
+*.zip
+
+# TypeScript
+*.tsbuildinfo

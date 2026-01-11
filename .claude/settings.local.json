@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix v1.1.1: Complete Socket.IO migration for responses\n\n## Critical Bug Fix\n\nv1.1.0 changed module to listen on `game.socket.socket.on\\(\\)` but\n**responses were still sent via `game.socket.emit\\(\\)`**!\n\nThis caused requests to be received but responses never reached the backend.\n\n### Problem\n- Module listened: `game.socket.socket.on\\(\\)` ✅\n- Module responded: `game.socket.emit\\(\\)` ❌\n- Result: Requests received, responses lost in void\n\n### Symptoms\n- Test hangs after \"Getting actors...\"\n- No responses received by backend\n- Backend waits forever for actorsResponse\n\n### Solution\nReplace ALL `game.socket.emit\\(\\)` with `game.socket.socket.emit\\(\\)`:\n\n**Changed functions:**\n- `sendResponse\\(\\)` - now uses real Socket.IO\n- `startKeepAlive\\(\\)` - ping uses real Socket.IO\n- `handleRequest\\(\\)` - pong and errors use real Socket.IO  \n- `sendActors\\(\\)` - uses sendResponse\\(\\)\n- `sendActor\\(\\)` - uses sendResponse\\(\\)\n- `sendItems\\(\\)` - uses sendResponse\\(\\)\n\n### Architecture Fix\n\n```\nBefore \\(BROKEN\\):\nBackend → Socket.IO → FoundryVTT\n              ↓\n        game.socket.socket.on\\(\\) ✅ receives\n              ↓\n        game.socket.emit\\(\\) ❌ sends to inter-client sync \\(void\\)\n\nAfter \\(FIXED\\):\nBackend → Socket.IO → FoundryVTT\n              ↓\n        game.socket.socket.on\\(\\) ✅ receives\n              ↓\n        game.socket.socket.emit\\(\\) ✅ sends back via Socket.IO\n              ↓\nBackend ← Socket.IO ← FoundryVTT\n```\n\n### Testing\nNow test should complete successfully:\n```\n✓ Connected to backend\n✓ Authenticated\n✓ Received actor: Character Name\n✓ Received chat message\n```\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}

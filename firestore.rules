@@ -1,0 +1,107 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ==================== USERS ====================
+    match /users/{userId} {
+      // Users can read and update only their own profile
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if false; // Users can't delete themselves via Firestore
+    }
+
+    // ==================== GAMES ====================
+    match /games/{gameId} {
+      function isGM() {
+        return isAuthenticated() &&
+               get(/databases/$(database)/documents/games/$(gameId)).data.gmId == request.auth.uid;
+      }
+
+      function isPlayer() {
+        return isAuthenticated() &&
+               request.auth.uid in get(/databases/$(database)/documents/games/$(gameId)).data.playerIds;
+      }
+
+      function canReadGame() {
+        return isGM() || isPlayer();
+      }
+
+      // Games are readable by GM and players
+      allow read: if canReadGame();
+
+      // Games can be created by any authenticated user
+      allow create: if isAuthenticated() &&
+                       request.resource.data.gmId == request.auth.uid;
+
+      // Only GM can update/delete the game
+      allow update, delete: if isGM();
+
+      // ==================== CHARACTERS ====================
+      match /characters/{characterId} {
+        function isCharacterOwner() {
+          return isAuthenticated() &&
+                 resource.data.ownerId == request.auth.uid;
+        }
+
+        function canCreateCharacter() {
+          return isAuthenticated() &&
+                 request.resource.data.ownerId == request.auth.uid;
+        }
+
+        // GM sees all characters, players see only their own
+        allow read: if isGM() || isCharacterOwner();
+
+        // Players can create characters in games they're part of
+        allow create: if isPlayer() && canCreateCharacter();
+
+        // Players can update/delete only their own characters
+        allow update, delete: if isCharacterOwner();
+      }
+
+      // ==================== KNOWLEDGE BASE ====================
+      match /knowledge/{type}/{itemId} {
+        function canReadKnowledge() {
+          return canReadGame();
+        }
+
+        function canModifyKnowledge() {
+          return isGM() || isPlayer();
+        }
+
+        // All game members can read knowledge base
+        // GM-only items are filtered on the client side
+        allow read: if canReadKnowledge();
+
+        // All game members can create/update knowledge base items
+        allow create, update: if canModifyKnowledge();
+
+        // Only GM or creator can delete
+        allow delete: if isGM() ||
+                         (isAuthenticated() && resource.data.createdBy == request.auth.uid);
+      }
+
+      // ==================== GAME ITEMS ====================
+      match /gameItems/{itemId} {
+        // All game members can read game items
+        allow read: if canReadGame();
+
+        // All game members can create/update game items
+        allow create, update: if isGM() || isPlayer();
+
+        // Only GM or creator can delete
+        allow delete: if isGM() ||
+                         (isAuthenticated() && resource.data.createdBy == request.auth.uid);
+      }
+    }
+  }
+}
