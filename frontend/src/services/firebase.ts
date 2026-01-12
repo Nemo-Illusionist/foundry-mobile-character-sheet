@@ -11,13 +11,24 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
+console.log('🔥 Firebase Config:', {
+  projectId: firebaseConfig.projectId,
+  useEmulators,
+  isDev: import.meta.env.DEV,
+  viteUseEmulators: import.meta.env.VITE_USE_EMULATORS
+});
+
 // Connect to emulators in development
 if (useEmulators) {
   try {
     connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
     connectFirestoreEmulator(db, 'localhost', 8080);
-    console.log('🔧 Firebase Emulators connected');
+    console.log('✅ Firebase Emulators connected successfully');
+    console.log('  - Auth: http://localhost:9099');
+    console.log('  - Firestore: localhost:8080');
   } catch (error) {
-    console.warn('⚠️ Emulator connection failed (may already be connected):', error);
+    console.error('❌ Emulator connection FAILED:', error);
   }
+} else {
+  console.log('🌐 Using PRODUCTION Firebase (emulators disabled)');
 }

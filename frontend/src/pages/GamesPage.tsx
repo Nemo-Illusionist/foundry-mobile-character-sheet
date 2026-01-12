@@ -9,6 +9,7 @@ import { GameCard } from '../components/games/GameCard';
 import { CreateGameModal } from '../components/games/CreateGameModal';
 import { Button } from '../components/shared/Button';
 import { LoadingSpinner } from '../components/shared/LoadingSpinner';
+import { createPersonalGame } from '../services/games.service';
 import './GamesPage.css';
 
 export default function GamesPage() {
@@ -35,6 +36,17 @@ export default function GamesPage() {
     navigate(`/games/${gameId}/characters`);
   };
 
+  const handleDebugCreatePersonalGame = async () => {
+    if (!firebaseUser) return;
+    try {
+      console.log('🔧 DEBUG: Creating personal game for user:', firebaseUser.uid);
+      await createPersonalGame(firebaseUser.uid);
+      console.log('✅ DEBUG: Personal game created successfully');
+    } catch (error) {
+      console.error('❌ DEBUG: Failed to create personal game:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="games-page">
@@ -57,6 +69,9 @@ export default function GamesPage() {
             </p>
           </div>
           <div className="games-actions">
+            <Button onClick={handleDebugCreatePersonalGame} variant="secondary">
+              🔧 Debug: Create Personal Game
+            </Button>
             <Button onClick={() => setIsCreateModalOpen(true)}>
               + Create Game
             </Button>

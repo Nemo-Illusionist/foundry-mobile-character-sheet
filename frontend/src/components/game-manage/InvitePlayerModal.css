@@ -1,0 +1,23 @@
+.invite-player-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--success);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--success);
+  font-size: 0.875rem;
+}
+
+.invite-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+}

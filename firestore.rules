@@ -13,8 +13,11 @@ service cloud.firestore {
 
     // ==================== USERS ====================
     match /users/{userId} {
-      // Users can read and update only their own profile
-      allow read: if isOwner(userId);
+      // Any authenticated user can read any user profile
+      // (needed for inviting to games by email)
+      allow read: if isAuthenticated();
+
+      // Users can only create/update their own profile
       allow create: if isOwner(userId);
       allow update: if isOwner(userId);
       allow delete: if false; // Users can't delete themselves via Firestore

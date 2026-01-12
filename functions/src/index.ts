@@ -13,22 +13,27 @@ const db = admin.firestore();
  */
 export const onUserCreate = functions.auth.user().onCreate(async (user) => {
   const uid = user.uid;
-  const email = user.email || '';
+  const email = (user.email || '').toLowerCase(); // Always store email in lowercase
   const displayName = user.displayName || email.split('@')[0];
 
-  console.log(`Creating personal game for user: ${uid}`);
+  console.log(`Creating user document and personal game for: ${uid}`);
 
   try {
-    // Create user document
-    const userRef = db.collection('users').doc(uid);
-
-    // Create personal game
-    const gameRef = db.collection('games').doc();
-    const gameId = gameRef.id;
+    // Personal game ID is deterministic
+    const gameId = `personal_${uid}`;
 
     await db.runTransaction(async (transaction) => {
-      // Create game document
-      transaction.set(gameRef, {
+      // Create user document
+      transaction.set(db.collection('users').doc(uid), {
+        uid,
+        email,
+        displayName,
+        photoURL: user.photoURL || null,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+
+      // Create personal game with deterministic ID
+      transaction.set(db.collection('games').doc(gameId), {
         id: gameId,
         name: `Personal Game`,
         description: 'Your personal game for storing characters and items',
@@ -38,21 +43,11 @@ export const onUserCreate = functions.auth.user().onCreate(async (user) => {
         createdAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
       });
-
-      // Create user document with reference to personal game
-      transaction.set(userRef, {
-        uid,
-        email,
-        displayName,
-        photoURL: user.photoURL || null,
-        personalGameId: gameId,
-        createdAt: FieldValue.serverTimestamp(),
-      });
     });
 
-    console.log(`✓ Personal game created for user ${uid}: ${gameId}`);
+    console.log(`✓ User and personal game created: ${uid}`);
   } catch (error) {
-    console.error(`Error creating personal game for user ${uid}:`, error);
+    console.error(`Error creating user and personal game for ${uid}:`, error);
     throw error;
   }
 });

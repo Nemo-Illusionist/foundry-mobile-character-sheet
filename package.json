@@ -18,12 +18,15 @@
     "deploy": "firebase deploy",
     "deploy:hosting": "firebase deploy --only hosting",
     "deploy:functions": "firebase deploy --only functions",
-    "emulators": "firebase emulators:start --project demo-test"
+    "emulators": "firebase emulators:start"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "firebase-functions": "^7.0.3"
   }
 }

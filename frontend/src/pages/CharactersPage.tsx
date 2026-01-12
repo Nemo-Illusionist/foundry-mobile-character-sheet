@@ -55,6 +55,9 @@ export default function CharactersPage() {
             <h1 className="characters-title">Characters</h1>
           </div>
           <div className="characters-actions">
+            <Button variant="secondary" onClick={() => navigate(`/games/${gameId}/manage`)}>
+              ⚙️ Manage Game
+            </Button>
             <Button onClick={() => setIsCreateModalOpen(true)}>
               + Create Character
             </Button>

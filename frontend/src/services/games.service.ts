@@ -5,6 +5,7 @@ import {
   getDoc,
   getDocs,
   addDoc,
+  setDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -41,6 +42,35 @@ export async function createGame(
   await updateDoc(doc(db, 'games', docRef.id), { id: docRef.id });
 
   return docRef.id;
+}
+
+/**
+ * Create a personal game for a new user
+ * Game ID is deterministic: personal_{userId}
+ */
+export async function createPersonalGame(userId: string): Promise<void> {
+  const gameId = `personal_${userId}`;
+
+  const gameData = {
+    id: gameId,
+    name: `Personal Game`,
+    description: 'Your private game for personal characters',
+    gmId: userId,
+    playerIds: [userId],
+    isPersonal: true,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+
+  console.log('📝 Creating personal game:', {
+    gameId,
+    userId,
+    gameData: { ...gameData, createdAt: '<serverTimestamp>', updatedAt: '<serverTimestamp>' }
+  });
+
+  await setDoc(doc(db, 'games', gameId), gameData);
+
+  console.log('✅ Personal game created successfully');
 }
 
 /**
@@ -97,6 +127,31 @@ export async function getUserGames(userId: string): Promise<Game[]> {
 }
 
 /**
+ * Subscribe to a single game in real-time
+ */
+export function subscribeToGame(
+  gameId: string,
+  callback: (game: Game | null) => void
+): Unsubscribe {
+  const gameRef = doc(db, 'games', gameId);
+
+  return onSnapshot(
+    gameRef,
+    (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.data() as Game);
+      } else {
+        callback(null);
+      }
+    },
+    (error) => {
+      console.error('Error subscribing to game:', error);
+      callback(null);
+    }
+  );
+}
+
+/**
  * Subscribe to user's games in real-time
  */
 export function subscribeToUserGames(
@@ -104,6 +159,8 @@ export function subscribeToUserGames(
   callback: (games: Game[]) => void
 ): Unsubscribe {
   const gamesRef = collection(db, 'games');
+
+  console.log('🔍 Setting up subscriptions for userId:', userId);
 
   // Subscribe to games where user is GM or player
   const gmQuery = query(gamesRef, where('gmId', '==', userId));
@@ -136,24 +193,38 @@ export function subscribeToUserGames(
   const unsubGm = onSnapshot(
     gmQuery,
     (snapshot) => {
+      console.log('📊 GM query snapshot:', {
+        size: snapshot.size,
+        empty: snapshot.empty,
+        docs: snapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }))
+      });
       gmGames = snapshot.docs.map((doc) => doc.data() as Game);
       console.log('GM games:', gmGames);
       updateGames();
     },
     (error) => {
-      console.error('Error in GM games subscription:', error);
+      console.error('❌ Error in GM games subscription:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
     }
   );
 
   const unsubPlayer = onSnapshot(
     playerQuery,
     (snapshot) => {
+      console.log('📊 Player query snapshot:', {
+        size: snapshot.size,
+        empty: snapshot.empty,
+        docs: snapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }))
+      });
       playerGames = snapshot.docs.map((doc) => doc.data() as Game);
       console.log('Player games:', playerGames);
       updateGames();
     },
     (error) => {
-      console.error('Error in player games subscription:', error);
+      console.error('❌ Error in player games subscription:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
     }
   );
 

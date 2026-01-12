@@ -45,7 +45,8 @@ export interface User {
   displayName: string;
   photoURL?: string;
   createdAt: Timestamp;
-  personalGameId: string;       // ID дефолтной личной игры
+  // Personal game ID is deterministic: personal_{uid}
+  // No need to store it explicitly
 }
 
 // ==================== GAME ====================
