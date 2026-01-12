@@ -27,13 +27,12 @@ export default function GamesPage() {
   };
 
   const handleGameClick = (gameId: string) => {
-    // TODO: Navigate to game page when implemented
-    console.log('Navigate to game:', gameId);
+    navigate(`/games/${gameId}/characters`);
   };
 
   const handleGameCreated = (gameId: string) => {
     console.log('Game created:', gameId);
-    // TODO: Navigate to new game when game page is implemented
+    navigate(`/games/${gameId}/characters`);
   };
 
   if (loading) {
