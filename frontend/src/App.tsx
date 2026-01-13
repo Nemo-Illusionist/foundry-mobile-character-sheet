@@ -1,9 +1,11 @@
 // D&D 2024 Character Manager - Main App
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { GameProvider } from './context/GameContext';
 import { LoadingSpinner } from './components/shared/LoadingSpinner';
 import AuthPage from './pages/AuthPage';
 import GamesPage from './pages/GamesPage';
+import GameLayout from './layouts/GameLayout';
 import GamePage from './pages/GamePage.tsx';
 import CharacterSheetPage from './pages/CharacterSheetPage';
 import GameManagePage from './pages/GameManagePage';
@@ -28,34 +30,26 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route
-        path="/auth"
-        element={isAuthenticated ? <Navigate to="/games" /> : <AuthPage />}
-      />
-      <Route
-        path="/games"
-        element={isAuthenticated ? <GamesPage /> : <Navigate to="/auth" />}
-      />
-      <Route
-        path="/games/:gameId/"
-        element={isAuthenticated ? <GamePage /> : <Navigate to="/auth" />}
-      />
-      <Route
-        path="/games/:gameId/characters/:characterId"
-        element={isAuthenticated ? <CharacterSheetPage /> : <Navigate to="/auth" />}
-      />
-      <Route
-        path="/games/:gameId/manage"
-        element={isAuthenticated ? <GameManagePage /> : <Navigate to="/auth" />}
-      />
-      <Route
-        path="/games/:gameId/items"
-        element={isAuthenticated ? <GameItemsPage /> : <Navigate to="/auth" />}
-      />
-      <Route
-        path="/"
-        element={<Navigate to={isAuthenticated ? "/games" : "/auth"} />}
-      />
+      {isAuthenticated ? (
+        // Authenticated routes
+        <>
+          <Route path="/games" element={<GamesPage />} />
+          {/* All game-related routes wrapped in GameLayout */}
+          <Route path="/games/:gameId" element={<GameLayout />}>
+            <Route index element={<GamePage />} />
+            <Route path="characters/:characterId" element={<CharacterSheetPage />} />
+            <Route path="manage" element={<GameManagePage />} />
+            <Route path="items" element={<GameItemsPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/games" />} />
+        </>
+      ) : (
+        // Unauthenticated routes
+        <>
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="*" element={<Navigate to="/auth" />} />
+        </>
+      )}
     </Routes>
   );
 }
@@ -64,9 +58,11 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <div className="app">
-          <AppRoutes />
-        </div>
+        <GameProvider>
+          <div className="app">
+            <AppRoutes />
+          </div>
+        </GameProvider>
       </AuthProvider>
     </BrowserRouter>
   );

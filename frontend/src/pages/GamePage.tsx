@@ -13,8 +13,10 @@ export default function GamePage() {
   const navigate = useNavigate();
   const { gameId } = useParams<{ gameId: string }>();
   const { firebaseUser } = useAuth();
-  const { characters, loading } = useCharacters(gameId || null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  // Game is already loaded in context by GameLayout
+  const { characters, loading: charactersLoading } = useCharacters();
 
   const handleCharacterClick = (characterId: string) => {
     navigate(`/games/${gameId}/characters/${characterId}`);
@@ -30,7 +32,7 @@ export default function GamePage() {
     navigate('/games');
   };
 
-  if (loading || !firebaseUser) {
+  if (charactersLoading || !firebaseUser) {
     return (
       <div className="characters-page">
         <div className="characters-loading">

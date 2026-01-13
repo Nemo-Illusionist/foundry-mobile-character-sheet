@@ -202,20 +202,31 @@ export async function getUserCharacters(
 
 /**
  * Subscribe to all characters in a game
+ * If the user is not a GM, only characters they own will be returned
  */
 export function subscribeToGameCharacters(
   gameId: string,
+  currentUserId: string,
+  isGM: boolean,
   callback: (characters: Character[]) => void
 ): Unsubscribe {
-  const charactersRef = collection(db, 'games', gameId, 'characters');
+  // If user is GM, subscribe to all characters
+  // If not GM, filter by ownerId to match Firestore rules
+  const charactersRef = isGM
+    ? collection(db, 'games', gameId, 'characters')
+    : query(
+        collection(db, 'games', gameId, 'characters'),
+        where('ownerId', '==', currentUserId)
+      );
 
-  console.log('Setting up characters subscription for game:', gameId);
+  console.log('Setting up characters subscription for game:', gameId, 'isGM:', isGM);
 
   return onSnapshot(
     charactersRef,
     (snapshot) => {
       console.log('Characters snapshot received:', {
         gameId,
+        isGM,
         size: snapshot.size,
         docs: snapshot.docs.map(d => ({ id: d.id, name: d.data().name }))
       });
