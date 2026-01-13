@@ -30,7 +30,12 @@ export function InvitePlayerModal({
 
     const input = email.trim();
     if (!input) {
-      setError('Please enter a user ID or email address');
+      setError('Please enter an email address');
+      return;
+    }
+
+    if (!input.includes('@')) {
+      setError('Please enter a valid email address');
       return;
     }
 
@@ -39,33 +44,19 @@ export function InvitePlayerModal({
     setSuccess('');
 
     try {
-      let userId: string;
-      let userName: string;
+      // Email lookup
+      const user = await getUserByEmail(input.toLowerCase());
 
-      // Check if input looks like a UID (alphanumeric, no @ symbol)
-      if (!input.includes('@')) {
-        // Direct UID input
-        userId = input;
-        userName = 'User';
-        console.log('Using direct UID:', userId);
-      } else {
-        // Email lookup
-        const user = await getUserByEmail(input.toLowerCase());
-
-        if (!user) {
-          setError('User with this email not found. They need to register first. Or try entering their User ID directly.');
-          setLoading(false);
-          return;
-        }
-
-        userId = user.uid;
-        userName = user.displayName;
+      if (!user) {
+        setError('User with this email not found. They need to register first.');
+        setLoading(false);
+        return;
       }
 
       // Add player to game
-      await addPlayerToGame(gameId, userId);
+      await addPlayerToGame(gameId, user.uid);
 
-      setSuccess(`${userName} added to game!`);
+      setSuccess(`${user.displayName} added to game!`);
       setEmail('');
 
       // Close modal after short delay
@@ -102,18 +93,18 @@ export function InvitePlayerModal({
         {success && <div className="form-success">{success}</div>}
 
         <Input
-          type="text"
-          label="Player Email or User ID"
+          type="email"
+          label="Player Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="player@example.com or PGgD6j0dlQ8fvgMs9RGVUkh5SmTI"
+          placeholder="player@example.com"
           required
           autoFocus
           disabled={loading}
         />
 
         <p className="invite-hint">
-          Enter the email address or User ID of a registered user. You can find User ID in Emulator UI.
+          Enter the email address of a registered user to invite them to your game.
         </p>
 
         <div className="modal-actions">

@@ -30,7 +30,7 @@ export default function CharactersPage() {
     navigate('/games');
   };
 
-  if (loading) {
+  if (loading || !firebaseUser) {
     return (
       <div className="characters-page">
         <div className="characters-loading">
@@ -41,8 +41,8 @@ export default function CharactersPage() {
     );
   }
 
-  const myCharacters = characters.filter((c) => c.ownerId === firebaseUser?.uid);
-  const otherCharacters = characters.filter((c) => c.ownerId !== firebaseUser?.uid);
+  const myCharacters = characters.filter((c) => c.ownerId === firebaseUser.uid);
+  const otherCharacters = characters.filter((c) => c.ownerId !== firebaseUser.uid);
 
   return (
     <div className="characters-page">
@@ -55,6 +55,9 @@ export default function CharactersPage() {
             <h1 className="characters-title">Characters</h1>
           </div>
           <div className="characters-actions">
+            <Button variant="secondary" onClick={() => navigate(`/games/${gameId}/items`)}>
+              📦 Game Items
+            </Button>
             <Button variant="secondary" onClick={() => navigate(`/games/${gameId}/manage`)}>
               ⚙️ Manage Game
             </Button>

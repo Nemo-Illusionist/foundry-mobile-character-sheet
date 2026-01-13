@@ -209,15 +209,26 @@ export function subscribeToGameCharacters(
 ): Unsubscribe {
   const charactersRef = collection(db, 'games', gameId, 'characters');
 
+  console.log('📡 Setting up characters subscription for game:', gameId);
+
   return onSnapshot(
     charactersRef,
     (snapshot) => {
+      console.log('✅ Characters snapshot received:', {
+        gameId,
+        size: snapshot.size,
+        docs: snapshot.docs.map(d => ({ id: d.id, name: d.data().name }))
+      });
       const characters = snapshot.docs.map((doc) => doc.data() as Character);
       characters.sort((a, b) => a.name.localeCompare(b.name));
       callback(characters);
     },
     (error) => {
-      console.error('Error subscribing to characters:', error);
+      console.error('❌ Error subscribing to characters:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
+      // Still call callback with empty array so UI doesn't hang
+      callback([]);
     }
   );
 }

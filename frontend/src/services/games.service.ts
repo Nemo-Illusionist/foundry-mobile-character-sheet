@@ -135,17 +135,29 @@ export function subscribeToGame(
 ): Unsubscribe {
   const gameRef = doc(db, 'games', gameId);
 
+  console.log('📡 Setting up game subscription for:', gameId);
+
   return onSnapshot(
     gameRef,
     (snapshot) => {
       if (snapshot.exists()) {
-        callback(snapshot.data() as Game);
+        const gameData = snapshot.data() as Game;
+        console.log('✅ Game snapshot received:', {
+          id: gameData.id,
+          name: gameData.name,
+          gmId: gameData.gmId,
+          playerIds: gameData.playerIds
+        });
+        callback(gameData);
       } else {
+        console.warn('⚠️ Game document does not exist:', gameId);
         callback(null);
       }
     },
     (error) => {
-      console.error('Error subscribing to game:', error);
+      console.error('❌ Error subscribing to game:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
       callback(null);
     }
   );
@@ -252,6 +264,8 @@ export async function updateGame(
  * Add player to game
  */
 export async function addPlayerToGame(gameId: string, playerId: string): Promise<void> {
+  console.log('➕ Adding player to game:', { gameId, playerId });
+
   const gameDoc = await getDoc(doc(db, 'games', gameId));
 
   if (!gameDoc.exists()) {
@@ -260,14 +274,25 @@ export async function addPlayerToGame(gameId: string, playerId: string): Promise
 
   const game = gameDoc.data() as Game;
 
+  console.log('Current game state:', {
+    name: game.name,
+    gmId: game.gmId,
+    currentPlayers: game.playerIds
+  });
+
   if (game.playerIds.includes(playerId)) {
     throw new Error('Player already in game');
   }
 
+  const newPlayerIds = [...game.playerIds, playerId];
+  console.log('Updating playerIds to:', newPlayerIds);
+
   await updateDoc(doc(db, 'games', gameId), {
-    playerIds: [...game.playerIds, playerId],
+    playerIds: newPlayerIds,
     updatedAt: serverTimestamp(),
   });
+
+  console.log('✅ Player added successfully');
 }
 
 /**

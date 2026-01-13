@@ -7,6 +7,7 @@ import GamesPage from './pages/GamesPage';
 import CharactersPage from './pages/CharactersPage';
 import CharacterSheetPage from './pages/CharacterSheetPage';
 import GameManagePage from './pages/GameManagePage';
+import GameItemsPage from './pages/GameItemsPage';
 import './App.css';
 
 function AppRoutes() {
@@ -46,6 +47,10 @@ function AppRoutes() {
       <Route
         path="/games/:gameId/manage"
         element={isAuthenticated ? <GameManagePage /> : <Navigate to="/auth" />}
+      />
+      <Route
+        path="/games/:gameId/items"
+        element={isAuthenticated ? <GameItemsPage /> : <Navigate to="/auth" />}
       />
       <Route
         path="/"

@@ -17,8 +17,9 @@ export default function AuthPage() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
+          {/*<h1 className="auth-app-title">TTRPG</h1>*/}
           <h1 className="auth-app-title">D&D24</h1>
-          <p className="auth-app-subtitle">Character Manager</p>
+          <p className="auth-app-subtitle">Character Master</p>
         </div>
 
         {isLogin ? (

@@ -25,24 +25,8 @@ service cloud.firestore {
 
     // ==================== GAMES ====================
     match /games/{gameId} {
-      function isGM() {
-        return isAuthenticated() &&
-               get(/databases/$(database)/documents/games/$(gameId)).data.gmId == request.auth.uid;
-      }
-
-      function isPlayer() {
-        return isAuthenticated() &&
-               request.auth.uid in get(/databases/$(database)/documents/games/$(gameId)).data.playerIds;
-      }
-
-      function canReadGame() {
-        return isGM() || isPlayer();
-      }
-
-      // For list operations (queries), use resource.data directly
-      // For get operations (single document), use helper functions
-      allow get: if canReadGame();
-      allow list: if isAuthenticated() && (
+      // Games can be read by GM or players (using resource.data directly)
+      allow get, list: if isAuthenticated() && (
         resource.data.gmId == request.auth.uid ||
         request.auth.uid in resource.data.playerIds
       );
@@ -52,10 +36,19 @@ service cloud.firestore {
                        request.resource.data.gmId == request.auth.uid;
 
       // Only GM can update/delete the game
-      allow update, delete: if isGM();
+      allow update, delete: if isAuthenticated() &&
+                               resource.data.gmId == request.auth.uid;
 
       // ==================== CHARACTERS ====================
       match /characters/{characterId} {
+        function getGameData() {
+          return get(/databases/$(database)/documents/games/$(gameId)).data;
+        }
+
+        function isGM() {
+          return isAuthenticated() && getGameData().gmId == request.auth.uid;
+        }
+
         function isCharacterOwner() {
           return isAuthenticated() &&
                  resource.data.ownerId == request.auth.uid;
@@ -69,8 +62,8 @@ service cloud.firestore {
         // GM sees all characters, players see only their own
         allow read: if isGM() || isCharacterOwner();
 
-        // Players can create characters in games they're part of
-        allow create: if isPlayer() && canCreateCharacter();
+        // Players can create characters if they own them
+        allow create: if canCreateCharacter();
 
         // Players can update/delete only their own characters
         allow update, delete: if isCharacterOwner();
@@ -78,20 +71,24 @@ service cloud.firestore {
 
       // ==================== KNOWLEDGE BASE ====================
       match /knowledge/{type}/{itemId} {
-        function canReadKnowledge() {
-          return canReadGame();
+        function getGameData() {
+          return get(/databases/$(database)/documents/games/$(gameId)).data;
         }
 
-        function canModifyKnowledge() {
-          return isGM() || isPlayer();
+        function isGM() {
+          return isAuthenticated() && getGameData().gmId == request.auth.uid;
+        }
+
+        function isPlayer() {
+          return isAuthenticated() && request.auth.uid in getGameData().playerIds;
         }
 
         // All game members can read knowledge base
         // GM-only items are filtered on the client side
-        allow read: if canReadKnowledge();
+        allow read: if isGM() || isPlayer();
 
         // All game members can create/update knowledge base items
-        allow create, update: if canModifyKnowledge();
+        allow create, update: if isGM() || isPlayer();
 
         // Only GM or creator can delete
         allow delete: if isGM() ||
@@ -100,8 +97,20 @@ service cloud.firestore {
 
       // ==================== GAME ITEMS ====================
       match /gameItems/{itemId} {
+        function getGameData() {
+          return get(/databases/$(database)/documents/games/$(gameId)).data;
+        }
+
+        function isGM() {
+          return isAuthenticated() && getGameData().gmId == request.auth.uid;
+        }
+
+        function isPlayer() {
+          return isAuthenticated() && request.auth.uid in getGameData().playerIds;
+        }
+
         // All game members can read game items
-        allow read: if canReadGame();
+        allow read: if isGM() || isPlayer();
 
         // All game members can create/update game items
         allow create, update: if isGM() || isPlayer();

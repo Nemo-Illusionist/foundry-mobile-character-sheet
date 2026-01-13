@@ -1,0 +1,88 @@
+/* Game Item Card Styles */
+
+.game-item-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.game-item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.game-item-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.game-item-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.game-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-item-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.game-item-type {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.game-item-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.visibility-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.visibility-badge.gm-only {
+  background-color: rgba(124, 58, 237, 0.2);
+  color: var(--accent);
+}
+
+.game-item-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.game-item-preview {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--bg-tertiary);
+}
+
+.game-item-preview img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+}

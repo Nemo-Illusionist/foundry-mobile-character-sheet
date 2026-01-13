@@ -1,0 +1,71 @@
+/* Create Game Item Modal Styles */
+
+.create-game-item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.type-select,
+.visibility-select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.type-select:hover,
+.visibility-select:hover {
+  border-color: var(--accent);
+}
+
+.type-select:focus,
+.visibility-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.type-select:disabled,
+.visibility-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.description-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 8px;
+  color: var(--text-primary);
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.description-input:hover {
+  border-color: var(--accent);
+}
+
+.description-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.description-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.description-input::placeholder {
+  color: var(--text-secondary);
+}
