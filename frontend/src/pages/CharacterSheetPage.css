@@ -2,45 +2,7 @@
   min-height: 100vh;
   padding: 2rem 1rem;
   background: var(--bg-primary);
-}
-
-.character-sheet-container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Header */
-.character-sheet-header {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.character-title-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.character-sheet-title {
-  font-size: 2.5rem;
-  font-weight: 900;
   color: var(--text-primary);
-  margin: 0;
-}
-
-.character-sheet-subtitle {
-  font-size: 1.25rem;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-/* Content */
-.character-sheet-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 }
 
 /* Loading & Error States */
@@ -65,25 +27,418 @@
   margin-bottom: 1rem;
 }
 
-.section-placeholder {
-  padding: 3rem;
+/* ==================== HEADER ==================== */
+
+.cs-header {
   background: var(--bg-secondary);
+  padding: 1.5rem;
   border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+
+.cs-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.cs-back-btn {
+  /* Styling handled by Button component */
+}
+
+.cs-header-title {
   text-align: center;
+  flex: 1;
+}
+
+.cs-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.cs-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0 0;
+}
+
+/* Level bar */
+.cs-level-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cs-level-label {
+  background: var(--accent);
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cs-xp-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cs-xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent) 0%, #9f7aea 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.cs-xp-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.625rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cs-prof-bonus {
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--text-secondary);
 }
 
-/* Responsive */
+/* Quick stats */
+.cs-quick-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cs-stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cs-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cs-stat-value.cs-bordered {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cs-stat-sub {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.cs-stat-label {
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* HP Box */
+.cs-hp-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 0.5rem;
+}
+
+.cs-hp-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cs-hp-btn.minus {
+  background: var(--hp-red);
+  color: #fff;
+}
+
+.cs-hp-btn.plus {
+  background: var(--hp-green);
+  color: #fff;
+}
+
+.cs-hp-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  min-width: 80px;
+  justify-content: center;
+}
+
+.cs-hp-current {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cs-hp-separator {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.cs-hp-max {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Expanded stats */
+.cs-expanded-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.cs-mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.cs-mini-label {
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.cs-mini-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Collapse button */
+.cs-collapse-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ==================== CONTENT ==================== */
+
+.character-sheet-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ==================== ABILITIES & SKILLS ==================== */
+
+.cs-abilities-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cs-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.cs-section-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.cs-section-menu {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+/* Ability Block */
+.cs-ability-block {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cs-ability-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.cs-ability-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.cs-ability-score {
+  width: 60px;
+  height: 48px;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.cs-ability-score:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* Modifiers row */
+.cs-ability-modifiers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+
+.cs-modifier-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cs-modifier-box:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cs-modifier-box.cs-save.proficient {
+  background: rgba(124, 58, 237, 0.2);
+  border-left: 3px solid var(--accent);
+}
+
+.cs-modifier-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cs-modifier-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Skills list */
+.cs-skills-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.cs-skill-row {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cs-skill-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cs-skill-row.proficiency-1 {
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.cs-skill-row.proficiency-2 {
+  background: rgba(124, 58, 237, 0.2);
+}
+
+.cs-skill-indicator {
+  width: 24px;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.cs-skill-name {
+  flex: 1;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.cs-skill-modifier {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
 @media (max-width: 768px) {
   .character-sheet-page {
     padding: 1.5rem 1rem;
   }
 
-  .character-sheet-title {
-    font-size: 2rem;
-  }
-
-  .character-sheet-subtitle {
-    font-size: 1rem;
+  .cs-name {
+    font-size: 1.25rem;
   }
 }
