@@ -726,4 +726,273 @@ input[type="number"] {
     box-sizing: border-box;
     width: 100%;
   }
+
+  /* Fix HP modal max overflow */
+  .cs-hp-modal-row {
+    gap: 0.5rem;
+  }
+
+  .cs-hp-modal-row input {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .cs-hp-modal-max {
+    font-size: 1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .cs-hp-modal-row label {
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+
+  /* Fix HP modal actions overflow on mobile */
+  .cs-hp-modal-actions {
+    gap: 0.5rem;
+  }
+
+  .cs-hp-btn-heal,
+  .cs-hp-btn-damage {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    min-width: 60px;
+  }
+}
+
+/* ==================== HP COMPONENTS ==================== */
+
+/* Desktop HP Box */
+.cs-hp-box-desktop {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem;
+  min-width: 220px;
+}
+
+.cs-hp-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cs-hp-btn-small {
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.cs-hp-btn-small.heal {
+  background: #16a34a;
+}
+
+.cs-hp-btn-small.heal:hover {
+  background: #15803d;
+}
+
+.cs-hp-btn-small.damage {
+  background: #dc2626;
+}
+
+.cs-hp-btn-small.damage:hover {
+  background: #b91c1c;
+}
+
+.cs-hp-label {
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cs-hp-label-temp {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cs-hp-input-small {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  width: 100%;
+}
+
+.cs-hp-display-large {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.cs-hp-temp-value {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Mobile HP Box */
+.cs-hp-box-mobile {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cs-hp-box-mobile:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cs-hp-mobile-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cs-hp-mobile-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* HP Modal */
+.cs-hp-modal-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cs-hp-modal-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cs-hp-modal-row label {
+  min-width: 120px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.cs-hp-modal-row input,
+.cs-hp-modal-row select {
+  flex: 1;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.cs-hp-modal-max {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.cs-hp-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  align-items: center;
+}
+
+.cs-hp-modal-actions input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.cs-hp-btn-heal {
+  padding: 0.5rem 0.75rem;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cs-hp-btn-heal:hover {
+  background: #15803d;
+}
+
+.cs-hp-btn-damage {
+  padding: 0.5rem 0.75rem;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cs-hp-btn-damage:hover {
+  background: #b91c1c;
+}
+
+.cs-hp-modal-settings {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-hp-settings-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cs-hp-settings-toggle:hover {
+  color: var(--accent);
+}
+
+.cs-hp-settings-content {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
