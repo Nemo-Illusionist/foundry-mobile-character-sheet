@@ -380,13 +380,12 @@ interface HPBoxDesktopProps {
 }
 
 function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
-  const [damageAmount, setDamageAmount] = useState('');
   const [healAmount, setHealAmount] = useState('');
 
   const effectiveMaxHP = character.hp.max + (character.hpBonus || 0);
 
   const handleDamage = async () => {
-    const amount = parseInt(damageAmount) || 0;
+    const amount = parseInt(healAmount) || 0;
     if (amount <= 0) return;
 
     let remaining = amount;
@@ -412,7 +411,7 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
     await updateCharacter(gameId, character.id, {
       hp: { ...character.hp, current: newCurrent, temp: newTemp },
     });
-    setDamageAmount('');
+    setHealAmount('');
   };
 
   const handleHeal = async () => {
@@ -435,7 +434,8 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
 
   return (
     <div className="cs-hp-box-desktop" onClick={onOpenModal} style={{ cursor: 'pointer' }}>
-      <div className="cs-hp-row">
+      {/* Column 1: Heal/Input/Damage group - spans 2 rows */}
+      <div className="cs-hp-vertical-group">
         <button
           className="cs-hp-btn-small heal"
           onClick={(e) => {
@@ -445,10 +445,6 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
         >
           Heal
         </button>
-        <div className="cs-hp-label">Hit Points</div>
-        <div className="cs-hp-label-temp">TEMP</div>
-      </div>
-      <div className="cs-hp-row">
         <input
           type="number"
           className="cs-hp-input-small"
@@ -457,23 +453,6 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
           onClick={(e) => e.stopPropagation()}
           placeholder="0"
         />
-        <div className="cs-hp-display-large">
-          <span className="cs-hp-current">{character.hp.current}</span>
-          <span className="cs-hp-separator">/</span>
-          <span className="cs-hp-max">{effectiveMaxHP}</span>
-        </div>
-        <input
-          type="number"
-          className="cs-hp-input-small"
-          value={character.hp.temp}
-          onChange={(e) => {
-            e.stopPropagation();
-            handleTempHPChange(e);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-      <div className="cs-hp-row">
         <button
           className="cs-hp-btn-small damage"
           onClick={(e) => {
@@ -483,9 +462,32 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
         >
           Damage
         </button>
-        <div></div>
-        <div></div>
       </div>
+
+      {/* Column 2, Row 1: Hit Points label */}
+      <div className="cs-hp-label">Hit Points</div>
+
+      {/* Column 3, Row 1: TEMP label */}
+      <div className="cs-hp-label-temp">TEMP</div>
+
+      {/* Column 2, Row 2: Current/Max HP display */}
+      <div className="cs-hp-display-large">
+        <span className="cs-hp-current">{character.hp.current}</span>
+        <span className="cs-hp-separator">/</span>
+        <span className="cs-hp-max">{effectiveMaxHP}</span>
+      </div>
+
+      {/* Column 3, Row 2: Temp HP input */}
+      <input
+        type="number"
+        className="cs-hp-input-small"
+        value={character.hp.temp}
+        onChange={(e) => {
+          e.stopPropagation();
+          handleTempHPChange(e);
+        }}
+        onClick={(e) => e.stopPropagation()}
+      />
     </div>
   );
 }
