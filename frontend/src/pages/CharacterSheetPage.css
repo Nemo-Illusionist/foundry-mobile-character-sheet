@@ -261,6 +261,7 @@
   padding: 0.75rem 0.5rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
+  min-width: 0;
 }
 
 .cs-mini-label {
@@ -269,6 +270,10 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .cs-mini-value {
@@ -651,6 +656,17 @@ input[type="number"] {
 }
 
 /* ==================== RESPONSIVE ==================== */
+
+/* Tablet breakpoint - hide Heal/Damage buttons in HP box */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .cs-hp-vertical-group {
+    display: none;
+  }
+
+  .cs-hp-box-desktop {
+    grid-template-columns: 1fr 80px;
+  }
+}
 
 @media (max-width: 768px) {
   .character-sheet-page {
