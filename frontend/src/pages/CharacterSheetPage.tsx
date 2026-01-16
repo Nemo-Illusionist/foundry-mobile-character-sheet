@@ -421,6 +421,7 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
     const newCurrent = Math.min(effectiveMaxHP, character.hp.current + amount);
     await updateCharacter(gameId, character.id, {
       hp: { ...character.hp, current: newCurrent },
+      deathSaves: { successes: 0, failures: 0 }, // Clear death saves on heal
     });
     setHealAmount('');
   };
@@ -431,6 +432,22 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
       hp: { ...character.hp, temp: Math.max(0, value) },
     });
   };
+
+  const handleDeathSaveClick = async (type: 'success' | 'failure', index: number) => {
+    const current = character.deathSaves || { successes: 0, failures: 0 };
+    const currentCount = type === 'success' ? current.successes : current.failures;
+    const newCount = currentCount === index + 1 ? index : index + 1;
+
+    await updateCharacter(gameId, character.id, {
+      deathSaves: {
+        ...current,
+        [type === 'success' ? 'successes' : 'failures']: newCount,
+      },
+    });
+  };
+
+  const isDead = character.hp.current === 0;
+  const deathSaves = character.deathSaves || { successes: 0, failures: 0 };
 
   return (
     <div className="cs-hp-box-desktop" onClick={onOpenModal} style={{ cursor: 'pointer' }}>
@@ -464,30 +481,64 @@ function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopProps) {
         </button>
       </div>
 
-      {/* Column 2, Row 1: Hit Points label */}
-      <div className="cs-hp-label">Hit Points</div>
+      {isDead ? (
+        <div className="cs-death-saves-both-rows">
+          {/* Row 1: Success circles (horizontal) */}
+          <div className="cs-death-saves-circles-horizontal">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={`success-${i}`}
+                className={`cs-death-save-circle cs-success ${i < deathSaves.successes ? 'filled' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeathSaveClick('success', i);
+                }}
+              />
+            ))}
+          </div>
 
-      {/* Column 3, Row 1: TEMP label */}
-      <div className="cs-hp-label-temp">TEMP</div>
+          {/* Row 2: Failure circles (horizontal) */}
+          <div className="cs-death-saves-circles-horizontal">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={`failure-${i}`}
+                className={`cs-death-save-circle cs-failure ${i < deathSaves.failures ? 'filled' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeathSaveClick('failure', i);
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Column 2, Row 1: Hit Points label */}
+          <div className="cs-hp-label">Hit Points</div>
 
-      {/* Column 2, Row 2: Current/Max HP display */}
-      <div className="cs-hp-display-large">
-        <span className="cs-hp-current">{character.hp.current}</span>
-        <span className="cs-hp-separator">/</span>
-        <span className="cs-hp-max">{effectiveMaxHP}</span>
-      </div>
+          {/* Column 3, Row 1: TEMP label */}
+          <div className="cs-hp-label-temp">TEMP</div>
 
-      {/* Column 3, Row 2: Temp HP input */}
-      <input
-        type="number"
-        className="cs-hp-input-small"
-        value={character.hp.temp}
-        onChange={(e) => {
-          e.stopPropagation();
-          handleTempHPChange(e);
-        }}
-        onClick={(e) => e.stopPropagation()}
-      />
+          {/* Column 2, Row 2: Current/Max HP display */}
+          <div className="cs-hp-display-large">
+            <span className="cs-hp-current">{character.hp.current}</span>
+            <span className="cs-hp-separator">/</span>
+            <span className="cs-hp-max">{effectiveMaxHP}</span>
+          </div>
+
+          {/* Column 3, Row 2: Temp HP input */}
+          <input
+            type="number"
+            className="cs-hp-input-small"
+            value={character.hp.temp}
+            onChange={(e) => {
+              e.stopPropagation();
+              handleTempHPChange(e);
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </>
+      )}
     </div>
   );
 }
@@ -499,6 +550,35 @@ interface HPBoxMobileProps {
 
 function HPBoxMobile({ character, onClick }: HPBoxMobileProps) {
   const effectiveMaxHP = character.hp.max + (character.hpBonus || 0);
+  const isDead = character.hp.current === 0;
+  const deathSaves = character.deathSaves || { successes: 0, failures: 0 };
+
+  if (isDead) {
+    return (
+      <div className="cs-hp-box-mobile cs-death-saves-mobile" onClick={onClick}>
+        <div className="cs-death-saves-mobile-row">
+          <div className="cs-death-saves-circles-mobile">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={`success-${i}`}
+                className={`cs-death-save-circle-mobile cs-success ${i < deathSaves.successes ? 'filled' : ''}`}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="cs-death-saves-mobile-row">
+          <div className="cs-death-saves-circles-mobile">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={`failure-${i}`}
+                className={`cs-death-save-circle-mobile cs-failure ${i < deathSaves.failures ? 'filled' : ''}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="cs-hp-box-mobile" onClick={onClick}>
@@ -565,6 +645,7 @@ function HPModal({ character, gameId, onClose }: HPModalProps) {
     const newCurrent = Math.min(effectiveMaxHP, currentHP + heal);
     await updateCharacter(gameId, character.id, {
       hp: { ...character.hp, current: newCurrent },
+      deathSaves: { successes: 0, failures: 0 },
     });
     setCurrentHP(newCurrent);
     setAmount('');
@@ -636,6 +717,43 @@ function HPModal({ character, gameId, onClose }: HPModalProps) {
                 }}
               />
             </div>
+
+            {currentHP === 0 && (
+              <div className="cs-hp-modal-death-saves">
+                <div className="cs-death-saves-checkboxes">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={`success-${i}`}
+                      className={`cs-death-save-checkbox cs-success ${
+                        i < (character.deathSaves?.successes || 0) ? 'checked' : ''
+                      }`}
+                      onClick={async () => {
+                        const current = character.deathSaves || { successes: 0, failures: 0 };
+                        const newCount = current.successes === i + 1 ? i : i + 1;
+                        await updateCharacter(gameId, character.id, {
+                          deathSaves: { ...current, successes: newCount },
+                        });
+                      }}
+                    />
+                  ))}
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={`failure-${i}`}
+                      className={`cs-death-save-checkbox cs-failure ${
+                        i < (character.deathSaves?.failures || 0) ? 'checked' : ''
+                      }`}
+                      onClick={async () => {
+                        const current = character.deathSaves || { successes: 0, failures: 0 };
+                        const newCount = current.failures === i + 1 ? i : i + 1;
+                        await updateCharacter(gameId, character.id, {
+                          deathSaves: { ...current, failures: newCount },
+                        });
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="cs-hp-modal-actions">
               <button className="cs-hp-btn-heal" onClick={handleHeal}>Heal</button>
