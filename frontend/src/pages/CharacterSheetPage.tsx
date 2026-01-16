@@ -47,6 +47,11 @@ const ABILITY_NAMES: Record<AbilityName, string> = {
 
 const ABILITY_ORDER: AbilityName[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
+// Calculate proficiency bonus based on level (D&D 2024)
+function getProficiencyBonus(level: number): number {
+  return Math.floor((level - 1) / 4) + 2;
+}
+
 // Group skills by ability
 function getSkillsByAbility(): Record<AbilityName, SkillName[]> {
   const grouped: Record<AbilityName, SkillName[]> = {
@@ -864,15 +869,17 @@ function CharacterHeader({ character, gameId, expanded, onToggleExpand }: Charac
             </div>
 
             <div className="cs-header-right">
-              <div className="cs-stats-grid">
-                <div className="cs-stat-values">
+              <div className="cs-combat-stats-desktop">
+                <div className="cs-stat-item">
                   <div className="cs-stat-value cs-bordered">{character.ac}</div>
-                  <div className="cs-stat-value">{character.speed}</div>
-                  <div className="cs-stat-value">{character.proficiencyBonus}</div>
-                </div>
-                <div className="cs-stat-labels">
                   <div className="cs-stat-label">Armor</div>
+                </div>
+                <div className="cs-stat-item">
+                  <div className="cs-stat-value">{character.speed}</div>
                   <div className="cs-stat-label">Speed</div>
+                </div>
+                <div className="cs-stat-item">
+                  <div className="cs-stat-value">+{getProficiencyBonus(character.level)}</div>
                   <div className="cs-stat-label">Proficiency</div>
                 </div>
               </div>
@@ -948,7 +955,7 @@ function CharacterHeader({ character, gameId, expanded, onToggleExpand }: Charac
 
             {/* Always visible stats */}
             <div className="cs-quick-stats-mobile">
-              <div className="cs-stats-left">
+              <div className="cs-combat-stats-mobile">
                 <div className="cs-stat-item">
                   <div className="cs-stat-value cs-bordered">{character.ac}</div>
                   <div className="cs-stat-label">Armor</div>
