@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '../../../../../shared/Button';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import { XP_THRESHOLDS, calculateLevelFromXP } from '../../constants/experience';
+import { getProficiencyBonus } from '../../constants/proficiencyBonus';
 import type { Character } from 'shared';
 import './Modals.css';
 
@@ -38,6 +39,7 @@ export function LevelXPModal({ character, gameId, onClose }: LevelXPModalProps) 
     await updateCharacter(gameId, character.id, {
       level: newLevel,
       experience: newXP,
+      proficiencyBonus: getProficiencyBonus(newLevel),
     });
 
     setCurrentXP(newXP);
@@ -48,6 +50,7 @@ export function LevelXPModal({ character, gameId, onClose }: LevelXPModalProps) 
     await updateCharacter(gameId, character.id, {
       experience: currentXP,
       level: currentLevel,
+      proficiencyBonus: getProficiencyBonus(currentLevel),
     });
     setMessage('Experience updated!');
   };
@@ -66,6 +69,7 @@ export function LevelXPModal({ character, gameId, onClose }: LevelXPModalProps) 
     await updateCharacter(gameId, character.id, {
       experience: newXP,
       level: newLevel,
+      proficiencyBonus: getProficiencyBonus(newLevel),
     });
 
     if (newLevel > oldLevel) {
