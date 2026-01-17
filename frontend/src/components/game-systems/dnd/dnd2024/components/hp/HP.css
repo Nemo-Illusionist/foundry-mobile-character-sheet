@@ -1,5 +1,14 @@
 /* ==================== HP COMPONENTS ==================== */
 
+/*
+ * BREAKPOINTS (synced with CharacterSheetLayout.css and Abilities.css):
+ * < 650px   : Mobile - HP modal via click
+ * >= 650px  : Small tablet - Heal/Damage скрыты
+ * >= 750px  : Tablet - Heal/Damage видны
+ * >= 850px  : Wide tablet - Heal/Damage видны
+ * >= 1024px : Desktop - Heal/Damage видны
+ */
+
 /* Desktop HP Box */
 .cs-hp-box-desktop {
   display: grid;
@@ -468,8 +477,8 @@
   font-weight: bold;
 }
 
-/* Tablet breakpoint - hide Heal/Damage buttons in HP box */
-@media (max-width: 799px) {
+/* Small tablet breakpoint (< 750px) - hide Heal/Damage buttons in HP box */
+@media (max-width: 749px) {
   .cs-hp-vertical-group {
     display: none;
   }

@@ -1,5 +1,14 @@
 /* ==================== ABILITIES & SKILLS ==================== */
 
+/*
+ * BREAKPOINTS (synced with CharacterSheetLayout.css and HP.css):
+ * < 650px   : Mobile - вертикальный список (cs-mobile-only), заголовок виден
+ * >= 650px  : Small tablet - 2 колонки compact, заголовок виден, Heal/Damage скрыты
+ * >= 750px  : Tablet - 2 колонки compact, заголовок виден, Heal/Damage видны
+ * >= 850px  : Wide tablet - 1 колонка compact, правая панель (1:2), заголовок скрыт
+ * >= 1024px : Desktop - 2 колонки compact, правая панель (1:1), заголовок скрыт
+ */
+
 .cs-abilities-skills {
   display: flex;
   flex-direction: column;
@@ -32,7 +41,7 @@
   padding: 0.25rem;
 }
 
-/* Ability Block */
+/* Ability Block (Mobile) */
 .cs-ability-block {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
@@ -160,10 +169,9 @@
   text-align: right;
 }
 
-/* ==================== COMPACT ABILITIES LAYOUT (Tablet/Desktop) ==================== */
+/* ==================== COMPACT ABILITIES LAYOUT ==================== */
 
 .cs-abilities-compact {
-  /* display controlled by .cs-tablet-desktop-only */
   gap: 1.5rem;
 }
 
@@ -310,11 +318,12 @@
   display: block;
 }
 
-/* Tablet/Desktop only - show 650px and up */
+/* Tablet/Desktop only - hidden by default */
 .cs-tablet-desktop-only {
   display: none;
 }
 
+/* >= 650px: Small Tablet - 2 колонки compact */
 @media (min-width: 650px) {
   .cs-mobile-only {
     display: none;
@@ -322,5 +331,39 @@
 
   .cs-tablet-desktop-only {
     display: flex;
+    flex-direction: row;
+  }
+}
+
+/* >= 850px: Wide Tablet - 1 колонка compact (правая панель появляется) */
+@media (min-width: 850px) {
+  .cs-tablet-desktop-only {
+    flex-direction: column;
+  }
+
+  .cs-compact-column {
+    flex: none;
+    width: 100%;
+  }
+
+  /* Показываем все abilities в одну колонку */
+  .cs-abilities-compact {
+    gap: 1rem;
+  }
+}
+
+/* >= 1024px: Desktop - 2 колонки compact */
+@media (min-width: 1024px) {
+  .cs-tablet-desktop-only {
+    flex-direction: row;
+  }
+
+  .cs-compact-column {
+    flex: 1;
+    width: auto;
+  }
+
+  .cs-abilities-compact {
+    gap: 1.5rem;
   }
 }
