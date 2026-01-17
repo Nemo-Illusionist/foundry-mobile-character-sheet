@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CharacterHeader } from './components/header';
 import { AbilitiesSection } from './components/abilities';
+import { RightPanel } from './components/right-panel';
 import type { Character } from 'shared';
 
 interface CharacterSheetProps {
@@ -29,7 +30,7 @@ export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
             <AbilitiesSection character={character} gameId={gameId} />
           </div>
           <div className="cs-main-right cs-desktop-only">
-            {/* Right panel content will be added later */}
+            <RightPanel character={character} gameId={gameId} />
           </div>
         </div>
       </div>

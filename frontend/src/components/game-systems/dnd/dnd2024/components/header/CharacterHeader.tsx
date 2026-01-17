@@ -119,7 +119,7 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
                   onClick={() => setConditionsOpen(true)}
                 >
                   <div className="cs-mini-label">Conditions</div>
-                  <div className="cs-mini-value">{conditionsCount}</div>
+                  <div className="cs-mini-value">{conditionsCount > 0 ? conditionsCount : '—'}</div>
                 </div>
                 <div className="cs-mini-stat">
                   <div className="cs-mini-label">Exhaustion</div>

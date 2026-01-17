@@ -1,0 +1,106 @@
+/* ==================== RIGHT PANEL ==================== */
+/* Desktop/Wide Tablet right panel content */
+
+.cs-right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Stats row - 4 columns */
+.cs-right-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+/* Reuse mini-stat styles from header */
+.cs-right-panel .cs-mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.cs-right-panel .cs-mini-label {
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.cs-right-panel .cs-mini-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cs-right-panel .cs-exhaustion-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  text-align-last: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  line-height: normal;
+}
+
+/* Conditions stat - special handling */
+.cs-conditions-stat {
+  transition: background 0.2s ease;
+}
+
+.cs-conditions-stat:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Compact view (number) - shown by default on wide tablet */
+.cs-conditions-compact {
+  display: block;
+}
+
+/* Expanded view (list) - hidden by default */
+.cs-conditions-expanded {
+  display: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* DESKTOP: >= 1024px - show expanded conditions list */
+@media (min-width: 1024px) {
+  .cs-conditions-stat {
+    flex: 1;
+    min-height: 80px;
+    justify-content: flex-start;
+  }
+
+  .cs-conditions-compact {
+    display: none;
+  }
+
+  .cs-conditions-expanded {
+    display: block;
+  }
+}
