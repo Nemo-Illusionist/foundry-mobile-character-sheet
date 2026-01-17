@@ -175,6 +175,69 @@ input[type="number"] {
   font-weight: 500;
 }
 
+/* Conditions Modal */
+.cs-conditions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cs-condition-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cs-condition-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cs-condition-row.active {
+  background: rgba(124, 58, 237, 0.2);
+}
+
+.cs-condition-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.cs-condition-row.active .cs-condition-checkbox {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.cs-condition-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cs-condition-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.cs-condition-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
 /* Mobile Responsive */
 @media (max-width: 649px) {
   /* Fix modal form width on mobile */

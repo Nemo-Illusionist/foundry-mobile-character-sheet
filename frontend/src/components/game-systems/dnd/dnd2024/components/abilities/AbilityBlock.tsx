@@ -27,35 +27,35 @@ export function AbilityBlock({
 
   return (
     <div className="cs-ability-block">
-      {/* Ability Header */}
+      {/* Ability Header: Name + Score + Modifiers (unified) */}
       <div className="cs-ability-header">
-        <h3 className="cs-ability-name">{ABILITY_NAMES[ability].toUpperCase()}</h3>
-        <input
-          type="number"
-          className="cs-ability-score"
-          value={score}
-          onChange={(e) => onAbilityChange(ability, parseInt(e.target.value) || 10)}
-          min="1"
-          max="30"
-        />
-      </div>
-
-      {/* Check & Saving Throw row */}
-      <div className="cs-ability-modifiers">
-        <div className="cs-modifier-box">
-          <span className="cs-modifier-label">Check</span>
-          <span className="cs-modifier-value">
-            {modifier >= 0 ? '+' : ''}{modifier}
-          </span>
+        <div className="cs-ability-title">
+          <h3 className="cs-ability-name">{ABILITY_NAMES[ability].toUpperCase()}</h3>
+          <input
+            type="number"
+            className="cs-ability-score"
+            value={score}
+            onChange={(e) => onAbilityChange(ability, parseInt(e.target.value) || 10)}
+            min="1"
+            max="30"
+          />
         </div>
-        <div
-          className={`cs-modifier-box cs-save ${saveProficient ? 'proficient' : ''}`}
-          onClick={() => onSavingThrowToggle(ability)}
-        >
-          <span className="cs-modifier-label">Saving Throw</span>
-          <span className="cs-modifier-value">
-            {saveModifier >= 0 ? '+' : ''}{saveModifier}
-          </span>
+        <div className="cs-ability-modifiers">
+          <div className="cs-modifier-box">
+            <span className="cs-modifier-label">Check</span>
+            <span className="cs-modifier-value">
+              {modifier >= 0 ? '+' : ''}{modifier}
+            </span>
+          </div>
+          <div
+            className={`cs-modifier-box cs-save ${saveProficient ? 'proficient' : ''}`}
+            onClick={() => onSavingThrowToggle(ability)}
+          >
+            <span className="cs-modifier-label">Save</span>
+            <span className="cs-modifier-value">
+              {saveModifier >= 0 ? '+' : ''}{saveModifier}
+            </span>
+          </div>
         </div>
       </div>
 

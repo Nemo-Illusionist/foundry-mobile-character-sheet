@@ -37,6 +37,23 @@ export type CreatureSize = 'Tiny' | 'Small' | 'Medium' | 'Large' | 'Huge' | 'Gar
 
 export type GameItemType = 'Map' | 'Note' | 'Image';
 
+// D&D 2024 SRD Conditions
+export type ConditionName =
+  | 'Blinded'
+  | 'Charmed'
+  | 'Deafened'
+  | 'Frightened'
+  | 'Grappled'
+  | 'Incapacitated'
+  | 'Invisible'
+  | 'Paralyzed'
+  | 'Petrified'
+  | 'Poisoned'
+  | 'Prone'
+  | 'Restrained'
+  | 'Stunned'
+  | 'Unconscious';
+
 // ==================== USER ====================
 
 export interface User {
@@ -111,6 +128,7 @@ export interface Character {
   proficiencyBonus: number;
   inspiration?: boolean;       // Inspiration status
   exhaustion?: number;          // Exhaustion level (0-6)
+  conditions?: ConditionName[]; // Active conditions (from SRD)
 
   // Skills (навыки)
   // proficiency: 0 = none, 1 = proficient, 2 = expert

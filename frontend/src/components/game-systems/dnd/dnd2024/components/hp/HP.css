@@ -17,7 +17,7 @@
 /* Desktop HP Box */
 .cs-hp-box-desktop {
   display: grid;
-  grid-template-columns: 80px 1fr 80px;
+  grid-template-columns: 80px 1fr 60px;
   grid-template-rows: auto auto;
   gap: 0.5rem;
   background: rgba(255, 255, 255, 0.05);
@@ -489,7 +489,7 @@
   }
 
   .cs-hp-box-desktop {
-    grid-template-columns: 1fr 80px;
+    grid-template-columns: 1fr 60px;
   }
 }
 

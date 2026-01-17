@@ -27,35 +27,35 @@ export function CompactAbilityBlock({
 
   return (
     <div className="cs-compact-ability">
-      {/* Ability Header with score input */}
+      {/* Ability Header: Name + Score + Modifiers */}
       <div className="cs-compact-ability-header">
-        <h3 className="cs-compact-ability-name">{ABILITY_NAMES[ability].toUpperCase()}</h3>
-        <input
-          type="number"
-          className="cs-compact-ability-score"
-          value={score}
-          onChange={(e) => onAbilityChange(ability, parseInt(e.target.value) || 10)}
-          min="1"
-          max="30"
-        />
-      </div>
-
-      {/* Check & Saving Throw row */}
-      <div className="cs-compact-modifiers">
-        <div className="cs-compact-modifier-box">
-          <span className="cs-compact-modifier-label">Check</span>
-          <span className="cs-compact-modifier-value">
-            {modifier >= 0 ? '+' : ''}{modifier}
-          </span>
+        <div className="cs-compact-ability-title">
+          <h3 className="cs-compact-ability-name">{ABILITY_NAMES[ability].toUpperCase()}</h3>
+          <input
+            type="number"
+            className="cs-compact-ability-score"
+            value={score}
+            onChange={(e) => onAbilityChange(ability, parseInt(e.target.value) || 10)}
+            min="1"
+            max="30"
+          />
         </div>
-        <div
-          className={`cs-compact-modifier-box cs-save ${saveProficient ? 'proficient' : ''}`}
-          onClick={() => onSavingThrowToggle(ability)}
-        >
-          <span className="cs-compact-modifier-label">Saving Throw</span>
-          <span className="cs-compact-modifier-value">
-            {saveModifier >= 0 ? '+' : ''}{saveModifier}
-          </span>
+        <div className="cs-compact-modifiers">
+          <div className="cs-compact-modifier-box">
+            <span className="cs-compact-modifier-label">Check</span>
+            <span className="cs-compact-modifier-value">
+              {modifier >= 0 ? '+' : ''}{modifier}
+            </span>
+          </div>
+          <div
+            className={`cs-compact-modifier-box cs-save ${saveProficient ? 'proficient' : ''}`}
+            onClick={() => onSavingThrowToggle(ability)}
+          >
+            <span className="cs-compact-modifier-label">Save</span>
+            <span className="cs-compact-modifier-value">
+              {saveModifier >= 0 ? '+' : ''}{saveModifier}
+            </span>
+          </div>
         </div>
       </div>
 

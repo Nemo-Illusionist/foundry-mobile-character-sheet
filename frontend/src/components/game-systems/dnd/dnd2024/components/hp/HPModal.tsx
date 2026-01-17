@@ -84,15 +84,24 @@ export function HPModal({ character, gameId, onClose }: HPModalProps) {
   };
 
   const handleUpdateCurrentHP = async (newCurrent: number) => {
+    // Clamp between 0 and effectiveMaxHP
+    const clampedHP = Math.max(0, Math.min(effectiveMaxHP, newCurrent));
     await updateCharacter(gameId, character.id, {
-      hp: { ...character.hp, current: newCurrent },
+      hp: { ...character.hp, current: clampedHP },
     });
+    if (clampedHP !== newCurrent) {
+      setCurrentHP(clampedHP);
+    }
   };
 
   const handleUpdateTempHP = async (newTemp: number) => {
+    const clampedTemp = Math.max(0, newTemp);
     await updateCharacter(gameId, character.id, {
-      hp: { ...character.hp, temp: newTemp },
+      hp: { ...character.hp, temp: clampedTemp },
     });
+    if (clampedTemp !== newTemp) {
+      setTempHP(clampedTemp);
+    }
   };
 
   return (

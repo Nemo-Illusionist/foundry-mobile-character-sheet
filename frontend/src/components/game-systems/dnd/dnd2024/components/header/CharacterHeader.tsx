@@ -9,6 +9,7 @@ import { HPBoxMobile } from '../hp/HPBoxMobile';
 import { HPModal } from '../hp/HPModal';
 import { SettingsModal } from '../modals/SettingsModal';
 import { LevelXPModal } from '../modals/LevelXPModal';
+import { ConditionsModal } from '../modals/ConditionsModal';
 import type { Character } from 'shared';
 import './CharacterHeader.css';
 
@@ -23,6 +24,9 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [levelModalOpen, setLevelModalOpen] = useState(false);
   const [hpModalOpen, setHpModalOpen] = useState(false);
+  const [conditionsOpen, setConditionsOpen] = useState(false);
+
+  const conditionsCount = character.conditions?.length || 0;
 
   const initiativeModifier = getAbilityModifier(character.abilities.dex);
 
@@ -109,9 +113,13 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
                     {initiativeModifier >= 0 ? '+' : ''}{initiativeModifier}
                   </div>
                 </div>
-                <div className="cs-mini-stat">
+                <div
+                  className="cs-mini-stat"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setConditionsOpen(true)}
+                >
                   <div className="cs-mini-label">Conditions</div>
-                  <div className="cs-mini-value">0</div>
+                  <div className="cs-mini-value">{conditionsCount}</div>
                 </div>
                 <div className="cs-mini-stat">
                   <div className="cs-mini-label">Exhaustion</div>
@@ -180,6 +188,15 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
           character={character}
           gameId={gameId}
           onClose={() => setHpModalOpen(false)}
+        />
+      )}
+
+      {/* Conditions Modal */}
+      {conditionsOpen && (
+        <ConditionsModal
+          character={character}
+          gameId={gameId}
+          onClose={() => setConditionsOpen(false)}
         />
       )}
     </>
