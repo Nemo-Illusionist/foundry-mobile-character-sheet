@@ -1,15 +1,12 @@
 // Game Items Page - Shared game items (maps, notes, images)
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useGameById } from '../hooks/useGameById';
-import { useGameItems } from '../hooks/useGameItems';
+import { useAuth, useGameById, useGameItems } from '../hooks';
 import { isGameMaster } from '../services/games.service';
 import { filterGameItemsByVisibility, deleteGameItem } from '../services/gameItems.service';
 import { GameItemCard } from '../components/gameItems/GameItemCard';
 import { CreateGameItemModal } from '../components/gameItems/CreateGameItemModal';
-import { Button } from '../components/shared/Button';
-import { LoadingSpinner } from '../components/shared/LoadingSpinner';
+import { Button, LoadingSpinner } from '../components/shared';
 import './GameItemsPage.css';
 
 export default function GameItemsPage() {

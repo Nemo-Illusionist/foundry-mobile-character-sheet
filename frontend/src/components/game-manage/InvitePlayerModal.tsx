@@ -1,8 +1,6 @@
 // Invite Player Modal Component
 import { FormEvent, useState } from 'react';
-import { Modal } from '../shared/Modal';
-import { Input } from '../shared/Input';
-import { Button } from '../shared/Button';
+import { Modal, Input, Button } from '../shared';
 import { getUserByEmail } from '../../services/users.service';
 import { addPlayerToGame } from '../../services/games.service';
 import './InvitePlayerModal.css';

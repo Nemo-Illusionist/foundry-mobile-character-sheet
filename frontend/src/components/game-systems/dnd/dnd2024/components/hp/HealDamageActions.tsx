@@ -1,6 +1,6 @@
 // D&D 2024 - Heal/Damage Actions Component
 
-import { NumberInput } from '../../../../../../components/shared';
+import { NumberInput } from '../../../../../shared';
 
 interface HealDamageActionsProps {
   amount: number;

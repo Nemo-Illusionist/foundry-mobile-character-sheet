@@ -1,21 +1,19 @@
 // Games Page - List all user's games (Refactored)
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useGames } from '../hooks/useGames';
-import { useModalState } from '../hooks/useModalState';
+import { useAuth, useGames, useModalState } from '../hooks';
 import { isGameMaster } from '../services/games.service';
 import { signOut } from '../services/auth.service';
 import { GameCard } from '../components/games/GameCard';
 import { CreateGameModal } from '../components/games/CreateGameModal';
-import { Button } from '../components/shared/Button';
 import {
+  Button,
   PageLayout,
   PageHeader,
   PageLoading,
   PageEmpty,
   PageSection,
   PageGrid,
-} from '../components/shared/PageLayout';
+} from '../components/shared';
 
 export default function GamesPage() {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 // Character Sheet Page - Thin wrapper using CharacterSheetLayout
 
 import { useParams } from 'react-router-dom';
-import { useCharacter } from '../hooks/useCharacter';
+import { useCharacter } from '../hooks';
 import { CharacterSheetLayout } from '../components/character-sheet';
 import { DnD2024CharacterSheet } from '../components/game-systems';
 

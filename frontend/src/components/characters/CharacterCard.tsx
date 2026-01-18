@@ -1,5 +1,5 @@
 // Character Card Component
-import { Card } from '../shared/Card';
+import { Card } from '../shared';
 import type { Character } from 'shared';
 import './CharacterCard.css';
 

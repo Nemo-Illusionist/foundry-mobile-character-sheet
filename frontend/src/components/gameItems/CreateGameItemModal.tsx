@@ -1,8 +1,6 @@
 // Create Game Item Modal Component
 import { FormEvent, useState } from 'react';
-import { Modal } from '../shared/Modal';
-import { Input } from '../shared/Input';
-import { Button } from '../shared/Button';
+import { Modal, Input, Button } from '../shared';
 import { createGameItem } from '../../services/gameItems.service';
 import type { GameItemType } from 'shared';
 import './CreateGameItemModal.css';

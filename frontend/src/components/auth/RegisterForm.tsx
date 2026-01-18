@@ -1,8 +1,7 @@
 // Register Form Component
 import { FormEvent, useState } from 'react';
 import { register } from '../../services/auth.service';
-import { Input } from '../shared/Input';
-import { Button } from '../shared/Button';
+import { Input, Button } from '../shared';
 import './AuthForms.css';
 
 interface RegisterFormProps {

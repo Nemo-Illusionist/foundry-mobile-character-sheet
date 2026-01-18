@@ -1,7 +1,7 @@
 // D&D 2024 - HP Modal Component (Refactored)
 
 import { useState } from 'react';
-import { useCharacterMutation } from '../../../../../../hooks/useCharacterMutation';
+import { useCharacterMutation } from '../../../../../../hooks';
 import { HPDisplay } from './HPDisplay';
 import { HealDamageActions } from './HealDamageActions';
 import { DeathSavesSection } from './DeathSavesSection';

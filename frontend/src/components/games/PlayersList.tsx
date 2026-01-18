@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getUsers } from '../../services/users.service';
 import { removePlayerFromGame } from '../../services/games.service';
-import { Button } from '../shared/Button';
+import { Button } from '../shared';
 import type { User } from 'shared';
 import './PlayersList.css';
 

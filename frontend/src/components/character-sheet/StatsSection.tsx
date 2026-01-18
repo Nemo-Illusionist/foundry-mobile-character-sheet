@@ -1,6 +1,5 @@
 // Stats Section - Abilities, Skills, Saving Throws
-import { Card } from '../shared/Card';
-import { NumberInput } from '../shared';
+import { Card, NumberInput } from '../shared';
 import { getAbilityModifier, getSavingThrowModifier, getSkillModifier, updateCharacter } from '../../services/characters.service';
 import type { Character, AbilityName, SkillName } from 'shared';
 import './StatsSection.css';

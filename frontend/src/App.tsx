@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GameProvider } from './context/GameContext';
-import { LoadingSpinner } from './components/shared/LoadingSpinner';
+import { LoadingSpinner } from './components/shared';
 import AuthPage from './pages/AuthPage';
 import GamesPage from './pages/GamesPage';
 import GameLayout from './layouts/GameLayout';

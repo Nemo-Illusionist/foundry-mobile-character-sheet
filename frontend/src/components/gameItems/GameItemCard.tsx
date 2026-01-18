@@ -1,5 +1,5 @@
 // Game Item Card Component
-import { Card } from '../shared/Card';
+import { Card } from '../shared';
 import type { GameItem } from 'shared';
 import './GameItemCard.css';
 

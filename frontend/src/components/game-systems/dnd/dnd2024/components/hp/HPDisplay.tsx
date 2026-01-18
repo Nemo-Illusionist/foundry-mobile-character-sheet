@@ -1,6 +1,6 @@
 // D&D 2024 - HP Display Component (HP and Temp inputs)
 
-import { NumberInput } from '../../../../../../components/shared';
+import { NumberInput } from '../../../../../shared';
 
 interface HPDisplayProps {
   currentHP: number;

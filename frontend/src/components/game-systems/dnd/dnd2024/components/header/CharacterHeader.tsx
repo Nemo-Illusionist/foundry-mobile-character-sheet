@@ -1,7 +1,6 @@
 // D&D 2024 - Character Header Component (Refactored)
 
-import { useModalState } from '../../../../../../hooks/useModalState';
-import { useCharacterMutation } from '../../../../../../hooks/useCharacterMutation';
+import { useModalState, useCharacterMutation } from '../../../../../../hooks';
 import { getAbilityModifier } from '../../../core';
 import { getProficiencyBonus } from '../../constants';
 import { HPBoxDesktop, HPBoxMobile, HPModal } from '../hp';

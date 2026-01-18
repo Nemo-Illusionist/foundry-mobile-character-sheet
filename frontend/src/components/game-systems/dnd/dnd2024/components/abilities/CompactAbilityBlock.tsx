@@ -1,6 +1,6 @@
 // D&D 2024 - Compact Ability Block Component (Tablet/Desktop Layout)
 
-import { NumberInput } from '../../../../../../components/shared';
+import { NumberInput } from '../../../../../shared';
 import { getAbilityModifier, getSkillModifier, getSavingThrowModifier, ABILITY_NAMES, SKILLS_BY_ABILITY } from '../../../core';
 import type { Character, AbilityName, SkillName } from 'shared';
 

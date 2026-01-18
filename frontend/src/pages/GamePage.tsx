@@ -1,19 +1,17 @@
 // Characters Page - List all characters in a game (Refactored)
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useCharacters } from '../hooks/useCharacters';
-import { useModalState } from '../hooks/useModalState';
+import { useAuth, useCharacters, useModalState } from '../hooks';
 import { CharacterCard } from '../components/characters/CharacterCard';
 import { CreateCharacterModal } from '../components/characters/CreateCharacterModal';
-import { Button } from '../components/shared/Button';
 import {
+  Button,
   PageLayout,
   PageHeader,
   PageLoading,
   PageEmpty,
   PageSection,
   PageGrid,
-} from '../components/shared/PageLayout';
+} from '../components/shared';
 
 export default function GamePage() {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 // D&D 2024 - HP Settings Section Component
 
 import { useState } from 'react';
-import { NumberInput } from '../../../../../../components/shared';
+import { NumberInput } from '../../../../../shared';
 
 interface HPSettingsSectionProps {
   maxHP: number;

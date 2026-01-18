@@ -3,8 +3,7 @@
 
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../shared/Button';
-import { LoadingSpinner } from '../shared/LoadingSpinner';
+import { Button, LoadingSpinner } from '../shared';
 import './CharacterSheetLayout.css';
 
 interface CharacterSheetLayoutProps {

@@ -1,8 +1,7 @@
 // Login Form Component
 import { FormEvent, useState } from 'react';
 import { signIn } from '../../services/auth.service';
-import { Input } from '../shared/Input';
-import { Button } from '../shared/Button';
+import { Input, Button } from '../shared';
 import './AuthForms.css';
 
 interface LoginFormProps {

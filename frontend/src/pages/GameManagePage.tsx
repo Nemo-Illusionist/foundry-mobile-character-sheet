@@ -1,12 +1,12 @@
 // Game Management Page - Manage players, settings
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks';
 import { useGame } from '../context/GameContext';
 import { isGameMaster } from '../services/games.service';
 import { PlayersList } from '../components/games/PlayersList';
 import { InvitePlayerModal } from '../components/game-manage/InvitePlayerModal';
-import { Button } from '../components/shared/Button';
+import { Button } from '../components/shared';
 import './GameManagePage.css';
 
 export default function GameManagePage() {

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { subscribeToGame } from '../services/games.service';
-import { LoadingSpinner } from '../components/shared/LoadingSpinner';
+import { LoadingSpinner } from '../components/shared';
 
 export default function GameLayout() {
   const { gameId } = useParams<{ gameId: string }>();

@@ -1,10 +1,8 @@
 // Create Game Modal Component
 import { FormEvent, useState } from 'react';
-import { Modal } from '../shared/Modal';
-import { Input } from '../shared/Input';
-import { Button } from '../shared/Button';
+import { Modal, Input, Button } from '../shared';
 import { createGame } from '../../services/games.service';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks';
 import './CreateGameModal.css';
 
 interface CreateGameModalProps {
