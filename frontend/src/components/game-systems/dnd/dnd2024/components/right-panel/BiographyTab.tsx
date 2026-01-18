@@ -1,5 +1,6 @@
 // D&D 2024 - Biography Tab Component
 
+import { useState, useEffect } from 'react';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import type { Character } from 'shared';
 
@@ -20,6 +21,33 @@ const ALIGNMENTS = [
   'Chaotic Evil',
   'Unaligned',
 ] as const;
+
+// Hook for number input with local state (allows clearing)
+function useNumberInput(externalValue: number | undefined, onCommit: (value: number | undefined) => void) {
+  const [localValue, setLocalValue] = useState(externalValue?.toString() ?? '');
+
+  useEffect(() => {
+    setLocalValue(externalValue?.toString() ?? '');
+  }, [externalValue]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val === '' || /^\d*$/.test(val)) {
+      setLocalValue(val);
+    }
+  };
+
+  const handleBlur = () => {
+    if (localValue === '') {
+      onCommit(undefined);
+    } else {
+      const num = parseInt(localValue, 10);
+      onCommit(isNaN(num) ? undefined : num);
+    }
+  };
+
+  return { value: localValue, onChange: handleChange, onBlur: handleBlur };
+}
 
 export function BiographyTab({ character, gameId }: BiographyTabProps) {
   const biography = character.biography || {};
@@ -46,6 +74,9 @@ export function BiographyTab({ character, gameId }: BiographyTabProps) {
     });
   };
 
+  const ageInput = useNumberInput(appearance.age, (val) => updateAppearance('age', val));
+  const weightInput = useNumberInput(appearance.weight, (val) => updateAppearance('weight', val));
+
   return (
     <div className="cs-biography-tab">
       {/* Alignment */}
@@ -70,11 +101,12 @@ export function BiographyTab({ character, gameId }: BiographyTabProps) {
           <div className="cs-bio-field">
             <label>Age</label>
             <input
-              type="number"
-              value={appearance.age ?? ''}
-              onChange={(e) => updateAppearance('age', e.target.value === '' ? undefined : Number(e.target.value))}
+              type="text"
+              inputMode="numeric"
+              value={ageInput.value}
+              onChange={ageInput.onChange}
+              onBlur={ageInput.onBlur}
               placeholder="—"
-              min={0}
             />
           </div>
           <div className="cs-bio-field">
@@ -89,11 +121,12 @@ export function BiographyTab({ character, gameId }: BiographyTabProps) {
           <div className="cs-bio-field">
             <label>Weight</label>
             <input
-              type="number"
-              value={appearance.weight ?? ''}
-              onChange={(e) => updateAppearance('weight', e.target.value === '' ? undefined : Number(e.target.value))}
+              type="text"
+              inputMode="numeric"
+              value={weightInput.value}
+              onChange={weightInput.onChange}
+              onBlur={weightInput.onBlur}
               placeholder="—"
-              min={0}
             />
           </div>
           <div className="cs-bio-field">

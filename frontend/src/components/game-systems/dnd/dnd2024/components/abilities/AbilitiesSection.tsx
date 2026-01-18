@@ -4,6 +4,7 @@ import { updateCharacter } from '../../../../../../services/characters.service';
 import { ABILITY_ORDER } from '../../../core';
 import { AbilityBlock } from './AbilityBlock';
 import { CompactAbilityBlock } from './CompactAbilityBlock';
+import { PassiveSenses } from './PassiveSenses';
 import { EquipmentProficiencies } from '../proficiencies/EquipmentProficiencies';
 import type { Character, AbilityName, SkillName } from 'shared';
 import './Abilities.css';
@@ -76,6 +77,9 @@ export function AbilitiesSection({ character, gameId }: AbilitiesSectionProps) {
 
       {/* Mobile Layout - vertical list */}
       <div className="cs-abilities-skills cs-mobile-only">
+        {/* Passive Senses */}
+        <PassiveSenses character={character} />
+
         {ABILITY_ORDER.map((ability) => (
           <AbilityBlock
             key={ability}
@@ -91,6 +95,9 @@ export function AbilitiesSection({ character, gameId }: AbilitiesSectionProps) {
       {/* Tablet/Desktop Layout - compact 2-column */}
       <div className="cs-abilities-compact cs-tablet-desktop-only">
         <div className="cs-compact-column">
+          {/* Passive Senses */}
+          <PassiveSenses character={character} />
+
           {/* STRENGTH */}
           <CompactAbilityBlock
             ability="str"

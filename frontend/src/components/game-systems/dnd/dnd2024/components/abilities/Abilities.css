@@ -190,6 +190,7 @@
 
 .cs-compact-column {
   flex: 1;
+  min-width: 0; /* Allow shrinking in flex */
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -331,6 +332,60 @@
   text-align: right;
 }
 
+/* ==================== PASSIVE SENSES ==================== */
+
+.cs-passive-senses {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 0.75rem;
+}
+
+.cs-passive-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.cs-passive-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.cs-passive-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.cs-passive-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cs-passive-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 /* ==================== RESPONSIVE VISIBILITY ==================== */
 
 /* MOBILE: < 650px - показываем вертикальный список */
@@ -382,6 +437,7 @@
 
   .cs-compact-column {
     flex: 1;
+    width: auto;
     width: auto;
   }
 
