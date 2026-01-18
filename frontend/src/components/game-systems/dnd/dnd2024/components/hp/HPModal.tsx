@@ -206,17 +206,17 @@ export function HPModal({ character, gameId, onClose }: HPModalProps) {
               />
             )}
 
-            <HitDiceSection
-              hitDice={hitDice}
-              total={hitDiceTotal}
-              used={hitDiceUsed}
-            />
-
             <HealDamageActions
               amount={amount}
               onAmountChange={setAmount}
               onHeal={handleHeal}
               onDamage={handleDamage}
+            />
+
+            <HitDiceSection
+              hitDice={hitDice}
+              total={hitDiceTotal}
+              used={hitDiceUsed}
             />
 
             <div className="cs-rest-buttons">

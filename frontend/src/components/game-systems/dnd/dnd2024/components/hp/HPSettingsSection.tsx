@@ -28,6 +28,13 @@ export function HPSettingsSection({
 }: HPSettingsSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const hitDiceRemaining = hitDiceTotal - hitDiceUsed;
+
+  const handleRemainingChange = (newRemaining: number) => {
+    const newUsed = hitDiceTotal - newRemaining;
+    onHitDiceUsedChange(newUsed);
+  };
+
   return (
     <div className="cs-hp-modal-settings">
       <button
@@ -68,13 +75,13 @@ export function HPSettingsSection({
             </select>
           </div>
           <div className="cs-hp-modal-row">
-            <label>Hit Dice Used</label>
+            <label>Hit Dice Left</label>
             <NumberInput
-              value={hitDiceUsed}
-              onChange={onHitDiceUsedChange}
+              value={hitDiceRemaining}
+              onChange={handleRemainingChange}
               min={0}
               max={hitDiceTotal}
-              defaultValue={0}
+              defaultValue={hitDiceTotal}
             />
             <span className="cs-hp-modal-max">/ {hitDiceTotal}</span>
           </div>
