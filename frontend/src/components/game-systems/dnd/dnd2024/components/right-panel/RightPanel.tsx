@@ -5,6 +5,7 @@ import { updateCharacter } from '../../../../../../services/characters.service';
 import { getAbilityModifier } from '../../../core';
 import { ConditionsModal } from '../modals';
 import { ActionsTab } from './ActionsTab';
+import { SpellsTab } from './SpellsTab';
 import { InventoryTab } from './InventoryTab';
 import type { Character } from 'shared';
 import './RightPanel.css';
@@ -14,7 +15,7 @@ interface RightPanelProps {
   gameId: string;
 }
 
-type TabId = 'actions' | 'inventory';
+type TabId = 'actions' | 'spells' | 'inventory';
 
 export function RightPanel({ character, gameId }: RightPanelProps) {
   const [conditionsOpen, setConditionsOpen] = useState(false);
@@ -25,6 +26,7 @@ export function RightPanel({ character, gameId }: RightPanelProps) {
 
   const tabs: { id: TabId; label: string }[] = [
     { id: 'actions', label: 'Actions' },
+    { id: 'spells', label: 'Spells' },
     { id: 'inventory', label: 'Inventory' },
   ];
 
@@ -107,6 +109,9 @@ export function RightPanel({ character, gameId }: RightPanelProps) {
         <div className="cs-tab-content">
           {activeTab === 'actions' && (
             <ActionsTab character={character} gameId={gameId} />
+          )}
+          {activeTab === 'spells' && (
+            <SpellsTab character={character} gameId={gameId} />
           )}
           {activeTab === 'inventory' && (
             <InventoryTab character={character} gameId={gameId} />

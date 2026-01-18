@@ -154,6 +154,7 @@ export interface Character {
 
   // Spells (заклинания)
   spells: CharacterSpell[];
+  spellEntries?: CharacterSpellEntry[];  // Simplified spell entries
 
   // Spell Slots (ячейки заклинаний)
   spellSlots: {
@@ -219,6 +220,23 @@ export interface InventoryItem {
   equipped?: boolean;           // Is item equipped
   attuned?: boolean;            // Is item attuned (for magic items)
   description?: string;         // Item description/notes
+}
+
+// Simplified spell entry for character sheet (D&D Beyond style)
+export interface CharacterSpellEntry {
+  id: string;                   // Unique ID
+  name: string;                 // Spell name
+  level: number;                // 0-9 (0 = cantrip)
+  school?: MagicSchool;         // School of magic
+  castingTime?: string;         // "1 action", "1 bonus action", "1 reaction", etc.
+  range?: string;               // "Self", "Touch", "30 feet", etc.
+  components?: string;          // "V, S, M (a pinch of dust)"
+  duration?: string;            // "Instantaneous", "1 minute", "Concentration, 1 hour"
+  ritual?: boolean;             // Can be cast as ritual
+  concentration?: boolean;      // Requires concentration
+  prepared?: boolean;           // Is spell prepared (for prepared casters)
+  description?: string;         // Spell description
+  source?: string;              // Source book/page (e.g., "PHB 279")
 }
 
 // ==================== KNOWLEDGE BASE - SPELL ====================
