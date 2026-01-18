@@ -77,9 +77,9 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
 
         {/* Mobile Layout */}
         <div className="cs-header-mobile">
-          {/* Expandable content */}
-          {expanded && (
-            <div className="cs-mobile-expanded">
+          {/* Expandable content - always rendered, visibility controlled by CSS */}
+          <div className={`cs-mobile-expanded ${expanded ? 'expanded' : 'collapsed'}`}>
+            <div className="cs-mobile-expanded-inner">
               <div className="cs-name-block">
                 <h1 className="cs-name">{character.name}</h1>
                 <button className="cs-settings-btn" onClick={settingsModal.open}>
@@ -132,7 +132,7 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Always visible stats */}
           <div className="cs-quick-stats-mobile">

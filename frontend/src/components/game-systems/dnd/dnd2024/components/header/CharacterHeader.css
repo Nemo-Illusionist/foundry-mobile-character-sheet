@@ -156,10 +156,30 @@
 }
 
 .cs-mobile-expanded {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.3s ease-out, margin-bottom 0.3s ease-out;
+  margin-bottom: 0;
+}
+
+.cs-mobile-expanded.expanded {
+  grid-template-rows: 1fr;
+  margin-bottom: 1rem;
+}
+
+.cs-mobile-expanded-inner {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-bottom: 1rem;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-out, padding-bottom 0.3s ease-out;
+  padding-bottom: 0;
+}
+
+.cs-mobile-expanded.expanded .cs-mobile-expanded-inner {
+  opacity: 1;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--border);
 }
