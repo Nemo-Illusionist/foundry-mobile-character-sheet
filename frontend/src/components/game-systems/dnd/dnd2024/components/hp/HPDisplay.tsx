@@ -21,14 +21,16 @@ export function HPDisplay({
     <>
       <div className="cs-hp-modal-row">
         <label>HP</label>
-        <NumberInput
-          value={currentHP}
-          onChange={onCurrentHPChange}
-          min={0}
-          max={effectiveMaxHP}
-          defaultValue={0}
-        />
-        <span className="cs-hp-modal-max">/ {effectiveMaxHP}</span>
+        <div className="cs-hp-input-with-suffix">
+          <NumberInput
+            value={currentHP}
+            onChange={onCurrentHPChange}
+            min={0}
+            max={effectiveMaxHP}
+            defaultValue={0}
+          />
+          <span className="cs-hp-input-suffix">/{effectiveMaxHP}</span>
+        </div>
       </div>
 
       <div className="cs-hp-modal-row">
