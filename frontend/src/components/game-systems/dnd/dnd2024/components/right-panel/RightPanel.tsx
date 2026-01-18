@@ -7,6 +7,7 @@ import { ConditionsModal } from '../modals';
 import { ActionsTab } from './ActionsTab';
 import { SpellsTab } from './SpellsTab';
 import { InventoryTab } from './InventoryTab';
+import { BiographyTab } from './BiographyTab';
 import type { Character } from 'shared';
 import './RightPanel.css';
 
@@ -15,7 +16,7 @@ interface RightPanelProps {
   gameId: string;
 }
 
-type TabId = 'actions' | 'spells' | 'inventory';
+type TabId = 'actions' | 'spells' | 'inventory' | 'bio';
 
 export function RightPanel({ character, gameId }: RightPanelProps) {
   const [conditionsOpen, setConditionsOpen] = useState(false);
@@ -28,6 +29,7 @@ export function RightPanel({ character, gameId }: RightPanelProps) {
     { id: 'actions', label: 'Actions' },
     { id: 'spells', label: 'Spells' },
     { id: 'inventory', label: 'Inventory' },
+    { id: 'bio', label: 'Bio' },
   ];
 
   // Filter tabs based on settings
@@ -128,6 +130,9 @@ export function RightPanel({ character, gameId }: RightPanelProps) {
           )}
           {activeTab === 'inventory' && (
             <InventoryTab character={character} gameId={gameId} />
+          )}
+          {activeTab === 'bio' && (
+            <BiographyTab character={character} gameId={gameId} />
           )}
         </div>
       </div>

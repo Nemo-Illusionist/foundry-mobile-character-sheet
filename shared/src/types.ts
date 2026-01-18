@@ -185,6 +185,27 @@ export interface Character {
   // Notes (заметки)
   notes?: string;
 
+  // Biography (D&D SRD 5.2 - Character Details)
+  biography?: {
+    alignment?: string;
+    appearance?: {
+      age?: number;
+      height?: string;
+      weight?: number;
+      eyes?: string;
+      skin?: string;
+      hair?: string;
+      description?: string;
+    };
+    personalityTraits?: string;
+    ideals?: string;
+    bonds?: string;
+    flaws?: string;
+    backstory?: string;
+    languages?: string;
+    alliesAndOrganizations?: string;
+  };
+
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
