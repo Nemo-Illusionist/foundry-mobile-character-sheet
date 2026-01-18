@@ -18,30 +18,26 @@ export function HPDisplay({
   onTempHPChange,
 }: HPDisplayProps) {
   return (
-    <>
-      <div className="cs-hp-modal-row">
-        <label>HP</label>
-        <div className="cs-hp-input-with-suffix">
-          <NumberInput
-            value={currentHP}
-            onChange={onCurrentHPChange}
-            min={0}
-            max={effectiveMaxHP}
-            defaultValue={0}
-          />
-          <span className="cs-hp-input-suffix">/{effectiveMaxHP}</span>
-        </div>
-      </div>
-
-      <div className="cs-hp-modal-row">
-        <label>TEMP</label>
+    <div className="cs-hp-display-row">
+      <label>HP</label>
+      <div className="cs-hp-input-with-suffix">
         <NumberInput
-          value={tempHP}
-          onChange={onTempHPChange}
+          value={currentHP}
+          onChange={onCurrentHPChange}
           min={0}
+          max={effectiveMaxHP}
           defaultValue={0}
         />
+        <span className="cs-hp-input-suffix">/{effectiveMaxHP}</span>
       </div>
-    </>
+
+      <label>Temp</label>
+      <NumberInput
+        value={tempHP}
+        onChange={onTempHPChange}
+        min={0}
+        defaultValue={0}
+      />
+    </div>
   );
 }
