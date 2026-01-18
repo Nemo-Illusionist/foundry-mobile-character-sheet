@@ -44,38 +44,36 @@ export function HPSettingsSection({
         {isExpanded ? '▼' : '▶'} HP Settings
       </button>
       {isExpanded && (
-        <div className="cs-hp-settings-content">
-          <div className="cs-hp-modal-row">
-            <label>Max HP</label>
-            <NumberInput
-              value={maxHP}
-              onChange={onMaxHPChange}
-              min={1}
-              defaultValue={1}
-            />
-          </div>
-          <div className="cs-hp-modal-row">
-            <label>HP Bonus</label>
-            <NumberInput
-              value={hpBonus}
-              onChange={onHPBonusChange}
-              defaultValue={0}
-            />
-          </div>
-          <div className="cs-hp-modal-row">
-            <label>Hit Dice</label>
-            <select
-              value={hitDice}
-              onChange={(e) => onHitDiceChange(e.target.value)}
-            >
-              <option value="d6">d6</option>
-              <option value="d8">d8</option>
-              <option value="d10">d10</option>
-              <option value="d12">d12</option>
-            </select>
-          </div>
-          <div className="cs-hp-modal-row">
-            <label>Hit Dice Left</label>
+        <div className="cs-hp-settings-grid">
+          {/* Row 1: Max | input | Bonus | input */}
+          <label>Max</label>
+          <NumberInput
+            value={maxHP}
+            onChange={onMaxHPChange}
+            min={1}
+            defaultValue={1}
+          />
+          <label>Bonus</label>
+          <NumberInput
+            value={hpBonus}
+            onChange={onHPBonusChange}
+            defaultValue={0}
+          />
+
+          {/* Row 2: Dice | select | Left | input with suffix */}
+          <label>Dice</label>
+          <select
+            className="cs-hp-settings-select"
+            value={hitDice}
+            onChange={(e) => onHitDiceChange(e.target.value)}
+          >
+            <option value="d6">d6</option>
+            <option value="d8">d8</option>
+            <option value="d10">d10</option>
+            <option value="d12">d12</option>
+          </select>
+          <label>Left</label>
+          <div className="cs-hp-input-with-suffix">
             <NumberInput
               value={hitDiceRemaining}
               onChange={handleRemainingChange}
@@ -83,7 +81,7 @@ export function HPSettingsSection({
               max={hitDiceTotal}
               defaultValue={hitDiceTotal}
             />
-            <span className="cs-hp-modal-max">/ {hitDiceTotal}</span>
+            <span className="cs-hp-input-suffix">/{hitDiceTotal}</span>
           </div>
         </div>
       )}
