@@ -135,3 +135,23 @@ export async function getCurrentUserData(): Promise<User | null> {
 export function onAuthChange(callback: (user: FirebaseUser | null) => void) {
     return onAuthStateChanged(auth, callback);
 }
+
+/**
+ * Update user's display name
+ */
+export async function updateUserDisplayName(newDisplayName: string): Promise<void> {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+        throw new Error('No authenticated user');
+    }
+
+    // Update Firebase Auth profile
+    await updateProfile(currentUser, { displayName: newDisplayName });
+
+    // Update Firestore user document
+    await setDoc(
+        doc(db, 'users', currentUser.uid),
+        { displayName: newDisplayName },
+        { merge: true }
+    );
+}

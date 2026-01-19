@@ -2,9 +2,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useGames, useModalState } from '../hooks';
 import { isGameMaster } from '../services/games.service';
-import { signOut } from '../services/auth.service';
 import { GameCard } from '../components/games/GameCard';
 import { CreateGameModal } from '../components/games/CreateGameModal';
+import { UserSettingsModal } from '../components/user';
 import {
   Button,
   PageLayout,
@@ -19,15 +19,7 @@ export default function GamesPage() {
   const { firebaseUser, user } = useAuth();
   const { games, loading } = useGames();
   const createModal = useModalState();
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      navigate('/auth');
-    } catch (error) {
-      console.error('Failed to sign out:', error);
-    }
-  };
+  const settingsModal = useModalState();
 
   const handleGameClick = (gameId: string) => {
     navigate(`/games/${gameId}`);
@@ -57,7 +49,7 @@ export default function GamesPage() {
         actions={
           <>
             <Button onClick={createModal.open}>+ Create Game</Button>
-            <Button variant="secondary" onClick={handleLogout}>Logout</Button>
+            <Button variant="secondary" onClick={settingsModal.open}>⚙ Settings</Button>
           </>
         }
       />
@@ -89,6 +81,11 @@ export default function GamesPage() {
         isOpen={createModal.isOpen}
         onClose={createModal.close}
         onSuccess={handleGameCreated}
+      />
+
+      <UserSettingsModal
+        isOpen={settingsModal.isOpen}
+        onClose={settingsModal.close}
       />
     </PageLayout>
   );

@@ -9,6 +9,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,11 +42,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return unsubscribe;
   }, []);
 
+  const refreshUser = async () => {
+    if (firebaseUser) {
+      const userData = await getCurrentUserData();
+      setUser(userData);
+    }
+  };
+
   const value: AuthContextType = {
     firebaseUser,
     user,
     loading,
     isAuthenticated: !!firebaseUser,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
