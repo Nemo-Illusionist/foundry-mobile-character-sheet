@@ -1,7 +1,8 @@
 // Game Items Page - Shared game items (maps, notes, images)
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth, useGameById, useGameItems, useModalState } from '../hooks';
+import { useAuth, useGameItems, useModalState } from '../hooks';
+import { useGame } from '../context/GameContext';
 import { isGameMaster } from '../services/games.service';
 import { filterGameItemsByVisibility, deleteGameItem } from '../services/gameItems.service';
 import { GameItemCard } from '../components/gameItems/GameItemCard';
@@ -22,12 +23,12 @@ export default function GameItemsPage() {
   const navigate = useNavigate();
   const { gameId } = useParams<{ gameId: string }>();
   const { firebaseUser } = useAuth();
-  const { game, loading: gameLoading } = useGameById(gameId || null);
+  const { currentGame: game } = useGame();
   const { items, loading: itemsLoading } = useGameItems(gameId || null);
   const createModal = useModalState();
   const [selectedItem, setSelectedItem] = useState<GameItem | null>(null);
 
-  if (gameLoading || itemsLoading || !firebaseUser) {
+  if (itemsLoading || !firebaseUser) {
     return (
       <PageLayout>
         <PageLoading message="Loading items..." />
@@ -36,18 +37,7 @@ export default function GameItemsPage() {
   }
 
   if (!game) {
-    return (
-      <PageLayout>
-        <PageEmpty
-          icon="❌"
-          title="Game Not Found"
-          action={{
-            label: 'Back to Games',
-            onClick: () => navigate('/games'),
-          }}
-        />
-      </PageLayout>
-    );
+    return null; // GameLayout handles loading
   }
 
   const isGM = isGameMaster(game, firebaseUser.uid);
@@ -68,13 +58,13 @@ export default function GameItemsPage() {
             <div className="mobile-menu">
               <DropdownMenu
                 items={[
-                  ...(isGM ? [{ label: 'Add Item', icon: '+', onClick: createModal.open }] : []),
+                  { label: 'Add Item', icon: '+', onClick: createModal.open },
                   { label: 'Back to Games', icon: '←', onClick: () => navigate('/games') },
                   ...(isGM ? [{ label: 'Game Settings', icon: '⚙️', onClick: () => navigate(`/games/${gameId}/manage`) }] : []),
                 ]}
               />
             </div>
-            {isGM && <Button className="hide-on-mobile" onClick={createModal.open}>+ Add Item</Button>}
+            <Button className="hide-on-mobile" onClick={createModal.open}>+ Add Item</Button>
           </>
         }
       />
@@ -83,19 +73,11 @@ export default function GameItemsPage() {
         <PageEmpty
           icon="📦"
           title="No Items Yet"
-          description={
-            isGM
-              ? 'Add maps, notes, and images to share with your players!'
-              : "Your GM hasn't added any items yet."
-          }
-          action={
-            isGM
-              ? {
-                  label: '+ Add Your First Item',
-                  onClick: createModal.open,
-                }
-              : undefined
-          }
+          description="Add maps, notes, and images to share with your party!"
+          action={{
+            label: '+ Add Your First Item',
+            onClick: createModal.open,
+          }}
         />
       ) : (
         <PageGrid minWidth="280px">

@@ -12,7 +12,9 @@ export default function GameLayout() {
   const { currentGame, setCurrentGame } = useGame();
   const { firebaseUser } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+
+  // Only show loading if we don't have a game in context yet
+  const [loading, setLoading] = useState(!currentGame || currentGame.id !== gameId);
 
   const isGM = currentGame && firebaseUser ? isGameMaster(currentGame, firebaseUser.uid) : false;
 
@@ -22,13 +24,16 @@ export default function GameLayout() {
       return;
     }
 
-    console.log('GameLayout: subscribing to game:', gameId);
-    setLoading(true);
+    // If we already have this game in context, don't show loading
+    if (currentGame?.id === gameId) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
 
     // Subscribe to game changes in real-time
     const unsubscribe = subscribeToGame(gameId, (game) => {
       if (game) {
-        console.log('GameLayout: game updated in context:', game.name);
         setCurrentGame(game);
         setLoading(false);
       } else {
@@ -39,7 +44,6 @@ export default function GameLayout() {
 
     // Cleanup: unsubscribe and clear game context when leaving game pages
     return () => {
-      console.log('GameLayout: cleaning up subscription');
       unsubscribe();
       setCurrentGame(null);
     };
@@ -47,7 +51,7 @@ export default function GameLayout() {
 
   if (loading) {
     return (
-      <AuthenticatedLayout variant="game">
+      <AuthenticatedLayout variant="game" isGM={isGM}>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
