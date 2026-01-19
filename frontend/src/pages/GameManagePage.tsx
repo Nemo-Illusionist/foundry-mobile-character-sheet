@@ -36,10 +36,6 @@ export default function GameManagePage() {
       <PageHeader
         title="Game Management"
         subtitle={<p>{game.name}</p>}
-        backButton={{
-          label: 'Back to Characters',
-          onClick: () => navigate(`/games/${gameId}/characters`),
-        }}
       />
 
       <div className="manage-sections">

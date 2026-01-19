@@ -15,6 +15,7 @@ import {
   PageEmpty,
   PageSection,
   PageGrid,
+  DropdownMenu,
 } from '../components/shared';
 import type { User } from 'shared';
 
@@ -91,18 +92,23 @@ export default function GamePage() {
     <PageLayout>
       <PageHeader
         title="Characters"
-        backButton={{
-          label: 'Back to Games',
-          onClick: () => navigate('/games'),
-        }}
         actions={
           <>
-            <Button onClick={createModal.open}>+ Create Character</Button>
-            <Button className="hide-on-side-nav" variant="secondary" onClick={() => navigate(`/games/${gameId}/items`)}>
+            <div className="mobile-menu">
+              <DropdownMenu
+                items={[
+                  { label: 'Create Character', icon: '+', onClick: createModal.open },
+                  { label: 'Back to Games', icon: '←', onClick: () => navigate('/games') },
+                  ...(isGM ? [{ label: 'Game Settings', icon: '⚙️', onClick: () => navigate(`/games/${gameId}/manage`) }] : []),
+                ]}
+              />
+            </div>
+            <Button className="hide-on-mobile" onClick={createModal.open}>+ Create Character</Button>
+            <Button className="hide-on-side-nav hide-on-mobile" variant="secondary" onClick={() => navigate(`/games/${gameId}/items`)}>
               📦 Game Items
             </Button>
             {isGM && (
-              <Button className="hide-on-side-nav" variant="secondary" onClick={() => navigate(`/games/${gameId}/manage`)}>
+              <Button className="hide-on-side-nav hide-on-mobile" variant="secondary" onClick={() => navigate(`/games/${gameId}/manage`)}>
                 ⚙️
               </Button>
             )}

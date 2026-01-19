@@ -14,6 +14,7 @@ import {
   PageLoading,
   PageEmpty,
   PageGrid,
+  DropdownMenu,
 } from '../components/shared';
 import type { GameItem } from 'shared';
 
@@ -62,14 +63,19 @@ export default function GameItemsPage() {
       <PageHeader
         title="Game Items"
         subtitle={<p>{game.name}</p>}
-        backButton={{
-          label: 'Back to Characters',
-          onClick: () => navigate(`/games/${gameId}/characters`),
-        }}
         actions={
-          isGM ? (
-            <Button onClick={createModal.open}>+ Add Item</Button>
-          ) : undefined
+          <>
+            <div className="mobile-menu">
+              <DropdownMenu
+                items={[
+                  ...(isGM ? [{ label: 'Add Item', icon: '+', onClick: createModal.open }] : []),
+                  { label: 'Back to Games', icon: '←', onClick: () => navigate('/games') },
+                  ...(isGM ? [{ label: 'Game Settings', icon: '⚙️', onClick: () => navigate(`/games/${gameId}/manage`) }] : []),
+                ]}
+              />
+            </div>
+            {isGM && <Button className="hide-on-mobile" onClick={createModal.open}>+ Add Item</Button>}
+          </>
         }
       />
 

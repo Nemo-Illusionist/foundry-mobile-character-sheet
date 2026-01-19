@@ -1,6 +1,7 @@
 // AuthenticatedLayout - Wrapper for authenticated pages with side navigation
 import { ReactNode } from 'react';
 import { SideNav } from '../components/shared/SideNav';
+import { MobileTabBar } from '../components/shared/MobileTabBar';
 import './AuthenticatedLayout.css';
 
 interface AuthenticatedLayoutProps {
@@ -29,6 +30,7 @@ export function AuthenticatedLayout({
       <main className="authenticated-content">
         {children}
       </main>
+      {variant === 'game' && <MobileTabBar variant="game" />}
     </div>
   );
 }
