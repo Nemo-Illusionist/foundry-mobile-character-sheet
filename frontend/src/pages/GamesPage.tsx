@@ -3,12 +3,12 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useGames, useModalState } from '../hooks';
 import { isGameMaster } from '../services/games.service';
+import { signOut } from '../services/auth.service';
 import { GameCard } from '../components/games/GameCard';
 import { CreateGameModal } from '../components/games/CreateGameModal';
 import { UserSettingsModal } from '../components/user';
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import {
-  Button,
   PageLayout,
   PageHeader,
   PageLoading,
@@ -62,12 +62,22 @@ export default function GamesPage() {
     navigate(`/games/${gameId}/characters`);
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/auth');
+    } catch (err) {
+      console.error('Failed to sign out:', err);
+    }
+  };
+
   if (loading) {
     return (
       <AuthenticatedLayout
         variant="games"
         onCreateGame={createModal.open}
         onOpenSettings={settingsModal.open}
+        onLogout={handleLogout}
       >
         <PageLayout>
           <PageLoading message="Loading games..." />
@@ -81,6 +91,7 @@ export default function GamesPage() {
       variant="games"
       onCreateGame={createModal.open}
       onOpenSettings={settingsModal.open}
+      onLogout={handleLogout}
     >
       <PageLayout>
         <PageHeader
@@ -91,18 +102,15 @@ export default function GamesPage() {
             </p>
           }
           actions={
-            <>
-              <div className="mobile-menu">
-                <DropdownMenu
-                  items={[
-                    { label: 'Create Game', icon: '+', onClick: createModal.open },
-                    { label: 'Settings', icon: '⚙️', onClick: settingsModal.open },
-                  ]}
-                />
-              </div>
-              <Button className="hide-on-side-nav hide-on-mobile" onClick={createModal.open}>+ Create Game</Button>
-              <Button className="hide-on-side-nav hide-on-mobile" variant="secondary" onClick={settingsModal.open}>⚙ Settings</Button>
-            </>
+            <div className="mobile-menu">
+              <DropdownMenu
+                items={[
+                  { label: 'Create Game', icon: '+', onClick: createModal.open },
+                  { label: 'Profile', icon: '👤', onClick: settingsModal.open },
+                  { label: 'Logout', icon: '🚪', onClick: handleLogout },
+                ]}
+              />
+            </div>
           }
         />
 

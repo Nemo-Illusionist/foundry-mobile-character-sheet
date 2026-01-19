@@ -8,6 +8,7 @@ interface AuthenticatedLayoutProps {
   variant: 'games' | 'game';
   onCreateGame?: () => void;
   onOpenSettings?: () => void;
+  onLogout?: () => void;
   isGM?: boolean;
 }
 
@@ -16,6 +17,7 @@ export function AuthenticatedLayout({
   variant,
   onCreateGame,
   onOpenSettings,
+  onLogout,
   isGM
 }: AuthenticatedLayoutProps) {
   return (
@@ -24,6 +26,7 @@ export function AuthenticatedLayout({
         variant={variant}
         onCreateGame={onCreateGame}
         onOpenSettings={onOpenSettings}
+        onLogout={onLogout}
         isGM={isGM}
       />
       <main className="authenticated-content">

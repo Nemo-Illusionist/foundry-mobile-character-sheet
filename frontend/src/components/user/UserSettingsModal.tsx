@@ -1,8 +1,7 @@
 // User Settings Modal Component
 import { FormEvent, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Modal, Input, Button } from '../shared';
-import { signOut, updateUserDisplayName } from '../../services/auth.service';
+import { updateUserDisplayName } from '../../services/auth.service';
 import { useAuth } from '../../hooks';
 import './UserSettingsModal.css';
 
@@ -12,7 +11,6 @@ interface UserSettingsModalProps {
 }
 
 export function UserSettingsModal({ isOpen, onClose }: UserSettingsModalProps) {
-  const navigate = useNavigate();
   const { user, refreshUser } = useAuth();
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -57,16 +55,6 @@ export function UserSettingsModal({ isOpen, onClose }: UserSettingsModalProps) {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      onClose();
-      navigate('/auth');
-    } catch (err) {
-      setError((err as Error).message || 'Failed to sign out');
-    }
-  };
-
   const handleClose = () => {
     if (!loading) {
       onClose();
@@ -103,12 +91,6 @@ export function UserSettingsModal({ isOpen, onClose }: UserSettingsModalProps) {
           </div>
         </section>
 
-        <section className="settings-section settings-section-danger">
-          <h3 className="settings-section-title">Account</h3>
-          <Button variant="danger" onClick={handleLogout}>
-            Logout
-          </Button>
-        </section>
       </div>
     </Modal>
   );

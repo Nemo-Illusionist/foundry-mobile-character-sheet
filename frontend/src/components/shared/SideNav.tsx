@@ -1,15 +1,17 @@
 // SideNav Component - Left navigation panel for tablets and desktops (>= 650px)
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { DropdownMenu } from './DropdownMenu';
 import './SideNav.css';
 
 interface SideNavProps {
   variant: 'games' | 'game';
   onCreateGame?: () => void;
   onOpenSettings?: () => void;
+  onLogout?: () => void;
   isGM?: boolean;
 }
 
-export function SideNav({ variant, onCreateGame, onOpenSettings, isGM }: SideNavProps) {
+export function SideNav({ variant, onCreateGame, onOpenSettings, onLogout, isGM }: SideNavProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { gameId } = useParams<{ gameId: string }>();
@@ -19,24 +21,15 @@ export function SideNav({ variant, onCreateGame, onOpenSettings, isGM }: SideNav
       <nav className="side-nav">
         <div className="side-nav-top" />
         <div className="side-nav-bottom">
-          {onCreateGame && (
-            <button
-              className="side-nav-btn"
-              onClick={onCreateGame}
-              title="Create Game"
-            >
-              +
-            </button>
-          )}
-          {onOpenSettings && (
-            <button
-              className="side-nav-btn"
-              onClick={onOpenSettings}
-              title="Settings"
-            >
-              <span className="side-nav-icon">⚙️</span>
-            </button>
-          )}
+          <DropdownMenu
+            className="side-nav-dropdown"
+            trigger={<span className="side-nav-icon">⚙️</span>}
+            items={[
+              ...(onCreateGame ? [{ label: 'Create Game', icon: '+', onClick: onCreateGame }] : []),
+              ...(onOpenSettings ? [{ label: 'Profile', icon: '👤', onClick: onOpenSettings }] : []),
+              ...(onLogout ? [{ label: 'Logout', icon: '🚪', onClick: onLogout }] : []),
+            ]}
+          />
         </div>
       </nav>
     );

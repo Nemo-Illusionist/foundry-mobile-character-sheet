@@ -60,6 +60,30 @@
   line-height: 1;
 }
 
+/* SideNav Dropdown */
+.side-nav-dropdown .dropdown-trigger {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+}
+
+.side-nav-dropdown .dropdown-trigger:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.side-nav-dropdown .dropdown-content {
+  left: 100%;
+  right: auto;
+  bottom: 0;
+  top: auto;
+  margin-left: 0.5rem;
+  margin-top: 0;
+}
+
 /* Hide buttons that are duplicated in side nav (>= 650px) */
 @media (min-width: 650px) {
   .hide-on-side-nav {

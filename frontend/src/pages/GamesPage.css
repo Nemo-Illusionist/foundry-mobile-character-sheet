@@ -1,5 +1,5 @@
 /* Override page header margin for games page */
-.page-header {
+.page-layout .page-header {
   margin-bottom: 1rem;
 }
 
@@ -211,8 +211,8 @@
     padding: 1.5rem 1rem;
   }
 
-  .page-header {
-    margin-bottom: 1rem;
+  .page-layout .page-header {
+    margin-bottom: 0.75rem;
   }
 
   .games-header {
