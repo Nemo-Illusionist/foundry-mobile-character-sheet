@@ -39,6 +39,14 @@ export const SHEET_TYPE_NAMES: Record<SheetType, string> = {
   'mob-2014': 'Mob 2014',
 };
 
+// Short names for cards/badges
+export const SHEET_TYPE_SHORT_NAMES: Record<SheetType, string> = {
+  'character-2024': '2024',
+  'character-2014': '2014',
+  'mob-2024': 'Mob 2024',
+  'mob-2014': 'Mob 2014',
+};
+
 // Sheet types available for each game system
 export const SYSTEM_SHEET_TYPES: Record<GameSystem, SheetType[]> = {
   dnd: ['character-2024', 'character-2014', 'mob-2024', 'mob-2014'],
