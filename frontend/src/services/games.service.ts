@@ -5,7 +5,6 @@ import {
   getDoc,
   getDocs,
   addDoc,
-  setDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -31,7 +30,6 @@ export async function createGame(
     description: description || '',
     gmId,
     playerIds: [gmId], // GM is automatically a player
-    isPersonal: false,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
@@ -42,35 +40,6 @@ export async function createGame(
   await updateDoc(doc(db, 'games', docRef.id), { id: docRef.id });
 
   return docRef.id;
-}
-
-/**
- * Create a personal game for a new user
- * Game ID is deterministic: personal_{userId}
- */
-export async function createPersonalGame(userId: string): Promise<void> {
-  const gameId = `personal_${userId}`;
-
-  const gameData = {
-    id: gameId,
-    name: `Personal Game`,
-    description: 'Your private game for personal characters',
-    gmId: userId,
-    playerIds: [userId],
-    isPersonal: true,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  };
-
-  console.log('📝 Creating personal game:', {
-    gameId,
-    userId,
-    gameData: { ...gameData, createdAt: '<serverTimestamp>', updatedAt: '<serverTimestamp>' }
-  });
-
-  await setDoc(doc(db, 'games', gameId), gameData);
-
-  console.log('✅ Personal game created successfully');
 }
 
 /**
@@ -318,7 +287,7 @@ export async function removePlayerFromGame(gameId: string, playerId: string): Pr
 }
 
 /**
- * Delete game (only GM can delete, and only if not personal)
+ * Delete game (only GM can delete)
  */
 export async function deleteGame(gameId: string, userId: string): Promise<void> {
   const gameDoc = await getDoc(doc(db, 'games', gameId));
@@ -331,10 +300,6 @@ export async function deleteGame(gameId: string, userId: string): Promise<void> 
 
   if (game.gmId !== userId) {
     throw new Error('Only GM can delete game');
-  }
-
-  if (game.isPersonal) {
-    throw new Error('Cannot delete personal game');
   }
 
   await deleteDoc(doc(db, 'games', gameId));

@@ -62,8 +62,6 @@ export interface User {
   displayName: string;
   photoURL?: string;
   createdAt: Timestamp;
-  // Personal game ID is deterministic: personal_{uid}
-  // No need to store it explicitly
 }
 
 // ==================== GAME ====================
@@ -76,7 +74,6 @@ export interface Game {
   playerIds: string[];          // Список UIDs игроков
   createdAt: Timestamp;
   updatedAt: Timestamp;
-  isPersonal: boolean;          // true для личной игры пользователя
 }
 
 // ==================== PUBLIC CHARACTER ====================

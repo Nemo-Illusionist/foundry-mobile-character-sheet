@@ -11,7 +11,6 @@ import {
   PageHeader,
   PageLoading,
   PageEmpty,
-  PageSection,
   PageGrid,
 } from '../components/shared';
 
@@ -46,9 +45,6 @@ export default function GamesPage() {
     );
   }
 
-  const personalGames = games.filter((g) => g.isPersonal);
-  const campaigns = games.filter((g) => !g.isPersonal);
-
   return (
     <PageLayout>
       <PageHeader
@@ -77,37 +73,16 @@ export default function GamesPage() {
           }}
         />
       ) : (
-        <>
-          {personalGames.length > 0 && (
-            <PageSection title="Personal Game" count={personalGames.length}>
-              <PageGrid>
-                {personalGames.map((game) => (
-                  <GameCard
-                    key={game.id}
-                    game={game}
-                    isGM={firebaseUser ? isGameMaster(game, firebaseUser.uid) : false}
-                    onClick={() => handleGameClick(game.id)}
-                  />
-                ))}
-              </PageGrid>
-            </PageSection>
-          )}
-
-          {campaigns.length > 0 && (
-            <PageSection title="Campaigns" count={campaigns.length}>
-              <PageGrid>
-                {campaigns.map((game) => (
-                  <GameCard
-                    key={game.id}
-                    game={game}
-                    isGM={firebaseUser ? isGameMaster(game, firebaseUser.uid) : false}
-                    onClick={() => handleGameClick(game.id)}
-                  />
-                ))}
-              </PageGrid>
-            </PageSection>
-          )}
-        </>
+        <PageGrid>
+          {games.map((game) => (
+            <GameCard
+              key={game.id}
+              game={game}
+              isGM={firebaseUser ? isGameMaster(game, firebaseUser.uid) : false}
+              onClick={() => handleGameClick(game.id)}
+            />
+          ))}
+        </PageGrid>
       )}
 
       <CreateGameModal

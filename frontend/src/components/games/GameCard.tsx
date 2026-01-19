@@ -14,8 +14,7 @@ export function GameCard({ game, isGM, onClick }: GameCardProps) {
     <Card onClick={onClick} className="game-card">
       <div className="game-card-header">
         <h3 className="game-card-title">{game.name}</h3>
-        {game.isPersonal && <span className="game-badge personal">Personal</span>}
-        {isGM && !game.isPersonal && <span className="game-badge gm">GM</span>}
+        {isGM && <span className="game-badge gm">GM</span>}
       </div>
 
       {game.description && (

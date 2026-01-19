@@ -36,11 +36,6 @@
   white-space: nowrap;
 }
 
-.game-badge.personal {
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--success);
-}
-
 .game-badge.gm {
   background: rgba(124, 58, 237, 0.15);
   color: var(--accent);

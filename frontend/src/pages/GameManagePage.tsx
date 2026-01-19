@@ -6,7 +6,6 @@ import { isGameMaster } from '../services/games.service';
 import { PlayersList } from '../components/games/PlayersList';
 import { InvitePlayerModal } from '../components/game-manage/InvitePlayerModal';
 import { PageLayout, PageHeader } from '../components/shared';
-import './GameManagePage.css';
 
 export default function GameManagePage() {
   const navigate = useNavigate();
@@ -20,54 +19,33 @@ export default function GameManagePage() {
   }
 
   const isGM = isGameMaster(game, firebaseUser.uid);
-  const isPersonalGame = game.isPersonal;
 
   return (
     <PageLayout>
       <PageHeader
         title="Game Management"
-        subtitle={
-          <p>
-            {game.name}
-            {isPersonalGame && <span className="game-badge personal"> Personal</span>}
-          </p>
-        }
+        subtitle={<p>{game.name}</p>}
         backButton={{
           label: 'Back to Characters',
           onClick: () => navigate(`/games/${gameId}`),
         }}
       />
 
-      {isPersonalGame ? (
-        <div className="personal-game-info">
-          <div className="info-icon">👤</div>
-          <h2>Personal Game</h2>
-          <p>
-            This is your personal game. Player management is not available for personal games.
-          </p>
-          <p>
-            You can create and manage characters directly from the characters page.
-          </p>
-        </div>
-      ) : (
-        <PlayersList
-          playerIds={game.playerIds}
-          gmId={game.gmId}
-          gameId={game.id}
-          currentUserId={firebaseUser.uid}
-          isGM={isGM}
-          onInviteClick={inviteModal.open}
-        />
-      )}
+      <PlayersList
+        playerIds={game.playerIds}
+        gmId={game.gmId}
+        gameId={game.id}
+        currentUserId={firebaseUser.uid}
+        isGM={isGM}
+        onInviteClick={inviteModal.open}
+      />
 
-      {!isPersonalGame && (
-        <InvitePlayerModal
-          isOpen={inviteModal.isOpen}
-          onClose={inviteModal.close}
-          onSuccess={() => console.log('Player invited successfully')}
-          gameId={game.id}
-        />
-      )}
+      <InvitePlayerModal
+        isOpen={inviteModal.isOpen}
+        onClose={inviteModal.close}
+        onSuccess={() => console.log('Player invited successfully')}
+        gameId={game.id}
+      />
     </PageLayout>
   );
 }

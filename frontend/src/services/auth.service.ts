@@ -10,7 +10,6 @@ import {
 import {doc, setDoc, getDoc, serverTimestamp} from 'firebase/firestore';
 import {auth, db} from './firebase';
 import type {User} from 'shared';
-import {createPersonalGame} from './games.service';
 
 /**
  * Register a new user
@@ -91,13 +90,8 @@ export async function register(email: string, password: string, displayName: str
             console.error('❌ Failed to create user document:', userError);
             console.error('Error code:', (userError as any).code);
             console.error('Error message:', (userError as any).message);
-            // Don't throw - continue to create personal game
+            throw userError;
         }
-
-        // Create personal game
-        console.log('📝 Step 4: Creating personal game...');
-        await createPersonalGame(firebaseUser.uid);
-        console.log('✅ Personal game created');
 
         console.log('🎉 Registration completed successfully!');
         return firebaseUser;
