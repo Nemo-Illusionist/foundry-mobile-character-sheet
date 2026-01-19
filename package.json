@@ -5,25 +5,21 @@
   "private": true,
   "workspaces": [
     "frontend",
-    "functions",
     "shared"
   ],
   "scripts": {
     "dev": "npm run dev --workspace=frontend",
     "dev:frontend": "npm run dev --workspace=frontend",
-    "dev:functions": "npm run serve --workspace=functions",
-    "build": "npm run build --workspace=shared && npm run build --workspace=frontend && npm run build --workspace=functions",
-    "build:staging": "npm run build --workspace=shared && npm run build:staging --workspace=frontend && npm run build --workspace=functions",
-    "build:production": "npm run build --workspace=shared && npm run build:production --workspace=frontend && npm run build --workspace=functions",
+    "build": "npm run build --workspace=shared && npm run build --workspace=frontend",
+    "build:staging": "npm run build --workspace=shared && npm run build:staging --workspace=frontend",
+    "build:production": "npm run build --workspace=shared && npm run build:production --workspace=frontend",
     "build:frontend": "npm run build --workspace=frontend",
-    "build:functions": "npm run build --workspace=functions",
     "setup": "node scripts/setup-firebase.js",
     "setup:rules": "firebase deploy --only firestore:rules,firestore:indexes",
-    "deploy": "firebase deploy",
+    "deploy": "firebase deploy --only hosting",
     "deploy:staging": "npm run build:staging && firebase use staging && firebase deploy --only hosting",
     "deploy:production": "npm run build:production && firebase use production && firebase deploy",
     "deploy:hosting": "firebase deploy --only hosting",
-    "deploy:functions": "firebase deploy --only functions",
     "emulators": "firebase emulators:start"
   },
   "devDependencies": {
@@ -31,8 +27,5 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "dependencies": {
-    "firebase-functions": "^7.0.3"
   }
 }
