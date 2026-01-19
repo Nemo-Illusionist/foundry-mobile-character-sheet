@@ -127,22 +127,8 @@ export default function GamePage() {
           }}
         />
       ) : isGM ? (
-        // GM View: Player characters grouped by owner, then GM characters
+        // GM View: GM characters first, then player characters grouped by owner
         <>
-          {playerGroups.map((group) => (
-            <PageSection key={group.ownerId} title={group.playerName} count={group.characters.length}>
-              <PageGrid>
-                {group.characters.map((character) => (
-                  <CharacterCard
-                    key={character.id}
-                    character={character}
-                    onClick={() => handleCharacterClick(character.id)}
-                  />
-                ))}
-              </PageGrid>
-            </PageSection>
-          ))}
-
           {gmCharacters.length > 0 && (
             <PageSection title="My Characters" count={gmCharacters.length}>
               <PageGrid>
@@ -156,6 +142,20 @@ export default function GamePage() {
               </PageGrid>
             </PageSection>
           )}
+
+          {playerGroups.map((group) => (
+            <PageSection key={group.ownerId} title={group.playerName} count={group.characters.length}>
+              <PageGrid>
+                {group.characters.map((character) => (
+                  <CharacterCard
+                    key={character.id}
+                    character={character}
+                    onClick={() => handleCharacterClick(character.id)}
+                  />
+                ))}
+              </PageGrid>
+            </PageSection>
+          ))}
         </>
       ) : (
         // Player View: My characters, then other characters
