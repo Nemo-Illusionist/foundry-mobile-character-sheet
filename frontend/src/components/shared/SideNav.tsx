@@ -1,0 +1,94 @@
+// SideNav Component - Left navigation panel for tablets and desktops (>= 650px)
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import './SideNav.css';
+
+interface SideNavProps {
+  variant: 'games' | 'game';
+  onCreateGame?: () => void;
+  onOpenSettings?: () => void;
+  isGM?: boolean;
+}
+
+export function SideNav({ variant, onCreateGame, onOpenSettings, isGM }: SideNavProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { gameId } = useParams<{ gameId: string }>();
+
+  if (variant === 'games') {
+    return (
+      <nav className="side-nav">
+        <div className="side-nav-top" />
+        <div className="side-nav-bottom">
+          {onCreateGame && (
+            <button
+              className="side-nav-btn"
+              onClick={onCreateGame}
+              title="Create Game"
+            >
+              +
+            </button>
+          )}
+          {onOpenSettings && (
+            <button
+              className="side-nav-btn"
+              onClick={onOpenSettings}
+              title="Settings"
+            >
+              <span className="side-nav-icon">⚙️</span>
+            </button>
+          )}
+        </div>
+      </nav>
+    );
+  }
+
+  // variant === 'game'
+  const currentPath = location.pathname;
+  const isCharactersActive = currentPath === `/games/${gameId}/characters`;
+  const isItemsActive = currentPath === `/games/${gameId}/items`;
+  const isManageActive = currentPath === `/games/${gameId}/manage`;
+
+  const handleBack = () => {
+    navigate('/games');
+  };
+
+  return (
+    <nav className="side-nav">
+      <div className="side-nav-top">
+        <button
+          className="side-nav-btn"
+          onClick={handleBack}
+          title="Back to Games"
+        >
+          ←
+        </button>
+      </div>
+
+      <div className="side-nav-bottom">
+        <button
+          className={`side-nav-btn ${isCharactersActive ? 'active' : ''}`}
+          onClick={() => navigate(`/games/${gameId}/characters`)}
+          title="Characters"
+        >
+          <span className="side-nav-icon">⚔️</span>
+        </button>
+        <button
+          className={`side-nav-btn ${isItemsActive ? 'active' : ''}`}
+          onClick={() => navigate(`/games/${gameId}/items`)}
+          title="Game Items"
+        >
+          <span className="side-nav-icon">📦</span>
+        </button>
+        {isGM && (
+          <button
+            className={`side-nav-btn ${isManageActive ? 'active' : ''}`}
+            onClick={() => navigate(`/games/${gameId}/manage`)}
+            title="Game Settings"
+          >
+            <span className="side-nav-icon">⚙️</span>
+          </button>
+        )}
+      </div>
+    </nav>
+  );
+}

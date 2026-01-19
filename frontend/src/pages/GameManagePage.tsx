@@ -1,4 +1,5 @@
-// Game Management Page - Manage players, settings
+// Game Management Page - GM only
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth, useModalState } from '../hooks';
 import { useGame } from '../context/GameContext';
@@ -17,11 +18,18 @@ export default function GameManagePage() {
   const { currentGame: game } = useGame();
   const inviteModal = useModalState();
 
-  if (!game || !firebaseUser) {
-    return null; // GameLayout handles loading
-  }
+  const isGM = game && firebaseUser ? isGameMaster(game, firebaseUser.uid) : false;
 
-  const isGM = isGameMaster(game, firebaseUser.uid);
+  // Redirect non-GMs to characters page
+  useEffect(() => {
+    if (game && firebaseUser && !isGM) {
+      navigate(`/games/${gameId}/characters`, { replace: true });
+    }
+  }, [game, firebaseUser, isGM, gameId, navigate]);
+
+  if (!game || !firebaseUser || !isGM) {
+    return null;
+  }
 
   return (
     <PageLayout>
@@ -35,26 +43,24 @@ export default function GameManagePage() {
       />
 
       <div className="manage-sections">
-        {isGM && <GameSettingsSection game={game} />}
+        <GameSettingsSection game={game} />
 
         <PlayersList
           playerIds={game.playerIds}
           gmId={game.gmId}
           gameId={game.id}
           currentUserId={firebaseUser.uid}
-          isGM={isGM}
+          isGM={true}
           onInviteClick={inviteModal.open}
         />
 
-        {isGM && (
-          <TransferGMSection game={game} currentUserId={firebaseUser.uid} />
-        )}
+        <TransferGMSection game={game} currentUserId={firebaseUser.uid} />
       </div>
 
       <InvitePlayerModal
         isOpen={inviteModal.isOpen}
         onClose={inviteModal.close}
-        onSuccess={() => console.log('Player invited successfully')}
+        onSuccess={() => {}}
         gameId={game.id}
       />
     </PageLayout>

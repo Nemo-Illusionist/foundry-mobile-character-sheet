@@ -1,0 +1,16 @@
+/* AuthenticatedLayout Styles */
+
+.authenticated-layout {
+  min-height: 100vh;
+}
+
+.authenticated-content {
+  min-height: 100vh;
+}
+
+/* Offset content when side nav is visible (>= 650px) */
+@media (min-width: 650px) {
+  .authenticated-content {
+    margin-left: 52px;
+  }
+}

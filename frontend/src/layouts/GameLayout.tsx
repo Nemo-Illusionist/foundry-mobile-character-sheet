@@ -2,14 +2,19 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
-import { subscribeToGame } from '../services/games.service';
+import { useAuth } from '../hooks';
+import { subscribeToGame, isGameMaster } from '../services/games.service';
 import { LoadingSpinner } from '../components/shared';
+import { AuthenticatedLayout } from './AuthenticatedLayout';
 
 export default function GameLayout() {
   const { gameId } = useParams<{ gameId: string }>();
-  const { setCurrentGame } = useGame();
+  const { currentGame, setCurrentGame } = useGame();
+  const { firebaseUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+
+  const isGM = currentGame && firebaseUser ? isGameMaster(currentGame, firebaseUser.uid) : false;
 
   useEffect(() => {
     if (!gameId) {
@@ -42,19 +47,25 @@ export default function GameLayout() {
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        gap: '1rem'
-      }}>
-        <LoadingSpinner size="large" />
-        <p>Loading game...</p>
-      </div>
+      <AuthenticatedLayout variant="game">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          gap: '1rem'
+        }}>
+          <LoadingSpinner size="large" />
+          <p>Loading game...</p>
+        </div>
+      </AuthenticatedLayout>
     );
   }
 
-  return <Outlet />;
+  return (
+    <AuthenticatedLayout variant="game" isGM={isGM}>
+      <Outlet />
+    </AuthenticatedLayout>
+  );
 }

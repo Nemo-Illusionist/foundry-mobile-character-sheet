@@ -98,12 +98,14 @@ export default function GamePage() {
         actions={
           <>
             <Button onClick={createModal.open}>+ Create Character</Button>
-            <Button variant="secondary" onClick={() => navigate(`/games/${gameId}/items`)}>
+            <Button className="hide-on-side-nav" variant="secondary" onClick={() => navigate(`/games/${gameId}/items`)}>
               📦 Game Items
             </Button>
-            <Button variant="secondary" onClick={() => navigate(`/games/${gameId}/manage`)}>
-              ⚙️
-            </Button>
+            {isGM && (
+              <Button className="hide-on-side-nav" variant="secondary" onClick={() => navigate(`/games/${gameId}/manage`)}>
+                ⚙️
+              </Button>
+            )}
           </>
         }
       />

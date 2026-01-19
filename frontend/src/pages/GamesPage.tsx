@@ -5,6 +5,7 @@ import { isGameMaster } from '../services/games.service';
 import { GameCard } from '../components/games/GameCard';
 import { CreateGameModal } from '../components/games/CreateGameModal';
 import { UserSettingsModal } from '../components/user';
+import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import {
   Button,
   PageLayout,
@@ -31,62 +32,74 @@ export default function GamesPage() {
 
   if (loading) {
     return (
-      <PageLayout>
-        <PageLoading message="Loading games..." />
-      </PageLayout>
+      <AuthenticatedLayout
+        variant="games"
+        onCreateGame={createModal.open}
+        onOpenSettings={settingsModal.open}
+      >
+        <PageLayout>
+          <PageLoading message="Loading games..." />
+        </PageLayout>
+      </AuthenticatedLayout>
     );
   }
 
   return (
-    <PageLayout>
-      <PageHeader
-        title="My Games"
-        subtitle={
-          <p>
-            Welcome, <strong>{user?.displayName || firebaseUser?.displayName || 'Player'}</strong>
-          </p>
-        }
-        actions={
-          <>
-            <Button onClick={createModal.open}>+ Create Game</Button>
-            <Button variant="secondary" onClick={settingsModal.open}>⚙ Settings</Button>
-          </>
-        }
-      />
-
-      {games.length === 0 ? (
-        <PageEmpty
-          icon="🎲"
-          title="No Games Yet"
-          description="Create your first game to start your TTRPG adventure!"
-          action={{
-            label: '+ Create Your First Game',
-            onClick: createModal.open,
-          }}
+    <AuthenticatedLayout
+      variant="games"
+      onCreateGame={createModal.open}
+      onOpenSettings={settingsModal.open}
+    >
+      <PageLayout>
+        <PageHeader
+          title="My Games"
+          subtitle={
+            <p>
+              Welcome, <strong>{user?.displayName || firebaseUser?.displayName || 'Player'}</strong>
+            </p>
+          }
+          actions={
+            <>
+              <Button className="hide-on-side-nav" onClick={createModal.open}>+ Create Game</Button>
+              <Button className="hide-on-side-nav" variant="secondary" onClick={settingsModal.open}>⚙ Settings</Button>
+            </>
+          }
         />
-      ) : (
-        <PageGrid>
-          {games.map((game) => (
-            <GameCard
-              key={game.id}
-              game={game}
-              isGM={firebaseUser ? isGameMaster(game, firebaseUser.uid) : false}
-              onClick={() => handleGameClick(game.id)}
-            />
-          ))}
-        </PageGrid>
-      )}
 
-      <CreateGameModal
-        isOpen={createModal.isOpen}
-        onClose={createModal.close}
-        onSuccess={handleGameCreated}
-      />
+        {games.length === 0 ? (
+          <PageEmpty
+            icon="🎲"
+            title="No Games Yet"
+            description="Create your first game to start your TTRPG adventure!"
+            action={{
+              label: '+ Create Your First Game',
+              onClick: createModal.open,
+            }}
+          />
+        ) : (
+          <PageGrid>
+            {games.map((game) => (
+              <GameCard
+                key={game.id}
+                game={game}
+                isGM={firebaseUser ? isGameMaster(game, firebaseUser.uid) : false}
+                onClick={() => handleGameClick(game.id)}
+              />
+            ))}
+          </PageGrid>
+        )}
 
-      <UserSettingsModal
-        isOpen={settingsModal.isOpen}
-        onClose={settingsModal.close}
-      />
-    </PageLayout>
+        <CreateGameModal
+          isOpen={createModal.isOpen}
+          onClose={createModal.close}
+          onSuccess={handleGameCreated}
+        />
+
+        <UserSettingsModal
+          isOpen={settingsModal.isOpen}
+          onClose={settingsModal.close}
+        />
+      </PageLayout>
+    </AuthenticatedLayout>
   );
 }
