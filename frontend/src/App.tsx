@@ -36,7 +36,8 @@ function AppRoutes() {
           <Route path="/games" element={<GamesPage />} />
           {/* All game-related routes wrapped in GameLayout */}
           <Route path="/games/:gameId" element={<GameLayout />}>
-            <Route index element={<GamePage />} />
+            <Route index element={<Navigate to="characters" replace />} />
+            <Route path="characters" element={<GamePage />} />
             <Route path="characters/:characterId" element={<CharacterSheetPage />} />
             <Route path="manage" element={<GameManagePage />} />
             <Route path="items" element={<GameItemsPage />} />

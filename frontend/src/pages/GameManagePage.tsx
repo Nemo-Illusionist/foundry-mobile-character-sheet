@@ -30,7 +30,7 @@ export default function GameManagePage() {
         subtitle={<p>{game.name}</p>}
         backButton={{
           label: 'Back to Characters',
-          onClick: () => navigate(`/games/${gameId}`),
+          onClick: () => navigate(`/games/${gameId}/characters`),
         }}
       />
 

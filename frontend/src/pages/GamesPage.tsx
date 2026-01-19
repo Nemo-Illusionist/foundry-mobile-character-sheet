@@ -22,11 +22,11 @@ export default function GamesPage() {
   const settingsModal = useModalState();
 
   const handleGameClick = (gameId: string) => {
-    navigate(`/games/${gameId}`);
+    navigate(`/games/${gameId}/characters`);
   };
 
   const handleGameCreated = (gameId: string) => {
-    navigate(`/games/${gameId}`);
+    navigate(`/games/${gameId}/characters`);
   };
 
   if (loading) {

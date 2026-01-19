@@ -17,7 +17,7 @@ export function CharacterCard({ character, onClick }: CharacterCardProps) {
         <div className="character-info">
           <h3 className="character-name">{character.name}</h3>
           <p className="character-details">
-            Level {character.level} {character.race} {character.class}
+            {character.race} {character.class} Level {character.level}
           </p>
         </div>
         <div className="character-card-badges">

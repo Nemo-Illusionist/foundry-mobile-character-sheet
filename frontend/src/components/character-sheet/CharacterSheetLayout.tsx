@@ -23,7 +23,7 @@ export function CharacterSheetLayout({
 
   const handleBack = () => {
     if (gameId) {
-      navigate(`/games/${gameId}`);
+      navigate(`/games/${gameId}/characters`);
     } else {
       navigate('/');
     }
