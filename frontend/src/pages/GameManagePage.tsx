@@ -5,7 +5,10 @@ import { useGame } from '../context/GameContext';
 import { isGameMaster } from '../services/games.service';
 import { PlayersList } from '../components/games/PlayersList';
 import { InvitePlayerModal } from '../components/game-manage/InvitePlayerModal';
+import { GameSettingsSection } from '../components/game-manage/GameSettingsSection';
+import { TransferGMSection } from '../components/game-manage/TransferGMSection';
 import { PageLayout, PageHeader } from '../components/shared';
+import './GameManagePage.css';
 
 export default function GameManagePage() {
   const navigate = useNavigate();
@@ -31,14 +34,22 @@ export default function GameManagePage() {
         }}
       />
 
-      <PlayersList
-        playerIds={game.playerIds}
-        gmId={game.gmId}
-        gameId={game.id}
-        currentUserId={firebaseUser.uid}
-        isGM={isGM}
-        onInviteClick={inviteModal.open}
-      />
+      <div className="manage-sections">
+        {isGM && <GameSettingsSection game={game} />}
+
+        <PlayersList
+          playerIds={game.playerIds}
+          gmId={game.gmId}
+          gameId={game.id}
+          currentUserId={firebaseUser.uid}
+          isGM={isGM}
+          onInviteClick={inviteModal.open}
+        />
+
+        {isGM && (
+          <TransferGMSection game={game} currentUserId={firebaseUser.uid} />
+        )}
+      </div>
 
       <InvitePlayerModal
         isOpen={inviteModal.isOpen}

@@ -1,3 +1,7 @@
 /* Game Management Page - Custom Styles */
 
-/* Currently no custom styles needed - using shared components */
+.manage-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

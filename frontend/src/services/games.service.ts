@@ -320,3 +320,33 @@ export function isGameMaster(game: Game, userId: string): boolean {
 export function isPlayer(game: Game, userId: string): boolean {
   return game.playerIds.includes(userId);
 }
+
+/**
+ * Transfer GM role to another player
+ */
+export async function transferGMRole(
+  gameId: string,
+  currentGmId: string,
+  newGmId: string
+): Promise<void> {
+  const gameDoc = await getDoc(doc(db, 'games', gameId));
+
+  if (!gameDoc.exists()) {
+    throw new Error('Game not found');
+  }
+
+  const game = gameDoc.data() as Game;
+
+  if (game.gmId !== currentGmId) {
+    throw new Error('Only current GM can transfer GM role');
+  }
+
+  if (!game.playerIds.includes(newGmId)) {
+    throw new Error('New GM must be a player in the game');
+  }
+
+  await updateDoc(doc(db, 'games', gameId), {
+    gmId: newGmId,
+    updatedAt: serverTimestamp(),
+  });
+}
