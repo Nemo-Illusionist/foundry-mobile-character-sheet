@@ -68,7 +68,7 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
                 <div className="cs-stat-value">{character.speed}</div>
                 <div className="cs-stat-label">Speed</div>
               </div>
-              <div className="cs-stat-item">
+              <div className="cs-stat-item cs-stat-proficiency">
                 <div className="cs-stat-value">+{getProficiencyBonus(character.level)}</div>
                 <div className="cs-stat-label">Proficiency</div>
               </div>

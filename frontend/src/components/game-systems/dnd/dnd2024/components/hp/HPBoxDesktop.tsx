@@ -156,6 +156,9 @@ export function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopPro
             <span className="cs-hp-current">{character.hp.current}</span>
             <span className="cs-hp-separator">/</span>
             <span className="cs-hp-max">{effectiveMaxHP}</span>
+            {character.hp.temp > 0 && (
+              <span className="cs-hp-temp-inline">({character.hp.temp})</span>
+            )}
           </div>
 
           {/* Column 3, Row 2: Temp HP input (centered) */}

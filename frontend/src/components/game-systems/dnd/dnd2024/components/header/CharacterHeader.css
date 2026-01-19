@@ -46,6 +46,8 @@
   font-weight: 700;
   margin: 0;
   color: var(--text-primary);
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .cs-subtitle {
@@ -254,6 +256,13 @@
 }
 
 /* ==================== RESPONSIVE ==================== */
+
+/* SMALL_TABLET: 650-749px - скрываем Proficiency */
+@media (min-width: 650px) and (max-width: 749px) {
+  .cs-stat-proficiency {
+    display: none;
+  }
+}
 
 @media (max-width: 649px) {
   /* Restore padding on mobile */

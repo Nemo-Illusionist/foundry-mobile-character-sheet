@@ -155,6 +155,14 @@
   color: #fff;
 }
 
+/* Inline temp HP (shown only in SMALL_TAB mode) */
+.cs-hp-temp-inline {
+  display: none;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-left: 0.25rem;
+}
+
 /* Mobile HP Box */
 .cs-hp-box-mobile {
   background: rgba(255, 255, 255, 0.05);
@@ -858,14 +866,27 @@
   background: rgba(234, 179, 8, 0.3);
 }
 
-/* SMALL_TABLET & MOBILE: < 750px (BREAKPOINTS.TABLET) - скрываем Heal/Damage */
-@media (max-width: 749px) {
+/* SMALL_TABLET: 650-749px - скрываем Heal/Damage и Temp column, показываем temp inline */
+@media (min-width: 650px) and (max-width: 749px) {
   .cs-hp-vertical-group {
     display: none;
   }
 
   .cs-hp-box-desktop {
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr;
+    min-width: auto;
+    width: fit-content;
+  }
+
+  /* Hide Temp column (label and input) */
+  .cs-hp-label-temp,
+  .cs-hp-temp-input-wrapper {
+    display: none;
+  }
+
+  /* Show inline temp HP */
+  .cs-hp-temp-inline {
+    display: inline;
   }
 }
 
