@@ -1,4 +1,5 @@
 // Games Page - List all user's games
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useGames, useModalState } from '../hooks';
 import { isGameMaster } from '../services/games.service';
@@ -14,7 +15,11 @@ import {
   PageEmpty,
   PageGrid,
   DropdownMenu,
+  Input,
+  Select,
 } from '../components/shared';
+import { GAME_SYSTEM_NAMES, DEFAULT_GAME_SYSTEM, type GameSystem } from 'shared';
+import './GamesPage.css';
 
 export default function GamesPage() {
   const navigate = useNavigate();
@@ -22,6 +27,37 @@ export default function GamesPage() {
   const { games, loading } = useGames();
   const createModal = useModalState();
   const settingsModal = useModalState();
+
+  // Filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [systemFilter, setSystemFilter] = useState<GameSystem | ''>('');
+  const [gmOnlyFilter, setGmOnlyFilter] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
+
+  // System options for select
+  const systemOptions = useMemo(() => [
+    { value: '', label: 'All Systems' },
+    ...Object.entries(GAME_SYSTEM_NAMES).map(([value, label]) => ({ value, label })),
+  ], []);
+
+  // Filtered games
+  const filteredGames = useMemo(() => {
+    return games.filter((game) => {
+      // Search by name
+      if (searchQuery && !game.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return false;
+      }
+      // Filter by system (treat undefined as default system)
+      if (systemFilter && (game.system || DEFAULT_GAME_SYSTEM) !== systemFilter) {
+        return false;
+      }
+      // Filter by GM status
+      if (gmOnlyFilter && firebaseUser && !isGameMaster(game, firebaseUser.uid)) {
+        return false;
+      }
+      return true;
+    });
+  }, [games, searchQuery, systemFilter, gmOnlyFilter, firebaseUser]);
 
   const handleGameClick = (gameId: string) => {
     navigate(`/games/${gameId}/characters`);
@@ -75,6 +111,41 @@ export default function GamesPage() {
           }
         />
 
+        {/* Search and Filters */}
+        <div className="games-filters">
+          <button
+            className="games-filters-toggle"
+            onClick={() => setFiltersExpanded(!filtersExpanded)}
+          >
+            🔍 {filtersExpanded ? 'Hide Filters' : 'Search & Filter'}
+          </button>
+          <div className={`games-filters-content ${filtersExpanded ? 'expanded' : ''}`}>
+            <Input
+              className="games-search"
+              type="text"
+              placeholder="Search by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <div className="games-filters-row">
+              <Select
+                className="games-filter-select"
+                options={systemOptions}
+                value={systemFilter}
+                onChange={(e) => setSystemFilter(e.target.value as GameSystem | '')}
+              />
+              <label className="games-filter-checkbox">
+                <input
+                  type="checkbox"
+                  checked={gmOnlyFilter}
+                  onChange={(e) => setGmOnlyFilter(e.target.checked)}
+                />
+                <span>GM</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
         {games.length === 0 ? (
           <PageEmpty
             icon="🎲"
@@ -85,9 +156,15 @@ export default function GamesPage() {
               onClick: createModal.open,
             }}
           />
+        ) : filteredGames.length === 0 ? (
+          <PageEmpty
+            icon="🔍"
+            title="No Games Found"
+            description="Try adjusting your search or filters."
+          />
         ) : (
           <PageGrid>
-            {games.map((game) => (
+            {filteredGames.map((game) => (
               <GameCard
                 key={game.id}
                 game={game}
