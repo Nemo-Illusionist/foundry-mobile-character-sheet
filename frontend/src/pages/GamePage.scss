@@ -1,3 +1,5 @@
+@use '../styles/breakpoints' as *;
+
 .characters-page {
   min-height: 100vh;
   padding: 2rem 1rem;
@@ -126,8 +128,8 @@
   gap: 1.5rem;
 }
 
-/* Responsive - MOBILE: < 650px */
-@media (max-width: 649px) {
+/* Responsive - MOBILE */
+@include mobile {
   .characters-page {
     padding: 1.5rem 1rem;
   }

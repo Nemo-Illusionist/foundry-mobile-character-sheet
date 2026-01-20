@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { NumberInput } from '../../../../../shared';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import type { Character } from 'shared';
-import './HP.css';
+import './HP.scss';
 
 interface HPBoxDesktopProps {
   character: Character;

@@ -1,3 +1,5 @@
+@use '../../../../../../styles/breakpoints' as *;
+
 /* ==================== RIGHT PANEL ==================== */
 /* Desktop/Wide Tablet right panel content */
 
@@ -89,7 +91,7 @@
 }
 
 /* DESKTOP: >= 1024px - show expanded conditions list */
-@media (min-width: 1024px) {
+@include desktop {
   .cs-conditions-stat {
     flex: 1;
     min-height: 80px;
@@ -539,7 +541,7 @@
 }
 
 /* Mobile responsive */
-@media (max-width: 649px) {
+@include mobile {
   .cs-bio-appearance-grid {
     grid-template-columns: repeat(2, 1fr);
   }

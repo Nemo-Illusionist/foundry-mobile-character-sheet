@@ -4,7 +4,7 @@ import { NumberInput } from '../../../../../shared';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import { getAbilityModifier } from '../../../core';
 import type { Character } from 'shared';
-import './Modals.css';
+import './Modals.scss';
 
 interface CombatStatsModalProps {
   character: Character;

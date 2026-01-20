@@ -1,13 +1,15 @@
+@use '../../styles/breakpoints' as *;
+
 /* Character Sheet Layout - Base styles for all game systems */
 /* See: src/styles/breakpoints.ts for full breakpoint documentation */
 
 /*
- * BREAKPOINTS (значения из breakpoints.ts):
- * >= 1024px (DESKTOP)      : 2 колонки abilities, правая панель (1:1), заголовок скрыт
- * >= 850px  (WIDE_TABLET)  : 1 колонка abilities, правая панель (1:2), заголовок скрыт
- * >= 750px  (TABLET)       : 2 колонки abilities, заголовок виден, Heal/Damage видны
- * >= 650px  (SMALL_TABLET) : 2 колонки abilities, заголовок виден, Heal/Damage скрыты
- * < 650px   (MOBILE)       : вертикальный список, заголовок виден
+ * BREAKPOINTS (значения из _breakpoints.scss):
+ * >= $DESKTOP (1024px)     : 2 колонки abilities, правая панель (1:1), заголовок скрыт
+ * >= $WIDE_TABLET (850px)  : 1 колонка abilities, правая панель (1:2), заголовок скрыт
+ * >= $TABLET (750px)       : 2 колонки abilities, заголовок виден, Heal/Damage видны
+ * >= $SMALL_TABLET (650px) : 2 колонки abilities, заголовок виден, Heal/Damage скрыты
+ * < $MOBILE (650px)        : вертикальный список, заголовок виден
  */
 
 .character-sheet-page {
@@ -77,19 +79,19 @@
 
 /* ==================== RESPONSIVE ==================== */
 
-/* MOBILE: < 650px (BREAKPOINTS.MOBILE) */
-@media (max-width: 649px) {
+/* MOBILE */
+@include mobile {
   .character-sheet-page {
     padding: 1rem;
   }
 }
 
-/* SMALL_TABLET: >= 650px - handled in Abilities.css, HP.css */
-/* TABLET: >= 750px - handled in HP.css */
+/* SMALL_TABLET: >= 650px - handled in Abilities.scss, HP.scss */
+/* TABLET: >= 750px - handled in HP.scss */
 
-/* WIDE_TABLET: >= 850px (BREAKPOINTS.WIDE_TABLET) */
+/* WIDE_TABLET */
 /* Показываем правую панель (1:2), скрываем заголовок "Abilities & Skills" */
-@media (min-width: 850px) {
+@include wide-tablet-up {
   .cs-main-layout {
     flex-direction: row;
     gap: 1.5rem;
@@ -117,9 +119,9 @@
   }
 }
 
-/* DESKTOP: >= 1024px (BREAKPOINTS.DESKTOP) */
+/* DESKTOP */
 /* 2 колонки abilities, правая панель (1:1) */
-@media (min-width: 1024px) {
+@include desktop {
   .cs-main-layout {
     gap: 2rem;
   }

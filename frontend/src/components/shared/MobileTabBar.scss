@@ -1,3 +1,5 @@
+@use '../../styles/breakpoints' as *;
+
 /* MobileTabBar Component Styles */
 
 .mobile-tab-bar {
@@ -12,8 +14,8 @@
   z-index: 100;
 }
 
-/* Show only on mobile (< 650px) */
-@media (max-width: 649px) {
+/* Show only on mobile */
+@include mobile {
   .mobile-tab-bar {
     display: flex;
   }

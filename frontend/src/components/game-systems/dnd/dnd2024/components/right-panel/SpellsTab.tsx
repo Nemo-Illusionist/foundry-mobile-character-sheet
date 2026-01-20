@@ -8,7 +8,7 @@ import { ABILITY_ORDER, ABILITY_NAMES, getSpellSlotsForLevel, CASTER_TYPE_NAMES 
 import type { SpellcasterType } from '../../constants';
 import { SpellModal } from './SpellModal';
 import type { Character, CharacterSpellEntry, AbilityName } from 'shared';
-import './SpellsTab.css';
+import './SpellsTab.scss';
 
 interface SpellsTabProps {
   character: Character;

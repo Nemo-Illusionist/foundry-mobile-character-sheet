@@ -1,3 +1,5 @@
+@use '../styles/breakpoints' as *;
+
 /* AuthenticatedLayout Styles */
 
 .authenticated-layout {
@@ -6,11 +8,9 @@
 
 .authenticated-content {
   min-height: 100vh;
-}
 
-/* Offset content when side nav is visible (>= 650px) */
-@media (min-width: 650px) {
-  .authenticated-content {
+  /* Offset content when side nav is visible */
+  @include small-tablet-up {
     margin-left: 52px;
   }
 }

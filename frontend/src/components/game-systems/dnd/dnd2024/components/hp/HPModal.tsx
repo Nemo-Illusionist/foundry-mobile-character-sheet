@@ -8,7 +8,7 @@ import { DeathSavesSection } from './DeathSavesSection';
 import { HPSettingsSection } from './HPSettingsSection';
 import { HitDiceSection } from './HitDiceSection';
 import type { Character } from 'shared';
-import './HP.css';
+import './HP.scss';
 
 interface HPModalProps {
   character: Character;

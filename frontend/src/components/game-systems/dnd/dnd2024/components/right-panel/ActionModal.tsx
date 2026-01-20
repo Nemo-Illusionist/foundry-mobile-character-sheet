@@ -3,7 +3,7 @@
 import { NumberInput } from '../../../../../shared';
 import { ABILITY_NAMES, ABILITY_ORDER, DAMAGE_TYPES } from '../../constants';
 import type { CharacterAction, AbilityName } from 'shared';
-import '../modals/Modals.css';
+import '../modals/Modals.scss';
 
 interface ActionModalProps {
   action: CharacterAction;

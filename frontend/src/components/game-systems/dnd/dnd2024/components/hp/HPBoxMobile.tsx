@@ -1,7 +1,7 @@
 // D&D 2024 - HP Box Mobile Component
 
 import type { Character } from 'shared';
-import './HP.css';
+import './HP.scss';
 
 interface HPBoxMobileProps {
   character: Character;

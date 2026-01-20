@@ -3,7 +3,7 @@
 import { CONDITIONS } from '../../constants';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import type { Character, ConditionName } from 'shared';
-import './Modals.css';
+import './Modals.scss';
 
 interface ConditionsModalProps {
   character: Character;

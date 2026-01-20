@@ -1,7 +1,7 @@
 // SideNav Component - Left navigation panel for tablets and desktops (>= 650px)
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { DropdownMenu } from './DropdownMenu';
-import './SideNav.css';
+import './SideNav.scss';
 
 interface SideNavProps {
   variant: 'games' | 'game';

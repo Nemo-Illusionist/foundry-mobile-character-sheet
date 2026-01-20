@@ -5,7 +5,9 @@
       "Bash(npm run build:*)",
       "mcp__jetbrains-web-storm__list_directory_tree",
       "Bash(npx tsc:*)",
-      "mcp__jetbrains-web-storm__get_file_problems"
+      "mcp__jetbrains-web-storm__get_file_problems",
+      "Bash(npm install:*)",
+      "Bash(npm *)"
     ]
   }
 }

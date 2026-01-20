@@ -1,3 +1,5 @@
+@use '../../styles/breakpoints' as *;
+
 /* PageLayout Component Styles */
 
 .page-layout {
@@ -145,8 +147,8 @@
   gap: 1.5rem;
 }
 
-/* Responsive - MOBILE: < 650px */
-@media (max-width: 649px) {
+/* Responsive - MOBILE */
+@include mobile {
   .page-layout {
     padding: 1.5rem 1rem;
   }

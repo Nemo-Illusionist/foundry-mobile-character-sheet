@@ -1,3 +1,5 @@
+@use '../../../../../../styles/breakpoints' as *;
+
 /* SpellsTab Styles - D&D Beyond inspired */
 
 .cs-spells-tab {
@@ -425,7 +427,7 @@
 }
 
 /* Responsive */
-@media (max-width: 649px) {
+@include mobile {
   .cs-spellcasting-stats {
     gap: 0.5rem;
     padding: 0.5rem;

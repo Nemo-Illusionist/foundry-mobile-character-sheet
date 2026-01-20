@@ -6,7 +6,7 @@ import { getProficiencyBonus } from '../../constants';
 import { HPBoxDesktop, HPBoxMobile, HPModal } from '../hp';
 import { SettingsModal, LevelXPModal, ConditionsModal, CombatStatsModal } from '../modals';
 import type { Character } from 'shared';
-import './CharacterHeader.css';
+import './CharacterHeader.scss';
 
 interface CharacterHeaderProps {
   character: Character;

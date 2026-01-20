@@ -1,3 +1,5 @@
+@use '../../styles/breakpoints' as *;
+
 /* SideNav Component Styles */
 
 .side-nav {
@@ -13,11 +15,9 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 0.75rem 0;
-}
 
-/* Show on small tablet and larger (>= 650px) */
-@media (min-width: 650px) {
-  .side-nav {
+  /* Show on small tablet and larger */
+  @include small-tablet-up {
     display: flex;
   }
 }
@@ -84,21 +84,22 @@
   margin-top: 0;
 }
 
-/* Hide buttons that are duplicated in side nav (>= 650px) */
-@media (min-width: 650px) {
+/* Hide buttons that are duplicated in side nav */
+@include small-tablet-up {
   .hide-on-side-nav {
     display: none !important;
   }
-}
 
-/* Hide back button when side nav is visible */
-@media (min-width: 650px) {
   .page-back-btn {
+    display: none !important;
+  }
+
+  .mobile-menu {
     display: none !important;
   }
 }
 
-/* Mobile menu - visible only on mobile (< 650px), positioned top-right */
+/* Mobile menu - visible only on mobile, positioned top-right */
 .mobile-menu {
   position: fixed;
   top: 1rem;
@@ -106,14 +107,8 @@
   z-index: 50;
 }
 
-@media (min-width: 650px) {
-  .mobile-menu {
-    display: none !important;
-  }
-}
-
-/* Hide on mobile (< 650px) */
-@media (max-width: 649px) {
+/* Hide on mobile */
+@include mobile {
   .hide-on-mobile {
     display: none !important;
   }

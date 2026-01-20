@@ -1,7 +1,7 @@
 // D&D 2024 - Spell Modal Component
 
 import type { CharacterSpellEntry, MagicSchool } from 'shared';
-import '../modals/Modals.css';
+import '../modals/Modals.scss';
 
 interface SpellModalProps {
   spell: CharacterSpellEntry;

@@ -1,5 +1,7 @@
+@use '../../../../../../styles/breakpoints' as *;
+
 /* ==================== HP COMPONENTS ==================== */
-/* See: src/styles/breakpoints.ts for full breakpoint documentation */
+/* See: src/styles/_breakpoints.scss for full breakpoint documentation */
 
 /*
  * BREAKPOINTS (значения из breakpoints.ts):
@@ -867,7 +869,7 @@
 }
 
 /* SMALL_TABLET: 650-749px - скрываем Heal/Damage и Temp column, показываем temp inline */
-@media (min-width: 650px) and (max-width: 749px) {
+@include small-tablet-only {
   .cs-hp-vertical-group {
     display: none;
   }
@@ -891,7 +893,7 @@
 }
 
 /* MOBILE: < 650px (BREAKPOINTS.MOBILE) */
-@media (max-width: 649px) {
+@include mobile {
   /* Fix HP modal overflow */
   .cs-hp-modal-row {
     gap: 0.5rem;

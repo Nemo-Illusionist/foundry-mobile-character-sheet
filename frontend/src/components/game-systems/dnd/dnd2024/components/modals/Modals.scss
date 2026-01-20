@@ -1,3 +1,5 @@
+@use '../../../../../../styles/breakpoints' as *;
+
 /* ==================== MODALS ==================== */
 
 .cs-modal-overlay {
@@ -426,7 +428,7 @@ input[type="number"] {
 }
 
 /* Mobile Responsive - Bottom Sheet */
-@media (max-width: 649px) {
+@include mobile {
   .cs-modal-overlay {
     align-items: flex-end;
     padding: 0;

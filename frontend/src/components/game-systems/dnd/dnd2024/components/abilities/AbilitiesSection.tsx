@@ -7,7 +7,7 @@ import { CompactAbilityBlock } from './CompactAbilityBlock';
 import { PassiveSenses } from './PassiveSenses';
 import { EquipmentProficiencies } from '../proficiencies/EquipmentProficiencies';
 import type { Character, AbilityName, SkillName } from 'shared';
-import './Abilities.css';
+import './Abilities.scss';
 
 interface AbilitiesSectionProps {
   character: Character;

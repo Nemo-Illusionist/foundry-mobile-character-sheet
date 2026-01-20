@@ -4,7 +4,7 @@
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, LoadingSpinner } from '../shared';
-import './CharacterSheetLayout.css';
+import './CharacterSheetLayout.scss';
 
 interface CharacterSheetLayoutProps {
   children: ReactNode;

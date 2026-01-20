@@ -1,3 +1,5 @@
+@use '../styles/breakpoints' as *;
+
 /* Override page header margin for games page */
 .page-layout .page-header {
   margin-bottom: 1rem;
@@ -205,8 +207,8 @@
   gap: 1.5rem;
 }
 
-/* Responsive - MOBILE: < 650px */
-@media (max-width: 649px) {
+/* Responsive - MOBILE */
+@include mobile {
   .games-page {
     padding: 1.5rem 1rem;
   }

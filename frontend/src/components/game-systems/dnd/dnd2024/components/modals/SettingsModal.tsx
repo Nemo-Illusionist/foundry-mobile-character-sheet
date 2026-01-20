@@ -7,7 +7,7 @@ import { isGameMaster } from '../../../../../../services/games.service';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import { getUsers } from '../../../../../../services/users.service';
 import type { Character, User } from 'shared';
-import './Modals.css';
+import './Modals.scss';
 
 interface SettingsModalProps {
   character: Character;

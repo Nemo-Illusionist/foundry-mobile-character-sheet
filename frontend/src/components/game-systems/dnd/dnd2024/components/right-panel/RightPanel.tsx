@@ -9,7 +9,7 @@ import { SpellsTab } from './SpellsTab';
 import { InventoryTab } from './InventoryTab';
 import { BiographyTab } from './BiographyTab';
 import type { Character } from 'shared';
-import './RightPanel.css';
+import './RightPanel.scss';
 
 interface RightPanelProps {
   character: Character;

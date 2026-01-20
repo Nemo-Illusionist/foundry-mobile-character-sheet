@@ -1,3 +1,5 @@
+@use '../../../../../../styles/breakpoints' as *;
+
 /* ==================== HEADER ==================== */
 
 .cs-header {
@@ -258,13 +260,13 @@
 /* ==================== RESPONSIVE ==================== */
 
 /* SMALL_TABLET: 650-749px - скрываем Proficiency */
-@media (min-width: 650px) and (max-width: 749px) {
+@include small-tablet-only {
   .cs-stat-proficiency {
     display: none;
   }
 }
 
-@media (max-width: 649px) {
+@include mobile {
   /* Restore padding on mobile */
   .cs-header {
     padding: 1rem;

@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 import { LoadingSpinner } from './LoadingSpinner';
 import { Button } from './Button';
-import './PageLayout.css';
+import './PageLayout.scss';
 
 interface PageLayoutProps {
   children: ReactNode;

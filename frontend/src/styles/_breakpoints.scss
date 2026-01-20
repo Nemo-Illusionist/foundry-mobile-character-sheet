@@ -1,0 +1,48 @@
+// Breakpoint constants - single source of truth
+// Keep in sync with breakpoints.ts
+// Usage: @use 'src/styles/breakpoints' as *;
+
+// Breakpoint values (same as breakpoints.ts)
+$MOBILE: 650px;        // Mobile: < 650px (use max-width: 649px)
+$SMALL_TABLET: 650px;  // Small Tablet: >= 650px
+$TABLET: 750px;        // Tablet: >= 750px
+$WIDE_TABLET: 850px;   // Wide Tablet: >= 850px
+$DESKTOP: 1024px;      // Desktop: >= 1024px
+
+// Mixins for media queries
+@mixin mobile {
+  @media (max-width: #{$MOBILE - 1}) {
+    @content;
+  }
+}
+
+@mixin small-tablet-up {
+  @media (min-width: $SMALL_TABLET) {
+    @content;
+  }
+}
+
+// Small tablet only: 650-749px
+@mixin small-tablet-only {
+  @media (min-width: $SMALL_TABLET) and (max-width: #{$TABLET - 1}) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: $TABLET) {
+    @content;
+  }
+}
+
+@mixin wide-tablet-up {
+  @media (min-width: $WIDE_TABLET) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $DESKTOP) {
+    @content;
+  }
+}

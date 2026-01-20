@@ -1,6 +1,6 @@
 // MobileTabBar Component - Bottom tab bar for mobile navigation
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import './MobileTabBar.css';
+import './MobileTabBar.scss';
 
 interface MobileTabBarProps {
   variant: 'game';

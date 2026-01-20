@@ -1,5 +1,7 @@
+@use '../../../../../../styles/breakpoints' as *;
+
 /* ==================== ABILITIES & SKILLS ==================== */
-/* See: src/styles/breakpoints.ts for full breakpoint documentation */
+/* See: src/styles/_breakpoints.scss for full breakpoint documentation */
 
 /*
  * BREAKPOINTS (значения из breakpoints.ts):
@@ -401,7 +403,7 @@
 }
 
 /* SMALL_TABLET: >= 650px (BREAKPOINTS.SMALL_TABLET) - 2 колонки compact */
-@media (min-width: 650px) {
+@include small-tablet-up {
   .cs-mobile-only {
     display: none;
   }
@@ -413,7 +415,7 @@
 }
 
 /* WIDE_TABLET: >= 850px (BREAKPOINTS.WIDE_TABLET) - 1 колонка (правая панель появляется) */
-@media (min-width: 850px) {
+@include wide-tablet-up {
   .cs-tablet-desktop-only {
     flex-direction: column;
   }
@@ -430,7 +432,7 @@
 }
 
 /* DESKTOP: >= 1024px (BREAKPOINTS.DESKTOP) - 2 колонки compact */
-@media (min-width: 1024px) {
+@include desktop {
   .cs-tablet-desktop-only {
     flex-direction: row;
   }

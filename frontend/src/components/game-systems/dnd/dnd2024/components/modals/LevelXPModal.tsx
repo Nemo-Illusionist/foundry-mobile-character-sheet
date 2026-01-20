@@ -6,7 +6,7 @@ import { updateCharacter } from '../../../../../../services/characters.service';
 import { XP_THRESHOLDS, calculateLevelFromXP, getProficiencyBonus, getSpellSlotsForLevel } from '../../constants';
 import type { SpellcasterType } from '../../constants';
 import type { Character } from 'shared';
-import './Modals.css';
+import './Modals.scss';
 
 // Helper to get spell slots update if needed
 function getSpellSlotsUpdate(character: Character, newLevel: number) {

@@ -2,7 +2,7 @@
 
 import { NumberInput } from '../../../../../shared';
 import type { InventoryItem } from 'shared';
-import '../modals/Modals.css';
+import '../modals/Modals.scss';
 
 interface InventoryItemModalProps {
   item: InventoryItem;

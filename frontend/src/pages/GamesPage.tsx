@@ -19,7 +19,7 @@ import {
   Select,
 } from '../components/shared';
 import { GAME_SYSTEM_NAMES, DEFAULT_GAME_SYSTEM, type GameSystem } from 'shared';
-import './GamesPage.css';
+import './GamesPage.scss';
 
 export default function GamesPage() {
   const navigate = useNavigate();

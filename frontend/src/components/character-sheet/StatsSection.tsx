@@ -2,7 +2,7 @@
 import { Card, NumberInput } from '../shared';
 import { getAbilityModifier, getSavingThrowModifier, getSkillModifier, updateCharacter } from '../../services/characters.service';
 import type { Character, AbilityName, SkillName } from 'shared';
-import './StatsSection.css';
+import './StatsSection.scss';
 
 /**
  * Skill ability mapping (D&D 2024 SRD 5.2)
