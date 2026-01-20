@@ -42,7 +42,7 @@ export default function GameManagePage() {
               items={[
                 { label: 'Characters', icon: '🎭', onClick: () => navigate(`/games/${gameId}/characters`) },
                 { label: 'Items', icon: '📦', onClick: () => navigate(`/games/${gameId}/items`) },
-                { label: 'Back to Games', icon: '⬅️', onClick: () => navigate('/games') },
+                { label: 'Back to Games', icon: '🎲', onClick: () => navigate('/games') },
               ]}
             />
           </div>

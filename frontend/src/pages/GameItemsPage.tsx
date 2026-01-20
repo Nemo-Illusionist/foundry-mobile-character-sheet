@@ -1,7 +1,7 @@
 // Game Items Page - Shared game items (maps, notes, images)
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useAuth, useGameItems, useModalState } from '../hooks';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { useAuth, useGameItems, useGameMenuItems, useModalState } from '../hooks';
 import { useGame } from '../context/GameContext';
 import { isGameMaster } from '../services/games.service';
 import { filterGameItemsByVisibility, deleteGameItem } from '../services/gameItems.service';
@@ -19,7 +19,6 @@ import {
 import type { GameItem } from 'shared';
 
 export default function GameItemsPage() {
-  const navigate = useNavigate();
   const { gameId } = useParams<{ gameId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const { firebaseUser } = useAuth();
@@ -49,6 +48,7 @@ export default function GameItemsPage() {
   }
 
   const isGM = isGameMaster(game, firebaseUser.uid);
+  const menuItems = useGameMenuItems({ isGM, onAddItem: createModal.open });
   const visibleItems = filterGameItemsByVisibility(items, isGM);
 
   const handleDeleteItem = async (itemId: string) => {
@@ -63,14 +63,7 @@ export default function GameItemsPage() {
         subtitle={<p>{game.name}</p>}
         actions={
           <div className="mobile-menu">
-            <DropdownMenu
-              items={[
-                { label: 'Create Character', icon: '🎭', onClick: () => navigate(`/games/${gameId}/characters?action=create`) },
-                { label: 'Add Item', icon: '📦', onClick: createModal.open },
-                { label: 'Back to Games', icon: '⬅️', onClick: () => navigate('/games') },
-                ...(isGM ? [{ label: 'Game Management', icon: '⚙️', onClick: () => navigate(`/games/${gameId}/manage`) }] : []),
-              ]}
-            />
+            <DropdownMenu items={menuItems} />
           </div>
         }
       />

@@ -61,7 +61,7 @@ export function PlayersSection({ playerIds, gmId, gameId, currentUserId, onInvit
           Players ({players.length})
         </h3>
         <Button onClick={onInviteClick} variant="secondary">
-          + Invite Player
+          Invite Player
         </Button>
       </div>
 

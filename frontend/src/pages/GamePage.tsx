@@ -1,7 +1,7 @@
 // Characters Page - List all characters in a game (Refactored)
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useAuth, useCharacters, useModalState } from '../hooks';
+import { useAuth, useCharacters, useGameMenuItems, useModalState } from '../hooks';
 import { useGame } from '../context/GameContext';
 import { isGameMaster } from '../services/games.service';
 import { getUsers } from '../services/users.service';
@@ -29,6 +29,7 @@ export default function GamePage() {
   const [playerUsers, setPlayerUsers] = useState<Map<string, User>>(new Map());
 
   const isGM = currentGame && firebaseUser ? isGameMaster(currentGame, firebaseUser.uid) : false;
+  const menuItems = useGameMenuItems({ isGM, onCreateCharacter: createModal.open });
 
   // Handle ?action=create URL param
   useEffect(() => {
@@ -102,14 +103,7 @@ export default function GamePage() {
         title="Characters"
         actions={
           <div className="mobile-menu">
-            <DropdownMenu
-              items={[
-                { label: 'Create Character', icon: '🎭', onClick: createModal.open },
-                { label: 'Add Item', icon: '📦', onClick: () => navigate(`/games/${gameId}/items?action=create`) },
-                { label: 'Back to Games', icon: '⬅️', onClick: () => navigate('/games') },
-                ...(isGM ? [{ label: 'Game Management', icon: '⚙️', onClick: () => navigate(`/games/${gameId}/manage`) }] : []),
-              ]}
-            />
+            <DropdownMenu items={menuItems} />
           </div>
         }
       />

@@ -1,5 +1,6 @@
 // SideNav Component - Left navigation panel for tablets and desktops (>= 650px)
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useGameMenuItems } from '../../hooks';
 import { DropdownMenu } from './DropdownMenu';
 import './SideNav.scss';
 
@@ -15,6 +16,7 @@ export function SideNav({ variant, onCreateGame, onOpenSettings, onLogout, isGM 
   const navigate = useNavigate();
   const location = useLocation();
   const { gameId } = useParams<{ gameId: string }>();
+  const gameMenuItems = useGameMenuItems({ isGM });
 
   if (variant === 'games') {
     return (
@@ -40,13 +42,6 @@ export function SideNav({ variant, onCreateGame, onOpenSettings, onLogout, isGM 
   const isCharactersActive = currentPath === `/games/${gameId}/characters`;
   const isItemsActive = currentPath === `/games/${gameId}/items`;
 
-  const menuItems = [
-    { label: 'Create Character', icon: '🎭', onClick: () => navigate(`/games/${gameId}/characters?action=create`) },
-    { label: 'Add Item', icon: '📦', onClick: () => navigate(`/games/${gameId}/items?action=create`) },
-    { label: 'Back to Games', icon: '⬅️', onClick: () => navigate('/games') },
-    ...(isGM ? [{ label: 'Game Management', icon: '⚙️', onClick: () => navigate(`/games/${gameId}/manage`) }] : []),
-  ];
-
   return (
     <nav className="side-nav">
       <div className="side-nav-top">
@@ -70,7 +65,7 @@ export function SideNav({ variant, onCreateGame, onOpenSettings, onLogout, isGM 
         <DropdownMenu
           className="side-nav-dropdown"
           trigger={<span className="side-nav-icon">⚙️</span>}
-          items={menuItems}
+          items={gameMenuItems}
         />
       </div>
     </nav>
