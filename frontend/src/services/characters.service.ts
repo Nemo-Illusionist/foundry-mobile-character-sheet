@@ -84,7 +84,8 @@ function createDefaultCharacterData(
   gameId: string,
   ownerId: string,
   name: string,
-  sheetType: SheetType = 'character-2024'
+  sheetType: SheetType = 'character-2024',
+  isHidden: boolean = false
 ): { publicData: Omit<PublicCharacter, 'createdAt' | 'updatedAt'>; privateData: PrivateCharacterSheet } {
   const defaultAbilities = {
     str: 10,
@@ -144,7 +145,7 @@ function createDefaultCharacterData(
     ownerId,
     name,
     sheetType,
-    isHidden: false,
+    isHidden,
   };
 
   // Private data (stored in characters/{id}/private/sheet)
@@ -190,9 +191,10 @@ export async function createCharacter(
   gameId: string,
   ownerId: string,
   name: string,
-  sheetType: SheetType = 'character-2024'
+  sheetType: SheetType = 'character-2024',
+  isHidden: boolean = false
 ): Promise<string> {
-  const { publicData, privateData } = createDefaultCharacterData(gameId, ownerId, name, sheetType);
+  const { publicData, privateData } = createDefaultCharacterData(gameId, ownerId, name, sheetType, isHidden);
 
   // Generate a new document reference to get a unique ID
   const characterRef = doc(collection(db, 'games', gameId, 'characters'));

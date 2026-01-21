@@ -12,6 +12,7 @@ interface CreateCharacterModalProps {
   gameId: string;
   userId: string;
   gameSystem?: GameSystem;
+  isGM?: boolean;
 }
 
 export function CreateCharacterModal({
@@ -21,6 +22,7 @@ export function CreateCharacterModal({
   gameId,
   userId,
   gameSystem = 'dnd',
+  isGM = false,
 }: CreateCharacterModalProps) {
   const [name, setName] = useState('');
   const [sheetType, setSheetType] = useState<SheetType>('character-2024');
@@ -42,7 +44,8 @@ export function CreateCharacterModal({
     setError('');
 
     try {
-      const characterId = await createCharacter(gameId, userId, name.trim(), sheetType);
+      // GM's characters are hidden by default
+      const characterId = await createCharacter(gameId, userId, name.trim(), sheetType, isGM);
 
       // Reset form
       setName('');
