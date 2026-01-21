@@ -188,10 +188,15 @@ service cloud.firestore {
         // ==================== PRIVATE CHARACTER DATA ====================
         // Приватные данные листа персонажа - только owner или GM
         match /private/{docId} {
-          allow read, write: if isAuthenticated() && (
+          // Для чтения и обновления — проверяем владельца через родительский документ
+          allow read, update, delete: if isAuthenticated() && (
             isOwner(get(/databases/$(database)/documents/games/$(gameId)/characters/$(characterId)).data.ownerId) ||
             isGM()
           );
+
+          // Для создания — проверяем что пользователь участник игры
+          // (родительский документ ещё не существует при batch write)
+          allow create: if isAuthenticated() && isPlayer();
         }
       }
 
