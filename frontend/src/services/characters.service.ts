@@ -456,6 +456,7 @@ export function subscribeToGameCharacters(
 
 /**
  * Subscribe to a single character (merges public + private data)
+ * Waits for both public and private data to load before emitting
  */
 export function subscribeToCharacter(
   gameId: string,
@@ -467,14 +468,21 @@ export function subscribeToCharacter(
 
   let publicData: PublicCharacter | null = null;
   let privateData: PrivateCharacterSheet | null = null;
+  let publicLoaded = false;
+  let privateLoaded = false;
 
   const emitCharacter = () => {
-    if (publicData) {
-      if (privateData) {
-        callback({ ...publicData, ...privateData } as Character);
-      } else {
-        callback(publicData as unknown as Character);
-      }
+    // Wait for both subscriptions to load at least once
+    if (!publicLoaded || !privateLoaded) {
+      return;
+    }
+
+    if (publicData && privateData) {
+      callback({ ...publicData, ...privateData } as Character);
+    } else if (publicData) {
+      // Character exists but no private data (shouldn't happen normally)
+      console.warn('Character has no private data:', characterId);
+      callback(null);
     } else {
       callback(null);
     }
@@ -483,6 +491,7 @@ export function subscribeToCharacter(
   const publicUnsub = onSnapshot(
     publicRef,
     (snapshot) => {
+      publicLoaded = true;
       if (snapshot.exists()) {
         publicData = snapshot.data() as PublicCharacter;
       } else {
@@ -492,6 +501,7 @@ export function subscribeToCharacter(
     },
     (error) => {
       console.error('Error subscribing to character:', error);
+      publicLoaded = true;
       callback(null);
     }
   );
@@ -499,6 +509,7 @@ export function subscribeToCharacter(
   const privateUnsub = onSnapshot(
     privateRef,
     (snapshot) => {
+      privateLoaded = true;
       if (snapshot.exists()) {
         privateData = snapshot.data() as PrivateCharacterSheet;
       } else {
@@ -508,7 +519,8 @@ export function subscribeToCharacter(
     },
     (error) => {
       console.error('Error subscribing to private character data:', error);
-      // Don't call callback(null) here - public data might still be valid
+      privateLoaded = true;
+      emitCharacter();
     }
   );
 
