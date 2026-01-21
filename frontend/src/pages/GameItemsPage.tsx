@@ -27,6 +27,9 @@ export default function GameItemsPage() {
   const createModal = useModalState();
   const [selectedItem, setSelectedItem] = useState<GameItem | null>(null);
 
+  const isGM = game && firebaseUser ? isGameMaster(game, firebaseUser.uid) : false;
+  const menuItems = useGameMenuItems({ isGM, onAddItem: createModal.open });
+
   // Handle ?action=create URL param
   useEffect(() => {
     if (searchParams.get('action') === 'create') {
@@ -47,8 +50,6 @@ export default function GameItemsPage() {
     return null; // GameLayout handles loading
   }
 
-  const isGM = isGameMaster(game, firebaseUser.uid);
-  const menuItems = useGameMenuItems({ isGM, onAddItem: createModal.open });
   const visibleItems = filterGameItemsByVisibility(items, isGM);
 
   const handleDeleteItem = async (itemId: string) => {

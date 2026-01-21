@@ -194,6 +194,34 @@ service cloud.firestore {
           );
         }
       }
+
+      // ==================== KNOWLEDGE BASE ====================
+      match /knowledge/{type}/{itemId} {
+        // All game members can read knowledge base
+        allow read: if isAuthenticated() && isPlayer();
+
+        // All game members can create/update knowledge base items
+        allow create, update: if isAuthenticated() && isPlayer();
+
+        // Only GM or creator can delete
+        allow delete: if isAuthenticated() && (
+          isGM() || resource.data.createdBy == request.auth.uid
+        );
+      }
+
+      // ==================== GAME ITEMS ====================
+      match /gameItems/{itemId} {
+        // All game members can read game items
+        allow read: if isAuthenticated() && isPlayer();
+
+        // All game members can create/update game items
+        allow create, update: if isAuthenticated() && isPlayer();
+
+        // Only GM or creator can delete
+        allow delete: if isAuthenticated() && (
+          isGM() || resource.data.createdBy == request.auth.uid
+        );
+      }
     }
   }
 }
