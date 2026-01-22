@@ -4,6 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import { CharacterHeader } from './components/header';
 import { AbilitiesSection } from './components/abilities';
 import { RightPanel } from './components/right-panel';
+import { ConditionsModal } from './components/modals';
+import { updateCharacter } from '../../../../services/characters.service';
+import { getAbilityModifier } from '../core';
 import type { Character } from 'shared';
 
 interface CharacterSheetProps {
@@ -14,7 +17,8 @@ interface CharacterSheetProps {
 // Threshold in pixels to trigger collapse
 const SCROLL_THRESHOLD = 50;
 
-// Breakpoint for showing unified tabs (below this = mobile/tablet mode)
+// Breakpoints
+const MOBILE_BREAKPOINT = 650;
 const WIDE_TABLET_BREAKPOINT = 850;
 
 // Tab IDs for unified mobile navigation
@@ -24,18 +28,39 @@ export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
   const [headerExpanded, setHeaderExpanded] = useState(true);
   const [mobileTab, setMobileTab] = useState<MobileTabId>('abilities');
   const [isMobileMode, setIsMobileMode] = useState(false);
+  const [isTabletMode, setIsTabletMode] = useState(false); // 650-849px
+  const [conditionsOpen, setConditionsOpen] = useState(false);
   const lastScrollY = useRef(0);
   const isManualToggle = useRef(false);
 
-  // Track window width for mobile/desktop mode
+  // Track window width for mobile/tablet mode
   useEffect(() => {
     const checkWidth = () => {
-      setIsMobileMode(window.innerWidth < WIDE_TABLET_BREAKPOINT);
+      const width = window.innerWidth;
+      setIsMobileMode(width < WIDE_TABLET_BREAKPOINT);
+      setIsTabletMode(width >= MOBILE_BREAKPOINT && width < WIDE_TABLET_BREAKPOINT);
     };
     checkWidth();
     window.addEventListener('resize', checkWidth);
     return () => window.removeEventListener('resize', checkWidth);
   }, []);
+
+  // Stats row handlers
+  const initiativeModifier = getAbilityModifier(character.abilities.dex);
+  const displayedInitiative = character.initiativeOverride ?? initiativeModifier;
+  const activeConditions = character.conditions || [];
+
+  const handleInspirationToggle = async () => {
+    await updateCharacter(gameId, character.id, {
+      inspiration: !character.inspiration,
+    });
+  };
+
+  const handleExhaustionChange = async (level: number) => {
+    await updateCharacter(gameId, character.id, {
+      exhaustion: level,
+    });
+  };
 
   // Auto-collapse header on scroll (mobile only)
   useEffect(() => {
@@ -111,6 +136,51 @@ export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
 
       {/* Main content */}
       <div className="character-sheet-content">
+        {/* Tablet stats row (650-849px only) - not on mobile, they're in header */}
+        {isTabletMode && (
+          <div className="cs-tablet-stats-row">
+            <div
+              className="cs-mini-stat"
+              style={{ cursor: 'pointer' }}
+              onClick={handleInspirationToggle}
+            >
+              <div className="cs-mini-label">Inspiration</div>
+              <div className="cs-mini-value">{character.inspiration ? '✓' : '—'}</div>
+            </div>
+
+            <div className="cs-mini-stat">
+              <div className="cs-mini-label">Initiative</div>
+              <div className="cs-mini-value">
+                {displayedInitiative >= 0 ? '+' : ''}{displayedInitiative}
+              </div>
+            </div>
+
+            <div className="cs-mini-stat">
+              <div className="cs-mini-label">Exhaustion</div>
+              <select
+                className="cs-mini-value cs-exhaustion-select"
+                value={character.exhaustion || 0}
+                onChange={(e) => handleExhaustionChange(Number(e.target.value))}
+              >
+                {[0, 1, 2, 3, 4, 5, 6].map((level) => (
+                  <option key={level} value={level}>{level}</option>
+                ))}
+              </select>
+            </div>
+
+            <div
+              className="cs-mini-stat"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setConditionsOpen(true)}
+            >
+              <div className="cs-mini-label">Conditions</div>
+              <div className="cs-mini-value">
+                {activeConditions.length > 0 ? activeConditions.length : '—'}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Mobile/Tablet unified tab bar (< 850px) */}
         {isMobileMode && (
           <div className="cs-mobile-tab-bar">
@@ -149,6 +219,15 @@ export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
           </div>
         </div>
       </div>
+
+      {/* Conditions Modal for tablet stats row */}
+      {conditionsOpen && (
+        <ConditionsModal
+          character={character}
+          gameId={gameId}
+          onClose={() => setConditionsOpen(false)}
+        />
+      )}
     </>
   );
 }

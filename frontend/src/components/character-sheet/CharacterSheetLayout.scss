@@ -117,6 +117,63 @@
   background: rgba(124, 58, 237, 0.2);
 }
 
+/* ==================== TABLET STATS ROW ==================== */
+/* Shown only on tablet (650-849px), not on mobile (stats in header) */
+
+.cs-tablet-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.cs-tablet-stats-row .cs-mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.625rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.cs-tablet-stats-row .cs-mini-label {
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.cs-tablet-stats-row .cs-mini-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cs-tablet-stats-row .cs-exhaustion-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  text-align-last: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
 /* Hidden utility class */
 .cs-hidden {
   display: none !important;
