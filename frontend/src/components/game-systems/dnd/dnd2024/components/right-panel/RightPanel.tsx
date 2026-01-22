@@ -57,6 +57,8 @@ export function RightPanel({ character, gameId, externalTab, hideTabHeader }: Ri
   return (
     <div className="cs-right-panel">
       {/* Stats row: Inspiration, Initiative, Exhaustion, Conditions */}
+      {/* Hidden in mobile/tablet mode (when hideTabHeader is true) - stats shown in CharacterSheet */}
+      {!hideTabHeader && (
       <div className="cs-right-stats-row">
         <div
           className="cs-mini-stat"
@@ -116,6 +118,7 @@ export function RightPanel({ character, gameId, externalTab, hideTabHeader }: Ri
           </div>
         </div>
       </div>
+      )}
 
       {/* Tabbed content area */}
       <div className={`cs-tab-container ${hideTabHeader ? 'cs-no-tab-header' : ''}`}>
