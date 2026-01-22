@@ -429,17 +429,16 @@
 /* ==================== SPELLS TABLE ==================== */
 
 /* Column widths */
-.cs-spells-table .cs-col-prepared {
-  width: 32px;
-  text-align: center;
-}
-
 .cs-spells-table .cs-col-name {
   width: auto;
 }
 
 .cs-spells-table .cs-col-time {
   width: 40px;
+}
+
+.cs-spells-table .cs-col-range {
+  width: 70px;
 }
 
 .cs-spells-table .cs-col-hit {
@@ -456,11 +455,13 @@
 }
 
 /* Cell styles */
-.cs-cell-prepared {
-  text-align: center;
+.cs-cell-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
 }
 
-.cs-cell-time {
+.cs-cell-range {
   font-size: 0.75rem;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -493,7 +494,7 @@
 .cs-save-value {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--text-primary);
 }
 
 /* Prepared spell row */
@@ -560,6 +561,10 @@
     width: 32px;
   }
 
+  .cs-spells-table .cs-col-range {
+    width: 50px;
+  }
+
   .cs-spells-table .cs-col-hit {
     width: 40px;
   }
@@ -573,6 +578,7 @@
   }
 
   .cs-cell-time,
+  .cs-cell-range,
   .cs-cell-effect,
   .cs-cell-notes {
     font-size: 0.6875rem;

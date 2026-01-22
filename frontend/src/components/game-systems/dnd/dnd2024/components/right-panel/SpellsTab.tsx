@@ -139,14 +139,6 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
     });
   };
 
-  const togglePrepared = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const spell = spells.find((s) => s.id === id);
-    if (spell && spell.level > 0) {
-      await updateSpell(id, { prepared: !spell.prepared });
-    }
-  };
-
   const useSpellSlot = async (level: number, delta: number) => {
     const slot = spellSlots[level] || { current: 0, max: 0 };
     const newCurrent = Math.max(0, Math.min(slot.max, slot.current + delta));
@@ -409,9 +401,9 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
                   <table className="cs-data-table cs-spells-table">
                     <thead>
                       <tr>
-                        {level > 0 && <th className="cs-col-prepared"></th>}
                         <th className="cs-col-name">Name</th>
                         <th className="cs-col-time">Time</th>
+                        <th className="cs-col-range">Range</th>
                         <th className="cs-col-hit">Hit/DC</th>
                         <th className="cs-col-effect">Effect</th>
                         <th className="cs-col-notes">Notes</th>
@@ -449,19 +441,9 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
                             className={`cs-table-row ${spell.prepared ? 'prepared' : ''}`}
                             onClick={() => setEditingSpell(spell)}
                           >
-                            {level > 0 && (
-                              <td className="cs-cell-prepared">
-                                <span
-                                  className="cs-active-toggle"
-                                  onClick={(e) => togglePrepared(spell.id, e)}
-                                  title={spell.prepared ? 'Unprepare' : 'Prepare'}
-                                >
-                                  {spell.prepared ? '●' : '○'}
-                                </span>
-                              </td>
-                            )}
                             <td className="cs-cell-name">{spell.name}</td>
                             <td className="cs-cell-time">{formatCastingTime(spell.castingTime)}</td>
+                            <td className="cs-cell-range">{spell.range || '—'}</td>
                             <td className="cs-cell-hit">{hitDcDisplay}</td>
                             <td className="cs-cell-effect">{spell.damage || '—'}</td>
                             <td className="cs-cell-notes">{notes.join(', ') || '—'}</td>
