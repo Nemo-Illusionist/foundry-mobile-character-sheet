@@ -14,10 +14,28 @@ interface CharacterSheetProps {
 // Threshold in pixels to trigger collapse
 const SCROLL_THRESHOLD = 50;
 
+// Breakpoint for showing unified tabs (below this = mobile/tablet mode)
+const WIDE_TABLET_BREAKPOINT = 850;
+
+// Tab IDs for unified mobile navigation
+type MobileTabId = 'abilities' | 'actions' | 'spells' | 'inventory' | 'bio';
+
 export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
   const [headerExpanded, setHeaderExpanded] = useState(true);
+  const [mobileTab, setMobileTab] = useState<MobileTabId>('abilities');
+  const [isMobileMode, setIsMobileMode] = useState(false);
   const lastScrollY = useRef(0);
   const isManualToggle = useRef(false);
+
+  // Track window width for mobile/desktop mode
+  useEffect(() => {
+    const checkWidth = () => {
+      setIsMobileMode(window.innerWidth < WIDE_TABLET_BREAKPOINT);
+    };
+    checkWidth();
+    window.addEventListener('resize', checkWidth);
+    return () => window.removeEventListener('resize', checkWidth);
+  }, []);
 
   // Auto-collapse header on scroll (mobile only)
   useEffect(() => {
@@ -55,6 +73,33 @@ export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
     setHeaderExpanded(!headerExpanded);
   };
 
+  // Build available mobile tabs
+  const allMobileTabs: { id: MobileTabId; label: string }[] = [
+    { id: 'abilities', label: 'Stats' },
+    { id: 'actions', label: 'Actions' },
+    { id: 'spells', label: 'Spells' },
+    { id: 'inventory', label: 'Items' },
+    { id: 'bio', label: 'Bio' },
+  ];
+
+  // Filter out spells tab if hidden
+  const mobileTabs = allMobileTabs.filter(
+    (tab) => !(tab.id === 'spells' && character.hideSpellsTab)
+  );
+
+  // Ensure active tab is valid
+  useEffect(() => {
+    if (!mobileTabs.find((t) => t.id === mobileTab) && mobileTabs.length > 0) {
+      setMobileTab(mobileTabs[0].id);
+    }
+  }, [mobileTabs, mobileTab]);
+
+  // Map mobile tab to RightPanel tab
+  const getRightPanelTab = (): 'actions' | 'spells' | 'inventory' | 'bio' | null => {
+    if (mobileTab === 'abilities') return null;
+    return mobileTab;
+  };
+
   return (
     <>
       <CharacterHeader
@@ -64,14 +109,43 @@ export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
         onToggleExpand={handleToggleExpand}
       />
 
-      {/* Desktop 2-panel layout */}
+      {/* Main content */}
       <div className="character-sheet-content">
-        <div className="cs-main-layout">
-          <div className="cs-main-left">
-            <AbilitiesSection character={character} gameId={gameId} />
+        {/* Mobile/Tablet unified tab bar (< 850px) */}
+        {isMobileMode && (
+          <div className="cs-mobile-tab-bar">
+            {mobileTabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`cs-mobile-tab-btn ${mobileTab === tab.id ? 'active' : ''}`}
+                onClick={() => setMobileTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
-          <div className="cs-main-right cs-desktop-only">
-            <RightPanel character={character} gameId={gameId} />
+        )}
+
+        <div className="cs-main-layout">
+          {/* Left panel: Abilities - show on desktop always, on mobile only when abilities tab is active */}
+          <div className={`cs-main-left ${isMobileMode && mobileTab !== 'abilities' ? 'cs-hidden' : ''}`}>
+            <AbilitiesSection
+              character={character}
+              gameId={gameId}
+              hideSectionHeader={isMobileMode}
+            />
+          </div>
+
+          {/* Right panel: Actions/Spells/Inventory/Bio */}
+          {/* On desktop (>= 850px): always visible with internal tabs */}
+          {/* On mobile/tablet (< 850px): visible when non-abilities tab selected, no internal tabs */}
+          <div className={`cs-main-right ${isMobileMode ? (mobileTab === 'abilities' ? 'cs-hidden' : 'cs-mobile-right-panel') : 'cs-desktop-only'}`}>
+            <RightPanel
+              character={character}
+              gameId={gameId}
+              externalTab={isMobileMode ? getRightPanelTab() : undefined}
+              hideTabHeader={isMobileMode}
+            />
           </div>
         </div>
       </div>

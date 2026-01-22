@@ -14,13 +14,23 @@ import './RightPanel.scss';
 interface RightPanelProps {
   character: Character;
   gameId: string;
+  externalTab?: 'actions' | 'spells' | 'inventory' | 'bio' | null;
+  hideTabHeader?: boolean;
 }
 
 type TabId = 'actions' | 'spells' | 'inventory' | 'bio';
 
-export function RightPanel({ character, gameId }: RightPanelProps) {
+export function RightPanel({ character, gameId, externalTab, hideTabHeader }: RightPanelProps) {
   const [conditionsOpen, setConditionsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabId>('actions');
+  const [internalTab, setInternalTab] = useState<TabId>('actions');
+
+  // Use external tab if provided, otherwise use internal state
+  const activeTab = externalTab ?? internalTab;
+  const setActiveTab = (tab: TabId) => {
+    if (!externalTab) {
+      setInternalTab(tab);
+    }
+  };
 
   const initiativeModifier = getAbilityModifier(character.abilities.dex);
   const activeConditions = character.conditions || [];
@@ -37,12 +47,12 @@ export function RightPanel({ character, gameId }: RightPanelProps) {
     !(tab.id === 'spells' && character.hideSpellsTab)
   );
 
-  // Switch to first available tab if current is hidden
+  // Switch to first available tab if current is hidden (only when using internal tabs)
   useEffect(() => {
-    if (!tabs.find((t) => t.id === activeTab) && tabs.length > 0) {
-      setActiveTab(tabs[0].id);
+    if (!externalTab && !tabs.find((t) => t.id === activeTab) && tabs.length > 0) {
+      setInternalTab(tabs[0].id);
     }
-  }, [tabs, activeTab]);
+  }, [tabs, activeTab, externalTab]);
 
   return (
     <div className="cs-right-panel">
@@ -108,18 +118,20 @@ export function RightPanel({ character, gameId }: RightPanelProps) {
       </div>
 
       {/* Tabbed content area */}
-      <div className="cs-tab-container">
-        <div className="cs-tab-header">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`cs-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      <div className={`cs-tab-container ${hideTabHeader ? 'cs-no-tab-header' : ''}`}>
+        {!hideTabHeader && (
+          <div className="cs-tab-header">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`cs-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="cs-tab-content">
           {activeTab === 'actions' && (
             <ActionsTab character={character} gameId={gameId} />

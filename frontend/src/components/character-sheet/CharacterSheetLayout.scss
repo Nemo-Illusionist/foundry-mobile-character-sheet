@@ -77,6 +77,56 @@
   display: flex;
 }
 
+/* ==================== MOBILE TAB BAR ==================== */
+
+.cs-mobile-tab-bar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cs-mobile-tab-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0.625rem 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.cs-mobile-tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cs-mobile-tab-btn.active {
+  color: var(--accent);
+  background: rgba(124, 58, 237, 0.2);
+}
+
+/* Hidden utility class */
+.cs-hidden {
+  display: none !important;
+}
+
+/* Mobile right panel - visible when tab selected */
+.cs-mobile-right-panel {
+  display: block;
+}
+
 /* ==================== RESPONSIVE ==================== */
 
 /* MOBILE */

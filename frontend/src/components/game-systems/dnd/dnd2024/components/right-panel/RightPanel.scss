@@ -155,6 +155,16 @@
   overflow-y: auto;
 }
 
+/* When tab header is hidden (mobile mode with external tabs) */
+.cs-tab-container.cs-no-tab-header {
+  border: none;
+  border-radius: 0;
+}
+
+.cs-tab-container.cs-no-tab-header .cs-tab-content {
+  padding: 0;
+}
+
 /* ==================== UNIFIED TAB FILTERS ==================== */
 
 .cs-tab-filters {

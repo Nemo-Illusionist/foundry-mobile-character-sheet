@@ -12,9 +12,10 @@ import './Abilities.scss';
 interface AbilitiesSectionProps {
   character: Character;
   gameId: string;
+  hideSectionHeader?: boolean;
 }
 
-export function AbilitiesSection({ character, gameId }: AbilitiesSectionProps) {
+export function AbilitiesSection({ character, gameId, hideSectionHeader }: AbilitiesSectionProps) {
   const handleAbilityChange = async (ability: AbilityName, value: number) => {
     await updateCharacter(gameId, character.id, {
       abilities: {
@@ -69,11 +70,13 @@ export function AbilitiesSection({ character, gameId }: AbilitiesSectionProps) {
 
   return (
     <>
-      {/* Section Header - visible on mobile and tablet, hidden on desktop */}
-      <div className="cs-section-header cs-hide-desktop">
-        <h2>Abilities & Skills</h2>
-        <button className="cs-section-menu">≡</button>
-      </div>
+      {/* Section Header - visible on mobile and tablet when not using unified tabs, hidden on desktop */}
+      {!hideSectionHeader && (
+        <div className="cs-section-header cs-hide-desktop">
+          <h2>Abilities & Skills</h2>
+          <button className="cs-section-menu">≡</button>
+        </div>
+      )}
 
       {/* Mobile Layout - vertical list */}
       <div className="cs-abilities-skills cs-mobile-only">
