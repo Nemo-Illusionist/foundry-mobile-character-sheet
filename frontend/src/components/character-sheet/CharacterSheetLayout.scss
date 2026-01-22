@@ -14,7 +14,7 @@
 
 .character-sheet-page {
   min-height: 100vh;
-  padding: 2rem 1rem;
+  padding: 1rem;
   background: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -82,7 +82,7 @@
 /* MOBILE */
 @include mobile {
   .character-sheet-page {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 }
 

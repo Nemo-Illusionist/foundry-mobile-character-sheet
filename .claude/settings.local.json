@@ -16,7 +16,8 @@
       "Bash(find:*)",
       "Bash(npx ts-node:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nSplit character data into public/private with Firestore-level access control\n\n- Add PublicCharacter and PrivateCharacterSheet types\n- Update Firestore rules for subcollection private/sheet\n- Refactor characters.service.ts for split document handling\n- Add usePublicCharacters hook with hidden character filtering\n- Create CharacterPublicInfoModal for viewing other players'' characters\n- Add migration script for existing data\n- Update .ai documentation\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }
