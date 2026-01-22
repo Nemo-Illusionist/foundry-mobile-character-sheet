@@ -81,37 +81,6 @@ export function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopPro
 
   return (
     <div className="cs-hp-box-desktop" onClick={onOpenModal} style={{ cursor: 'pointer' }}>
-      {/* Column 1: Heal/Input/Damage group - spans 2 rows */}
-      <div className="cs-hp-vertical-group">
-        <button
-          className="cs-hp-btn-small heal"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleHeal();
-          }}
-        >
-          Heal
-        </button>
-        <NumberInput
-          className="cs-hp-input-small"
-          value={healAmount}
-          onChange={setHealAmount}
-          onClick={(e) => e.stopPropagation()}
-          min={0}
-          defaultValue={0}
-          placeholder="0"
-        />
-        <button
-          className="cs-hp-btn-small damage"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDamage();
-          }}
-        >
-          Damage
-        </button>
-      </div>
-
       {isDead ? (
         <div className="cs-death-saves-both-rows">
           {/* Row 1: Success circles (horizontal) */}
@@ -144,13 +113,13 @@ export function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopPro
         </div>
       ) : (
         <>
-          {/* Column 2, Row 1: Hit Points label */}
+          {/* Column 1, Row 1: Hit Points label */}
           <div className="cs-hp-label">Hit Points</div>
 
-          {/* Column 3, Row 1: TEMP label */}
+          {/* Column 2, Row 1: TEMP label */}
           <div className="cs-hp-label-temp">TEMP</div>
 
-          {/* Column 2, Row 2: Current/Max HP display */}
+          {/* Column 1, Row 2: Current/Max HP display */}
           <div className="cs-hp-display-large">
             <span className="cs-hp-current">{character.hp.current}</span>
             <span className="cs-hp-separator">/</span>
@@ -160,7 +129,7 @@ export function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopPro
             )}
           </div>
 
-          {/* Column 3, Row 2: Temp HP input (centered) */}
+          {/* Column 2, Row 2: Temp HP input (centered) */}
           <div className="cs-hp-temp-input-wrapper">
             <NumberInput
               className="cs-hp-input-small"
@@ -173,6 +142,37 @@ export function HPBoxDesktop({ character, gameId, onOpenModal }: HPBoxDesktopPro
           </div>
         </>
       )}
+
+      {/* Column 3: Heal/Input/Damage group - spans 2 rows */}
+      <div className="cs-hp-vertical-group">
+        <button
+          className="cs-hp-btn-small heal"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleHeal();
+          }}
+        >
+          Heal
+        </button>
+        <NumberInput
+          className="cs-hp-input-small"
+          value={healAmount}
+          onChange={setHealAmount}
+          onClick={(e) => e.stopPropagation()}
+          min={0}
+          defaultValue={0}
+          placeholder="0"
+        />
+        <button
+          className="cs-hp-btn-small damage"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDamage();
+          }}
+        >
+          Damage
+        </button>
+      </div>
     </div>
   );
 }
