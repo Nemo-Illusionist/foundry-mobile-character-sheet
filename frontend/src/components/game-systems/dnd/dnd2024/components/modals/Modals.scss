@@ -296,6 +296,13 @@ input[type="number"] {
   cursor: pointer;
 }
 
+/* Components row (V, S, M checkboxes) */
+.cs-components-row {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+}
+
 /* Buttons */
 .cs-btn {
   padding: 0.625rem 1rem;

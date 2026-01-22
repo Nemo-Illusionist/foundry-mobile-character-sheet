@@ -1,7 +1,8 @@
 // D&D 2024 - Spell Modal Component
 
 import { useState, useEffect } from 'react';
-import type { CharacterSpellEntry, MagicSchool } from 'shared';
+import type { CharacterSpellEntry, MagicSchool, SpellAttackType, AbilityName } from 'shared';
+import { ABILITY_NAMES, ABILITY_ORDER, DAMAGE_TYPES } from '../../constants';
 import '../modals/Modals.scss';
 
 interface SpellModalProps {
@@ -47,6 +48,12 @@ const CASTING_TIMES = [
   '24 hours',
 ];
 
+const ATTACK_TYPES: { value: SpellAttackType; label: string }[] = [
+  { value: 'none', label: '—' },
+  { value: 'attack', label: 'Attack Roll' },
+  { value: 'save', label: 'Saving Throw' },
+];
+
 export function SpellModal({ spell, onUpdate, onDelete, onClose }: SpellModalProps) {
   // Local state for responsive editing
   const [localSpell, setLocalSpell] = useState<CharacterSpellEntry>(spell);
@@ -65,8 +72,15 @@ export function SpellModal({ spell, onUpdate, onDelete, onClose }: SpellModalPro
     if (localSpell.school !== spell.school) changes.school = localSpell.school;
     if (localSpell.castingTime !== spell.castingTime) changes.castingTime = localSpell.castingTime;
     if (localSpell.range !== spell.range) changes.range = localSpell.range;
-    if (localSpell.components !== spell.components) changes.components = localSpell.components;
+    if (localSpell.componentV !== spell.componentV) changes.componentV = localSpell.componentV;
+    if (localSpell.componentS !== spell.componentS) changes.componentS = localSpell.componentS;
+    if (localSpell.componentM !== spell.componentM) changes.componentM = localSpell.componentM;
+    if (localSpell.materials !== spell.materials) changes.materials = localSpell.materials;
     if (localSpell.duration !== spell.duration) changes.duration = localSpell.duration;
+    if (localSpell.attackType !== spell.attackType) changes.attackType = localSpell.attackType;
+    if (localSpell.saveAbility !== spell.saveAbility) changes.saveAbility = localSpell.saveAbility;
+    if (localSpell.damage !== spell.damage) changes.damage = localSpell.damage;
+    if (localSpell.damageType !== spell.damageType) changes.damageType = localSpell.damageType;
     if (localSpell.concentration !== spell.concentration) changes.concentration = localSpell.concentration;
     if (localSpell.ritual !== spell.ritual) changes.ritual = localSpell.ritual;
     if (localSpell.prepared !== spell.prepared) changes.prepared = localSpell.prepared;
@@ -132,7 +146,7 @@ export function SpellModal({ spell, onUpdate, onDelete, onClose }: SpellModalPro
             </div>
           </div>
 
-          {/* Casting Time and Range */}
+          {/* Casting Time and Duration */}
           <div className="cs-form-row">
             <div className="cs-form-group">
               <label>Casting Time</label>
@@ -147,28 +161,6 @@ export function SpellModal({ spell, onUpdate, onDelete, onClose }: SpellModalPro
               </select>
             </div>
             <div className="cs-form-group">
-              <label>Range</label>
-              <input
-                type="text"
-                value={localSpell.range ?? ''}
-                onChange={(e) => updateLocal({ range: e.target.value })}
-                placeholder="Self, Touch, 30 feet..."
-              />
-            </div>
-          </div>
-
-          {/* Components and Duration */}
-          <div className="cs-form-row">
-            <div className="cs-form-group">
-              <label>Components</label>
-              <input
-                type="text"
-                value={localSpell.components ?? ''}
-                onChange={(e) => updateLocal({ components: e.target.value })}
-                placeholder="V, S, M (a feather)"
-              />
-            </div>
-            <div className="cs-form-group">
               <label>Duration</label>
               <input
                 type="text"
@@ -176,6 +168,116 @@ export function SpellModal({ spell, onUpdate, onDelete, onClose }: SpellModalPro
                 onChange={(e) => updateLocal({ duration: e.target.value })}
                 placeholder="Instantaneous, 1 minute..."
               />
+            </div>
+          </div>
+
+          {/* Range/Area */}
+          <div className="cs-form-group">
+            <label>Range / Area</label>
+            <input
+              type="text"
+              value={localSpell.range ?? ''}
+              onChange={(e) => updateLocal({ range: e.target.value })}
+              placeholder="Self, Touch, 30 feet, 60-foot cone..."
+            />
+          </div>
+
+          {/* Components V, S, M */}
+          <div className="cs-form-group">
+            <label>Components</label>
+            <div className="cs-form-row cs-components-row">
+              <label className="cs-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={localSpell.componentV || false}
+                  onChange={(e) => updateLocal({ componentV: e.target.checked })}
+                />
+                <span>V</span>
+              </label>
+              <label className="cs-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={localSpell.componentS || false}
+                  onChange={(e) => updateLocal({ componentS: e.target.checked })}
+                />
+                <span>S</span>
+              </label>
+              <label className="cs-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={localSpell.componentM || false}
+                  onChange={(e) => updateLocal({ componentM: e.target.checked })}
+                />
+                <span>M</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Materials (only show if M is checked) */}
+          {localSpell.componentM && (
+            <div className="cs-form-group">
+              <label>Materials</label>
+              <input
+                type="text"
+                value={localSpell.materials ?? ''}
+                onChange={(e) => updateLocal({ materials: e.target.value })}
+                placeholder="a pinch of dust, a feather..."
+              />
+            </div>
+          )}
+
+          {/* Hit/DC */}
+          <div className="cs-form-row">
+            <div className="cs-form-group">
+              <label>Hit / DC</label>
+              <select
+                value={localSpell.attackType || 'none'}
+                onChange={(e) => updateLocal({ attackType: e.target.value as SpellAttackType })}
+              >
+                {ATTACK_TYPES.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+            {localSpell.attackType === 'save' && (
+              <div className="cs-form-group">
+                <label>Save Ability</label>
+                <select
+                  value={localSpell.saveAbility || ''}
+                  onChange={(e) => updateLocal({ saveAbility: (e.target.value as AbilityName) || undefined })}
+                >
+                  <option value="">—</option>
+                  {ABILITY_ORDER.map((ab) => (
+                    <option key={ab} value={ab}>{ABILITY_NAMES[ab]}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          {/* Damage/Healing */}
+          <div className="cs-form-row">
+            <div className="cs-form-group">
+              <label>Damage / Heal</label>
+              <input
+                type="text"
+                value={localSpell.damage ?? ''}
+                onChange={(e) => updateLocal({ damage: e.target.value })}
+                placeholder="2d10, 8d6..."
+              />
+            </div>
+            <div className="cs-form-group">
+              <label>Type</label>
+              <select
+                value={localSpell.damageType || ''}
+                onChange={(e) => updateLocal({ damageType: e.target.value || undefined })}
+              >
+                <option value="">—</option>
+                <option value="healing">Healing</option>
+                {DAMAGE_TYPES.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
             </div>
           </div>
 

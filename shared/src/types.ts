@@ -318,15 +318,25 @@ export interface InventoryItem {
 }
 
 // Simplified spell entry for character sheet (D&D Beyond style)
+export type SpellAttackType = 'none' | 'attack' | 'save';
+
 export interface CharacterSpellEntry {
   id: string;                   // Unique ID
   name: string;                 // Spell name
   level: number;                // 0-9 (0 = cantrip)
   school?: MagicSchool;         // School of magic
   castingTime?: string;         // "1 action", "1 bonus action", "1 reaction", etc.
-  range?: string;               // "Self", "Touch", "30 feet", etc.
-  components?: string;          // "V, S, M (a pinch of dust)"
+  range?: string;               // "Self", "Touch", "30 feet", "60-foot cone", etc.
+  components?: string;          // Legacy: "V, S, M (a pinch of dust)"
+  componentV?: boolean;         // Verbal component
+  componentS?: boolean;         // Somatic component
+  componentM?: boolean;         // Material component
+  materials?: string;           // Material components description
   duration?: string;            // "Instantaneous", "1 minute", "Concentration, 1 hour"
+  attackType?: SpellAttackType; // "none", "attack" (spell attack), "save" (saving throw)
+  saveAbility?: AbilityName;    // Which ability for saving throw (if attackType === 'save')
+  damage?: string;              // Damage/healing dice (e.g., "2d10", "8d6")
+  damageType?: string;          // Damage type (e.g., "fire", "radiant", "healing")
   ritual?: boolean;             // Can be cast as ritual
   concentration?: boolean;      // Requires concentration
   prepared?: boolean;           // Is spell prepared (for prepared casters)
