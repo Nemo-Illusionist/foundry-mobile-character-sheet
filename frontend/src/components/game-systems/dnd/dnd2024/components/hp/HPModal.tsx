@@ -118,9 +118,13 @@ export function HPModal({ character, gameId, onClose }: HPModalProps) {
 
   const hitDiceRemaining = hitDiceTotal - hitDiceUsed;
 
-  const openShortRestDialog = () => {
-    setShortRestDiceCount(Math.min(1, hitDiceRemaining));
-    setShowShortRestDialog(true);
+  const toggleShortRestDialog = () => {
+    if (showShortRestDialog) {
+      setShowShortRestDialog(false);
+    } else {
+      setShortRestDiceCount(Math.min(1, hitDiceRemaining));
+      setShowShortRestDialog(true);
+    }
   };
 
   const handleShortRest = async () => {
@@ -222,7 +226,7 @@ export function HPModal({ character, gameId, onClose }: HPModalProps) {
             <div className="cs-rest-buttons">
               <button
                 className="cs-short-rest-btn"
-                onClick={openShortRestDialog}
+                onClick={toggleShortRestDialog}
                 disabled={hitDiceRemaining <= 0}
               >
                 ☀️ Short Rest
