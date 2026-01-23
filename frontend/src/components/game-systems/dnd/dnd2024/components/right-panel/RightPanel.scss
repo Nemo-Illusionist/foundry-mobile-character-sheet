@@ -462,8 +462,13 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.cs-bio-identity .cs-bio-field:last-child:nth-child(odd) {
+.cs-bio-name,
+.cs-bio-owner {
   grid-column: 1 / -1;
+}
+
+.cs-bio-row {
+  display: contents;
 }
 
 .cs-bio-section {

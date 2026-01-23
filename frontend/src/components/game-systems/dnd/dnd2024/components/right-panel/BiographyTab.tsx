@@ -100,9 +100,9 @@ export function BiographyTab({ character, gameId }: BiographyTabProps) {
 
   return (
     <div className="cs-biography-tab">
-      {/* Name & Background */}
+      {/* Identity */}
       <div className="cs-bio-identity">
-        <div className="cs-bio-field">
+        <div className="cs-bio-field cs-bio-name">
           <label>Name</label>
           <input
             type="text"
@@ -111,17 +111,28 @@ export function BiographyTab({ character, gameId }: BiographyTabProps) {
             placeholder="Character name"
           />
         </div>
-        <div className="cs-bio-field">
-          <label>Background</label>
-          <input
-            type="text"
-            value={character.race}
-            onChange={(e) => update({ race: e.target.value })}
-            placeholder="Species / Origin"
-          />
+        <div className="cs-bio-row">
+          <div className="cs-bio-field">
+            <label>Species</label>
+            <input
+              type="text"
+              value={character.race}
+              onChange={(e) => update({ race: e.target.value })}
+              placeholder="Human, Elf, Dwarf..."
+            />
+          </div>
+          <div className="cs-bio-field">
+            <label>Background</label>
+            <input
+              type="text"
+              value={character.background || ''}
+              onChange={(e) => update({ background: e.target.value })}
+              placeholder="Acolyte, Soldier..."
+            />
+          </div>
         </div>
         {isGM && players.length > 0 && (
-          <div className="cs-bio-field">
+          <div className="cs-bio-field cs-bio-owner">
             <label>Owner</label>
             <select
               value={character.ownerId}
