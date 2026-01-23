@@ -38,7 +38,7 @@ export function RightPanel({ character, gameId, externalTab, hideTabHeader }: Ri
   const allTabs: { id: TabId; label: string }[] = [
     { id: 'actions', label: 'Actions' },
     { id: 'spells', label: 'Spells' },
-    { id: 'inventory', label: 'Inventory' },
+    { id: 'inventory', label: 'Items' },
     { id: 'bio', label: 'Bio' },
   ];
 

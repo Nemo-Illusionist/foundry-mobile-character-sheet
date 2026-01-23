@@ -12,11 +12,11 @@ interface InventoryTabProps {
 
 const ITEM_TYPES = [
   { id: 'all', label: 'All' },
-  { id: 'weapon', label: 'Weapons' },
+  { id: 'weapon', label: 'Wpn' },
   { id: 'armor', label: 'Armor' },
   { id: 'gear', label: 'Gear' },
-  { id: 'consumable', label: 'Consumable' },
-  { id: 'treasure', label: 'Treasure' },
+  { id: 'consumable', label: 'Cons' },
+  { id: 'treasure', label: 'Treas' },
   { id: 'other', label: 'Other' },
 ] as const;
 

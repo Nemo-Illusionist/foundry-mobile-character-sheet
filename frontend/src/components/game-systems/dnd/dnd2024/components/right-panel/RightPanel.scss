@@ -246,6 +246,9 @@
 
 .cs-cell-active {
   text-align: center;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
 }
 
 .cs-active-toggle {
@@ -253,6 +256,9 @@
   color: var(--text-secondary);
   cursor: pointer;
   transition: color 0.2s ease;
+  display: inline-block;
+  width: 1em;
+  text-align: center;
 }
 
 .cs-table-row.equipped .cs-active-toggle {
@@ -295,7 +301,10 @@
 /* Column widths - Inventory */
 .cs-col-active {
   width: 48px;
+  min-width: 48px;
+  max-width: 48px;
   text-align: center;
+  padding-right: 0 !important;
 }
 
 .cs-col-weight {
@@ -547,5 +556,11 @@
 @include mobile {
   .cs-bio-appearance-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Hide Active column on mobile */
+  .cs-col-active,
+  .cs-cell-active {
+    display: none;
   }
 }
