@@ -20,4 +20,9 @@ Verify all D&D 2024 rules with `@dnd-2024` agent before implementation.
 
 ### Git Commits
 
-Only commit when **explicitly requested** by the user.
+**ALWAYS ask before committing!**
+
+- Never commit automatically after making changes
+- First show what changed, then ask "Commit?"
+- Wait for explicit confirmation ("yes", "да", "commit")
+- Even for small fixes — ask first
