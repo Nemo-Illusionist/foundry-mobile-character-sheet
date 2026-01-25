@@ -89,78 +89,6 @@
   position: relative;
 }
 
-/* Pact Magic Section (Warlock) */
-.cs-pact-magic-section {
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 8px;
-  padding: 0.75rem;
-}
-
-.cs-pact-magic-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.cs-pact-magic-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #a78bfa;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.cs-pact-magic-info {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-.cs-pact-magic-stats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.cs-pact-magic-stats .cs-spellcasting-stat {
-  background: rgba(139, 92, 246, 0.15);
-}
-
-.cs-pact-magic-slots {
-  display: flex;
-  gap: 0.5rem;
-  margin-left: auto;
-  padding-left: 0.75rem;
-}
-
-.cs-pact-magic-pip {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid #a78bfa;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cs-pact-magic-pip.filled {
-  background: #a78bfa;
-}
-
-.cs-pact-magic-pip:hover {
-  transform: scale(1.15);
-}
-
-.cs-pact-magic-note {
-  margin: 0.5rem 0 0;
-  font-size: 0.6875rem;
-  color: var(--text-secondary);
-  text-align: center;
-  font-style: italic;
-}
 
 /* Spell Slots Row */
 .cs-spell-slots-row {
@@ -282,6 +210,7 @@
 /* Header slot pips */
 .cs-header-slots {
   display: flex;
+  align-items: center;
   gap: 0.375rem;
   margin-left: auto;
   padding: 0.25rem;
@@ -303,6 +232,23 @@
 
 .cs-header-pip:hover {
   transform: scale(1.15);
+}
+
+/* Pact Magic pips in header (purple) */
+.cs-header-pip.cs-pact-pip {
+  border-color: #a78bfa;
+}
+
+.cs-header-pip.cs-pact-pip.filled {
+  background: #a78bfa;
+}
+
+/* Separator between pact magic and regular slots */
+.cs-slots-separator {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin: 0 0.125rem;
 }
 
 /* Spell Level Content */

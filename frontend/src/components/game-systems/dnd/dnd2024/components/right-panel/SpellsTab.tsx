@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import { getAbilityModifier } from '../../../core';
 import { ABILITY_NAMES } from '../../constants';
-import { getSpellcastingClasses, getWarlockClass } from '../../utils';
+import { getSpellcastingClasses } from '../../utils';
 import { SpellModal } from './SpellModal';
 import type { Character, CharacterSpellEntry, AbilityName } from 'shared';
 import './SpellsTab.scss';
@@ -60,16 +60,14 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set([0, 1]));
 
   const spellcastingClasses = getSpellcastingClasses(character);
-  const warlockClass = getWarlockClass(character);
   const spells = character.spellEntries || [];
   const spellSlots = character.spellSlots || {};
   const pactMagicSlots = character.pactMagicSlots;
 
-  // Get unique spellcasting abilities from all classes
+  // Get unique spellcasting abilities from all classes (including warlock)
   const spellcastingAbilities = [...new Set(
     spellcastingClasses
-      .filter(c => c.spellcasterType !== 'warlock') // Warlock shown separately
-      .map(c => c.spellcastingAbility || 'int')
+      .map(c => c.spellcastingAbility || (c.spellcasterType === 'warlock' ? 'cha' : 'int'))
   )];
 
   // For spell display, use primary (first) ability
@@ -160,12 +158,6 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
     ...calculateSpellStats(character, ability),
   }));
 
-  // Warlock stats (if present)
-  const warlockStats = warlockClass ? {
-    ability: warlockClass.spellcastingAbility || 'cha',
-    ...calculateSpellStats(character, warlockClass.spellcastingAbility || 'cha'),
-  } : null;
-
   return (
     <div className="cs-spells-tab">
       {/* Spellcasting Stats - show all abilities for multiclass */}
@@ -194,41 +186,6 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
         </div>
       )}
 
-      {/* Pact Magic Section (Warlock) */}
-      {warlockClass && warlockStats && pactMagicSlots && (
-        <div className="cs-pact-magic-section">
-          <div className="cs-pact-magic-header">
-            <span className="cs-pact-magic-title">Pact Magic</span>
-            <span className="cs-pact-magic-info">
-              {pactMagicSlots.current}/{pactMagicSlots.max} slots (Level {pactMagicSlots.level})
-            </span>
-          </div>
-          <div className="cs-pact-magic-stats">
-            <div className="cs-spellcasting-stat">
-              <span className="cs-stat-label">Ability</span>
-              <span className="cs-stat-value cs-stat-ability">{ABILITY_NAMES[warlockStats.ability].slice(0, 3).toUpperCase()}</span>
-            </div>
-            <div className="cs-spellcasting-stat">
-              <span className="cs-stat-label">Save DC</span>
-              <span className="cs-stat-value">{warlockStats.spellSaveDC}</span>
-            </div>
-            <div className="cs-spellcasting-stat">
-              <span className="cs-stat-label">Attack</span>
-              <span className="cs-stat-value">{warlockStats.spellAttackBonus >= 0 ? '+' : ''}{warlockStats.spellAttackBonus}</span>
-            </div>
-            <div className="cs-pact-magic-slots" onClick={(e) => e.stopPropagation()}>
-              {Array.from({ length: pactMagicSlots.max }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`cs-pact-magic-pip ${i < pactMagicSlots.current ? 'filled' : ''}`}
-                  onClick={() => usePactMagicSlot(i < pactMagicSlots.current ? -1 : 1)}
-                />
-              ))}
-            </div>
-          </div>
-          <p className="cs-pact-magic-note">Restored on Short Rest</p>
-        </div>
-      )}
 
       {/* Filter tabs */}
       <div className="cs-spell-filters">
@@ -271,15 +228,32 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
               >
                 <span className="cs-level-toggle">{isExpanded ? '▼' : '▶'}</span>
                 <span className="cs-level-name">{LEVEL_NAMES[level]}</span>
-                {level > 0 && slot && slot.max > 0 && (
+                {level > 0 && (pactMagicSlots?.level === level || (slot && slot.max > 0)) && (
                   <div className="cs-header-slots" onClick={(e) => e.stopPropagation()}>
-                    {Array.from({ length: slot.max }).map((_, i) => (
+                    {/* Regular spell slots */}
+                    {slot && slot.max > 0 && Array.from({ length: slot.max }).map((_, i) => (
                       <div
                         key={i}
                         className={`cs-header-pip ${i < slot.current ? 'filled' : ''}`}
                         onClick={() => useSpellSlot(level, i < slot.current ? -1 : 1)}
                       />
                     ))}
+                    {/* Pact Magic slots (if this is the pact magic level) */}
+                    {pactMagicSlots && pactMagicSlots.level === level && (
+                      <>
+                        {/* Separator if there are also regular slots */}
+                        {slot && slot.max > 0 && (
+                          <span className="cs-slots-separator">/</span>
+                        )}
+                        {Array.from({ length: pactMagicSlots.max }).map((_, i) => (
+                          <div
+                            key={`pact-${i}`}
+                            className={`cs-header-pip cs-pact-pip ${i < pactMagicSlots.current ? 'filled' : ''}`}
+                            onClick={() => usePactMagicSlot(i < pactMagicSlots.current ? -1 : 1)}
+                          />
+                        ))}
+                      </>
+                    )}
                   </div>
                 )}
               </div>
