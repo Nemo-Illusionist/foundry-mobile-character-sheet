@@ -393,6 +393,11 @@
   border-color: var(--accent);
 }
 
+/* Hit dice label spanning columns 1-3 */
+.cs-hp-hitdice-label {
+  grid-column: 1 / 4;
+}
+
 /* Input with suffix (e.g., "3 /5") */
 .cs-hp-input-with-suffix {
   display: flex;

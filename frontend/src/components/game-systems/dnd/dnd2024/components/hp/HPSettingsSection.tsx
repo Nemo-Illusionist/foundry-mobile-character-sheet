@@ -57,17 +57,16 @@ export function HPSettingsSection({
             defaultValue={0}
           />
 
-          {/* Hit Dice rows - each class gets a row under Bonus column */}
+          {/* Hit Dice rows - label spans columns 1-3, input in column 4 */}
           {hitDiceGroups && hitDiceGroups.map((group) => {
             const remaining = group.total - group.used;
             return (
               <React.Fragment key={group.type}>
-                {/* Empty cell to align with Max column */}
-                <span />
-                <span />
-                {/* Label with class name and dice type */}
-                <label>{group.className || group.type}</label>
-                {/* Input with /total suffix */}
+                {/* Label spanning columns 1-3 */}
+                <label className="cs-hp-hitdice-label">
+                  Hit Dice: {group.className ? `${group.className} ${group.type}` : group.type}
+                </label>
+                {/* Input with /total suffix in column 4 */}
                 <div className="cs-hp-input-with-suffix">
                   <NumberInput
                     value={remaining}
