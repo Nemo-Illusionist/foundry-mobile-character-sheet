@@ -31,6 +31,7 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
   const [currentXP, setCurrentXP] = useState(character.experience || 0);
   const [gainXPInput, setGainXPInput] = useState(0);
   const [xpMessage, setXpMessage] = useState('');
+  const [showXPSection, setShowXPSection] = useState(false);
 
   const classes = getClasses(character);
   const hasMultipleClasses = isMulticlass(character);
@@ -399,37 +400,51 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
           </div>
         )}
 
-        {/* Current XP */}
-        <label>Current Experience</label>
-        <div className="cs-xp-row">
-          <input
-            type="number"
-            value={currentXP}
-            onChange={(e) => setCurrentXP(Math.max(0, parseInt(e.target.value) || 0))}
-            min={0}
-          />
-          <Button variant="secondary" onClick={handleXPChange}>Update</Button>
-        </div>
-        {nextLevelXP && (
-          <div className="cs-xp-help">
-            {nextLevelXP - currentXP} XP until level {globalLevel + 1}
+        {/* XP Section Toggle */}
+        <button
+          className="cs-xp-toggle"
+          onClick={() => setShowXPSection(!showXPSection)}
+        >
+          <span>Experience</span>
+          <span className={`cs-xp-toggle-icon ${showXPSection ? 'open' : ''}`}>▾</span>
+        </button>
+
+        {/* Collapsible XP Section */}
+        {showXPSection && (
+          <div className="cs-xp-section">
+            {/* Current XP */}
+            <label>Current Experience</label>
+            <div className="cs-xp-row">
+              <input
+                type="number"
+                value={currentXP}
+                onChange={(e) => setCurrentXP(Math.max(0, parseInt(e.target.value) || 0))}
+                min={0}
+              />
+              <Button variant="secondary" onClick={handleXPChange}>Update</Button>
+            </div>
+            {nextLevelXP && (
+              <div className="cs-xp-help">
+                {nextLevelXP - currentXP} XP until level {globalLevel + 1}
+              </div>
+            )}
+
+            {/* Add XP */}
+            <label>Gain Experience</label>
+            <div className="cs-xp-row">
+              <input
+                type="number"
+                value={gainXPInput || ''}
+                onChange={(e) => setGainXPInput(Math.max(0, parseInt(e.target.value) || 0))}
+                placeholder="0"
+                min={0}
+              />
+              <Button onClick={handleGainXP} disabled={gainXPInput <= 0}>Add</Button>
+            </div>
+
+            {xpMessage && <div className="cs-xp-message">{xpMessage}</div>}
           </div>
         )}
-
-        {/* Add XP */}
-        <label>Gain Experience</label>
-        <div className="cs-xp-row">
-          <input
-            type="number"
-            value={gainXPInput || ''}
-            onChange={(e) => setGainXPInput(Math.max(0, parseInt(e.target.value) || 0))}
-            placeholder="0"
-            min={0}
-          />
-          <Button onClick={handleGainXP} disabled={gainXPInput <= 0}>Add</Button>
-        </div>
-
-        {xpMessage && <div className="cs-xp-message">{xpMessage}</div>}
       </div>
 
       {/* Class Cards */}

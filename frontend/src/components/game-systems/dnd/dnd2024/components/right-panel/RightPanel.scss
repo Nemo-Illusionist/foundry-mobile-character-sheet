@@ -657,6 +657,54 @@
   font-size: 0.8125rem;
 }
 
+/* XP Section Toggle */
+.cs-xp-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0;
+  margin-top: 0.25rem;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.cs-xp-toggle:hover {
+  color: var(--text-primary);
+}
+
+.cs-xp-toggle-icon {
+  transition: transform 0.2s ease;
+}
+
+.cs-xp-toggle-icon.open {
+  transform: rotate(180deg);
+}
+
+/* Collapsible XP Section */
+.cs-xp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.cs-xp-section label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .cs-xp-help {
   font-size: 0.75rem;
   color: var(--text-secondary);
