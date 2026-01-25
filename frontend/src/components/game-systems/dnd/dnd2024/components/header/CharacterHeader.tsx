@@ -44,7 +44,9 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
         {/* Desktop Layout */}
         <div className="cs-header-desktop">
           <div className="cs-header-left">
-            <h1 className="cs-name">{character.name}</h1>
+            <div className="cs-name-block">
+              <h1 className="cs-name">{character.name}</h1>
+            </div>
             <p className="cs-subtitle">{character.race}</p>
             <p className="cs-subtitle">{character.class} {character.subclass && `(${character.subclass})`}</p>
             <button className="cs-level-btn" onClick={levelModal.open}>
@@ -76,7 +78,9 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
           {/* Expandable content - always rendered, visibility controlled by CSS */}
           <div className={`cs-mobile-expanded ${expanded ? 'expanded' : 'collapsed'}`}>
             <div className="cs-mobile-expanded-inner">
-              <h1 className="cs-name">{character.name}</h1>
+              <div className="cs-name-block">
+                <h1 className="cs-name">{character.name}</h1>
+              </div>
               <p className="cs-subtitle">
                 {character.race} — {character.class} {character.subclass && `(${character.subclass})`}
               </p>

@@ -434,6 +434,103 @@ input[type="number"] {
   margin: 0.5rem 0 0;
 }
 
+/* Warning box for prerequisites */
+.cs-warning-box {
+  padding: 0.75rem 1rem;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  color: #f59e0b;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Info text in modals */
+.cs-modal-info {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.cs-modal-info.cs-level-allocation-warning {
+  color: var(--warning, #f59e0b);
+}
+
+/* Multiclass summary badges */
+.cs-multiclass-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.cs-class-level-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* Class Selector for Level Up */
+.cs-class-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cs-class-selector > label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.cs-class-selector-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cs-class-selector-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cs-class-selector-btn:hover:not(:disabled) {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.cs-class-selector-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cs-class-selector-btn .cs-class-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.cs-class-selector-btn .cs-class-level {
+  font-size: 0.875rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
 /* Mobile Responsive - Bottom Sheet */
 @include mobile {
   .cs-modal-overlay {

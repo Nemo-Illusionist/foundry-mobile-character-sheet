@@ -78,6 +78,90 @@
   font-size: 0.875rem !important;
 }
 
+/* Multiclass: container for multiple spellcasting stat rows */
+.cs-spellcasting-stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cs-spellcasting-stats-container .cs-spellcasting-stats {
+  position: relative;
+}
+
+/* Pact Magic Section (Warlock) */
+.cs-pact-magic-section {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.cs-pact-magic-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.cs-pact-magic-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cs-pact-magic-info {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.cs-pact-magic-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cs-pact-magic-stats .cs-spellcasting-stat {
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.cs-pact-magic-slots {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+  padding-left: 0.75rem;
+}
+
+.cs-pact-magic-pip {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #a78bfa;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cs-pact-magic-pip.filled {
+  background: #a78bfa;
+}
+
+.cs-pact-magic-pip:hover {
+  transform: scale(1.15);
+}
+
+.cs-pact-magic-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
 /* Spell Slots Row */
 .cs-spell-slots-row {
   display: flex;

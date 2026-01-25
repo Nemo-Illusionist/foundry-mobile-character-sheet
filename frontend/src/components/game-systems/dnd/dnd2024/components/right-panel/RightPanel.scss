@@ -582,29 +582,84 @@
   gap: 1rem;
 }
 
-/* Total Level Display */
-.cs-class-total-level {
+/* Level & XP Block - unified, compact like class card */
+.cs-level-xp-block {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background: rgba(124, 58, 237, 0.15);
-  border: 1px solid rgba(124, 58, 237, 0.3);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
-.cs-class-total-label {
-  font-size: 0.75rem;
+.cs-level-xp-block label {
+  font-size: 0.625rem;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-top: 0.25rem;
 }
 
-.cs-class-total-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
+.cs-level-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* XP Row - Grid: input takes space, button fixed width */
+.cs-xp-row {
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Input styling - compact */
+.cs-xp-row input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.cs-xp-row input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.cs-xp-row input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+/* Hide number spinners */
+.cs-xp-row input::-webkit-inner-spin-button,
+.cs-xp-row input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cs-xp-row input {
+  -moz-appearance: textfield;
+}
+
+/* All buttons same width, smaller */
+.cs-xp-row .btn {
+  width: 100%;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.cs-xp-help {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
 }
 
 /* Class List */
@@ -787,14 +842,14 @@
   color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
-  cursor: not-allowed;
+  cursor: pointer;
   transition: all 0.2s ease;
-  opacity: 0.6;
+  opacity: 1;
 }
 
-.cs-class-add-btn:not(:disabled) {
-  cursor: pointer;
-  opacity: 1;
+.cs-class-add-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .cs-class-add-btn:not(:disabled):hover {
@@ -803,7 +858,77 @@
   background: rgba(124, 58, 237, 0.1);
 }
 
-/* Info text */
+/* Class subclass in header */
+.cs-class-subclass {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* Level +/- buttons for multiclass */
+.cs-class-level-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.cs-class-level-btn:hover:not(:disabled) {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cs-class-level-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Delete class button */
+.cs-class-delete-btn {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 6px;
+  color: #dc2626;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cs-class-delete-btn:hover {
+  background: rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+/* XP message */
+.cs-xp-message {
+  font-size: 0.6875rem;
+  color: var(--accent);
+  text-align: center;
+  padding: 0.25rem 0;
+}
+
+/* Level allocation message (multiclass) */
+.cs-level-allocation {
+  font-size: 0.6875rem;
+  color: var(--warning, #f59e0b);
+  text-align: center;
+  padding: 0.25rem 0;
+}
+
 .cs-class-info {
   font-size: 0.75rem;
   color: var(--text-secondary);

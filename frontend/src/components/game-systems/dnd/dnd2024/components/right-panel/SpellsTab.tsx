@@ -1,12 +1,13 @@
 // D&D 2024 - Spells Tab Component (D&D Beyond style)
+// Supports multiclass with multiple spellcasting abilities and Pact Magic
 
 import { useState } from 'react';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import { getAbilityModifier } from '../../../core';
 import { ABILITY_NAMES } from '../../constants';
-import { getPrimaryClass } from '../../utils';
+import { getSpellcastingClasses, getWarlockClass } from '../../utils';
 import { SpellModal } from './SpellModal';
-import type { Character, CharacterSpellEntry } from 'shared';
+import type { Character, CharacterSpellEntry, AbilityName } from 'shared';
 import './SpellsTab.scss';
 
 interface SpellsTabProps {
@@ -44,21 +45,36 @@ function formatCastingTime(time: string | undefined): string {
   return time;
 }
 
+// Calculate spellcasting stats for a given ability
+function calculateSpellStats(character: Character, ability: AbilityName) {
+  const abilityScore = character.abilities[ability];
+  const spellModifier = getAbilityModifier(abilityScore);
+  const spellSaveDC = 8 + character.proficiencyBonus + spellModifier;
+  const spellAttackBonus = character.proficiencyBonus + spellModifier;
+  return { spellModifier, spellSaveDC, spellAttackBonus };
+}
+
 export function SpellsTab({ character, gameId }: SpellsTabProps) {
   const [editingSpell, setEditingSpell] = useState<CharacterSpellEntry | null>(null);
   const [filter, setFilter] = useState<FilterType>('all');
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set([0, 1]));
 
-  const primaryClass = getPrimaryClass(character);
+  const spellcastingClasses = getSpellcastingClasses(character);
+  const warlockClass = getWarlockClass(character);
   const spells = character.spellEntries || [];
   const spellSlots = character.spellSlots || {};
-  const spellcastingAbility = primaryClass.spellcastingAbility || 'int';
+  const pactMagicSlots = character.pactMagicSlots;
 
-  // Calculate spellcasting stats
-  const abilityScore = character.abilities[spellcastingAbility];
-  const spellModifier = getAbilityModifier(abilityScore);
-  const spellSaveDC = 8 + character.proficiencyBonus + spellModifier;
-  const spellAttackBonus = character.proficiencyBonus + spellModifier;
+  // Get unique spellcasting abilities from all classes
+  const spellcastingAbilities = [...new Set(
+    spellcastingClasses
+      .filter(c => c.spellcasterType !== 'warlock') // Warlock shown separately
+      .map(c => c.spellcastingAbility || 'int')
+  )];
+
+  // For spell display, use primary (first) ability
+  const primaryAbility: AbilityName = spellcastingAbilities[0] || 'int';
+  const { spellSaveDC, spellAttackBonus } = calculateSpellStats(character, primaryAbility);
 
   // Filter spells
   const filteredSpells = spells.filter((spell) => {
@@ -127,30 +143,92 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
     });
   };
 
+  const usePactMagicSlot = async (delta: number) => {
+    if (!pactMagicSlots) return;
+    const newCurrent = Math.max(0, Math.min(pactMagicSlots.max, pactMagicSlots.current + delta));
+    await updateCharacter(gameId, character.id, {
+      pactMagicSlots: { ...pactMagicSlots, current: newCurrent },
+    });
+  };
+
   // Count prepared spells (excluding cantrips)
   const preparedCount = spells.filter((s) => s.prepared && s.level > 0).length;
 
+  // Calculate stats for each spellcasting ability
+  const abilityStats = spellcastingAbilities.map(ability => ({
+    ability,
+    ...calculateSpellStats(character, ability),
+  }));
+
+  // Warlock stats (if present)
+  const warlockStats = warlockClass ? {
+    ability: warlockClass.spellcastingAbility || 'cha',
+    ...calculateSpellStats(character, warlockClass.spellcastingAbility || 'cha'),
+  } : null;
+
   return (
     <div className="cs-spells-tab">
-      {/* Spellcasting Stats */}
-      <div className="cs-spellcasting-stats">
-        <div className="cs-spellcasting-stat">
-          <span className="cs-stat-label">Ability</span>
-          <span className="cs-stat-value cs-stat-ability">{ABILITY_NAMES[spellcastingAbility].slice(0, 3).toUpperCase()}</span>
+      {/* Spellcasting Stats - show all abilities for multiclass */}
+      {abilityStats.length > 0 && (
+        <div className="cs-spellcasting-stats-container">
+          {abilityStats.map(({ ability, spellModifier: mod, spellSaveDC: dc, spellAttackBonus: atk }) => (
+            <div key={ability} className="cs-spellcasting-stats">
+              <div className="cs-spellcasting-stat">
+                <span className="cs-stat-label">Ability</span>
+                <span className="cs-stat-value cs-stat-ability">{ABILITY_NAMES[ability].slice(0, 3).toUpperCase()}</span>
+              </div>
+              <div className="cs-spellcasting-stat">
+                <span className="cs-stat-label">Modifier</span>
+                <span className="cs-stat-value">{mod >= 0 ? '+' : ''}{mod}</span>
+              </div>
+              <div className="cs-spellcasting-stat">
+                <span className="cs-stat-label">Save DC</span>
+                <span className="cs-stat-value">{dc}</span>
+              </div>
+              <div className="cs-spellcasting-stat">
+                <span className="cs-stat-label">Attack</span>
+                <span className="cs-stat-value">{atk >= 0 ? '+' : ''}{atk}</span>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="cs-spellcasting-stat">
-          <span className="cs-stat-label">Modifier</span>
-          <span className="cs-stat-value">{spellModifier >= 0 ? '+' : ''}{spellModifier}</span>
+      )}
+
+      {/* Pact Magic Section (Warlock) */}
+      {warlockClass && warlockStats && pactMagicSlots && (
+        <div className="cs-pact-magic-section">
+          <div className="cs-pact-magic-header">
+            <span className="cs-pact-magic-title">Pact Magic</span>
+            <span className="cs-pact-magic-info">
+              {pactMagicSlots.current}/{pactMagicSlots.max} slots (Level {pactMagicSlots.level})
+            </span>
+          </div>
+          <div className="cs-pact-magic-stats">
+            <div className="cs-spellcasting-stat">
+              <span className="cs-stat-label">Ability</span>
+              <span className="cs-stat-value cs-stat-ability">{ABILITY_NAMES[warlockStats.ability].slice(0, 3).toUpperCase()}</span>
+            </div>
+            <div className="cs-spellcasting-stat">
+              <span className="cs-stat-label">Save DC</span>
+              <span className="cs-stat-value">{warlockStats.spellSaveDC}</span>
+            </div>
+            <div className="cs-spellcasting-stat">
+              <span className="cs-stat-label">Attack</span>
+              <span className="cs-stat-value">{warlockStats.spellAttackBonus >= 0 ? '+' : ''}{warlockStats.spellAttackBonus}</span>
+            </div>
+            <div className="cs-pact-magic-slots" onClick={(e) => e.stopPropagation()}>
+              {Array.from({ length: pactMagicSlots.max }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`cs-pact-magic-pip ${i < pactMagicSlots.current ? 'filled' : ''}`}
+                  onClick={() => usePactMagicSlot(i < pactMagicSlots.current ? -1 : 1)}
+                />
+              ))}
+            </div>
+          </div>
+          <p className="cs-pact-magic-note">Restored on Short Rest</p>
         </div>
-        <div className="cs-spellcasting-stat">
-          <span className="cs-stat-label">Save DC</span>
-          <span className="cs-stat-value">{spellSaveDC}</span>
-        </div>
-        <div className="cs-spellcasting-stat">
-          <span className="cs-stat-label">Attack</span>
-          <span className="cs-stat-value">{spellAttackBonus >= 0 ? '+' : ''}{spellAttackBonus}</span>
-        </div>
-      </div>
+      )}
 
       {/* Filter tabs */}
       <div className="cs-spell-filters">

@@ -75,7 +75,8 @@ export type ArmorType = 'Light Armor' | 'Medium Armor' | 'Heavy Armor' | 'Shield
 export type Currency = 'cp' | 'sp' | 'ep' | 'gp' | 'pp';
 
 // Spellcaster types for auto spell slot calculation
-export type SpellcasterType = 'none' | 'full' | 'half' | 'warlock' | 'manual';
+// 'third' = 1/3 caster (Eldritch Knight, Arcane Trickster)
+export type SpellcasterType = 'none' | 'full' | 'half' | 'third' | 'warlock' | 'manual';
 
 export type MagicSchool =
   | 'Abjuration' | 'Conjuration' | 'Divination' | 'Enchantment'
@@ -155,7 +156,7 @@ export interface CharacterClass {
   name: string;                       // Class name (Fighter, Wizard, etc.)
   subclass?: string;                  // Subclass (Champion, Evocation, etc.)
   level: number;                      // Class level
-  hitDice?: string;                   // Hit dice type (d6, d8, d10, d12)
+  hitDice: string;                    // Hit dice type (d6, d8, d10, d12) - required
   hitDiceUsed?: number;               // Hit dice used (recovered on long rest)
   spellcasterType?: SpellcasterType;  // Caster type for this class
   spellcastingAbility?: AbilityName;  // Spellcasting ability for this class
@@ -237,6 +238,13 @@ export interface PrivateCharacterSheet {
   // Spell Slots (ячейки заклинаний)
   spellSlots: {
     [key: string]: { current: number; max: number }; // '1', '2', ..., '9'
+  };
+
+  // Pact Magic Slots (Warlock's separate spell slot pool - short rest recovery)
+  pactMagicSlots?: {
+    current: number;   // Current available slots
+    max: number;       // Maximum slots
+    level: number;     // Slot level (all warlock slots are same level)
   };
 
   // Currency (валюта)

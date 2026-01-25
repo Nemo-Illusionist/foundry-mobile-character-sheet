@@ -28,6 +28,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 0.25rem;
 }
 
@@ -101,7 +102,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
-  text-align: left;
+  text-align: center;
+  width: 100%;
   margin-bottom: 1rem;
 }
 

@@ -13,6 +13,7 @@ interface HPSettingsSectionProps {
   onHPBonusChange: (value: number) => void;
   onHitDiceChange: (value: string) => void;
   onHitDiceUsedChange: (value: number) => void;
+  showHitDiceSettings?: boolean; // Hide hit dice for multiclass (managed in Class tab)
 }
 
 export function HPSettingsSection({
@@ -25,6 +26,7 @@ export function HPSettingsSection({
   onHPBonusChange,
   onHitDiceChange,
   onHitDiceUsedChange,
+  showHitDiceSettings = true,
 }: HPSettingsSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -60,29 +62,33 @@ export function HPSettingsSection({
             defaultValue={0}
           />
 
-          {/* Row 2: Dice | select | Left | input with suffix */}
-          <label>Dice</label>
-          <select
-            className="cs-hp-settings-select"
-            value={hitDice}
-            onChange={(e) => onHitDiceChange(e.target.value)}
-          >
-            <option value="d6">d6</option>
-            <option value="d8">d8</option>
-            <option value="d10">d10</option>
-            <option value="d12">d12</option>
-          </select>
-          <label>Left</label>
-          <div className="cs-hp-input-with-suffix">
-            <NumberInput
-              value={hitDiceRemaining}
-              onChange={handleRemainingChange}
-              min={0}
-              max={hitDiceTotal}
-              defaultValue={hitDiceTotal}
-            />
-            <span className="cs-hp-input-suffix">/{hitDiceTotal}</span>
-          </div>
+          {/* Row 2: Dice | select | Left | input with suffix (hidden for multiclass) */}
+          {showHitDiceSettings && (
+            <>
+              <label>Dice</label>
+              <select
+                className="cs-hp-settings-select"
+                value={hitDice}
+                onChange={(e) => onHitDiceChange(e.target.value)}
+              >
+                <option value="d6">d6</option>
+                <option value="d8">d8</option>
+                <option value="d10">d10</option>
+                <option value="d12">d12</option>
+              </select>
+              <label>Left</label>
+              <div className="cs-hp-input-with-suffix">
+                <NumberInput
+                  value={hitDiceRemaining}
+                  onChange={handleRemainingChange}
+                  min={0}
+                  max={hitDiceTotal}
+                  defaultValue={hitDiceTotal}
+                />
+                <span className="cs-hp-input-suffix">/{hitDiceTotal}</span>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

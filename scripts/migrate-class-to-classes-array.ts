@@ -13,6 +13,9 @@
  * - spellcasterType -> classes[0].spellcasterType
  * - spellcastingAbility -> classes[0].spellcastingAbility
  *
+ * Also handles:
+ * - Warlock Pact Magic slots setup (pactMagicSlots)
+ *
  * Usage:
  * 1. Ensure serviceAccountKey.json exists in project root
  * 2. Run: npx ts-node --project scripts/tsconfig.json scripts/migrate-class-to-classes-array.ts --dry-run
@@ -79,6 +82,36 @@ interface PrivateSheetDoc {
   spellcasterType?: string;
   spellcastingAbility?: string;
   classes?: CharacterClass[];
+  pactMagicSlots?: { current: number; max: number; level: number };
+}
+
+// Warlock Pact Magic table (D&D 2024 SRD 5.2.1)
+const WARLOCK_PACT_MAGIC: Record<number, { slots: number; level: number }> = {
+  1:  { slots: 1, level: 1 },
+  2:  { slots: 2, level: 1 },
+  3:  { slots: 2, level: 2 },
+  4:  { slots: 2, level: 2 },
+  5:  { slots: 2, level: 3 },
+  6:  { slots: 2, level: 3 },
+  7:  { slots: 2, level: 4 },
+  8:  { slots: 2, level: 4 },
+  9:  { slots: 2, level: 5 },
+  10: { slots: 2, level: 5 },
+  11: { slots: 3, level: 5 },
+  12: { slots: 3, level: 5 },
+  13: { slots: 3, level: 5 },
+  14: { slots: 3, level: 5 },
+  15: { slots: 3, level: 5 },
+  16: { slots: 3, level: 5 },
+  17: { slots: 4, level: 5 },
+  18: { slots: 4, level: 5 },
+  19: { slots: 4, level: 5 },
+  20: { slots: 4, level: 5 },
+};
+
+function getWarlockPactMagic(warlockLevel: number): { slots: number; level: number } | null {
+  if (warlockLevel < 1 || warlockLevel > 20) return null;
+  return WARLOCK_PACT_MAGIC[warlockLevel] || null;
 }
 
 async function migrateClassToClassesArray(): Promise<void> {
@@ -178,10 +211,26 @@ async function migrateClassToClassesArray(): Promise<void> {
       if (newClass.spellcasterType) console.log(`     Caster Type: ${newClass.spellcasterType}`);
       if (newClass.spellcastingAbility) console.log(`     Casting Ability: ${newClass.spellcastingAbility}`);
 
+      // Build update object
+      const updateData: Record<string, unknown> = {
+        classes: [newClass],
+      };
+
+      // Add Pact Magic for Warlocks
+      if (newClass.spellcasterType === 'warlock' && !sheet.pactMagicSlots) {
+        const pactMagic = getWarlockPactMagic(newClass.level);
+        if (pactMagic) {
+          updateData.pactMagicSlots = {
+            current: pactMagic.slots,
+            max: pactMagic.slots,
+            level: pactMagic.level,
+          };
+          console.log(`     Pact Magic: ${pactMagic.slots} slots at level ${pactMagic.level}`);
+        }
+      }
+
       if (!dryRun) {
-        await privateSheetRef.update({
-          classes: [newClass],
-        });
+        await privateSheetRef.update(updateData);
       }
       totalMigrated++;
     }
