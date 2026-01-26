@@ -42,11 +42,18 @@ body {
 
 input,
 textarea,
-button {
+button,
+select {
   font-family: inherit;
   font-size: inherit;
   border: none;
   outline: none;
+
+  // Remove focus ring on touch/click, keep for keyboard navigation
+  &:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+  }
 }
 
 button {
