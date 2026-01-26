@@ -1,22 +1,26 @@
+// Textarea Component Styles
 @use '../../styles/tokens' as *;
 
-.input-wrapper {
+.textarea-wrapper {
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
+  gap: $spacing-xs;
   width: 100%;
 }
 
-.input-label {
-  font-size: $font-base;
+.textarea-label {
+  font-size: $font-sm;
   font-weight: 600;
   color: var(--text-primary, #ffffff);
 }
 
-.input {
+.textarea {
   @include input-base;
   width: 100%;
   box-sizing: border-box;
+  resize: vertical;
+  min-height: 2.5rem;
+  line-height: 1.5;
 
   &::placeholder {
     color: var(--text-secondary, #9ca3af);
@@ -24,40 +28,31 @@
   }
 }
 
-// Size variants
-.input-sm {
-  @include input-size-sm;
-}
-
-.input-md {
-  @include input-size-md;
-}
-
-// Variant: default
-.input-default {
+// Default variant
+.textarea-default {
   padding: $input-padding-md;
   font-size: $font-base;
-  border-radius: $radius-lg;
 }
 
-// Variant: compact
-.input-compact {
+// Compact variant
+.textarea-compact {
   padding: $input-padding-sm;
   font-size: $font-md;
-  border-radius: $radius-md;
 }
 
 // Error state
-.input-error {
-  border-color: $color-danger;
-
-  &:focus {
+.textarea-wrapper.has-error {
+  .textarea {
     border-color: $color-danger;
-    box-shadow: 0 0 0 3px rgba($color-danger, 0.2);
+
+    &:focus {
+      border-color: $color-danger;
+      box-shadow: 0 0 0 3px rgba($color-danger, 0.2);
+    }
   }
 }
 
-.input-error-text {
+.textarea-error {
   font-size: $font-sm;
   color: $color-danger;
 }

@@ -27,6 +27,7 @@ export function HPDisplay({
           min={0}
           max={effectiveMaxHP}
           defaultValue={0}
+          variant="unstyled"
         />
         <span className="cs-hp-input-suffix">/{effectiveMaxHP}</span>
       </div>

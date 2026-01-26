@@ -1,0 +1,129 @@
+// StatBox Component Styles
+@use '../../styles/tokens' as *;
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  background: $bg-stat-box;
+  border: $border-default;
+  border-radius: $radius-md;
+  transition: background-color $transition-normal, opacity $transition-normal;
+
+  &:hover {
+    background: $bg-stat-box-hover;
+  }
+}
+
+// Clickable variant
+.stat-box-clickable {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:active {
+    opacity: 0.75;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: $shadow-focus;
+  }
+}
+
+// Size variants
+.stat-box-sm {
+  min-width: 40px;
+  padding: $spacing-sm;
+
+  .stat-box-value {
+    font-size: $font-lg;
+    width: 32px;
+    height: 32px;
+  }
+
+  .stat-box-label {
+    font-size: $font-xs;
+  }
+}
+
+.stat-box-md {
+  min-width: 48px;
+  padding: $spacing-sm $spacing-md;
+
+  .stat-box-value {
+    font-size: $font-xl;
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat-box-label {
+    font-size: 0.625rem; // 10px
+  }
+}
+
+.stat-box-lg {
+  min-width: 64px;
+  padding: $spacing-md;
+
+  .stat-box-value {
+    font-size: $font-2xl;
+    width: 48px;
+    height: 48px;
+  }
+
+  .stat-box-label {
+    font-size: $font-sm;
+  }
+}
+
+// Value styling
+.stat-box-value {
+  font-weight: 700;
+  color: var(--text-primary, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  border-radius: $radius-sm;
+}
+
+// Label styling
+.stat-box-label {
+  color: var(--text-secondary, #9ca3af);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+// Style variants
+.stat-box-default {
+  background: transparent;
+  border-color: transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.stat-box-bordered {
+  .stat-box-value {
+    border-color: var(--border, #374151);
+  }
+}
+
+.stat-box-filled {
+  background: rgba(255, 255, 255, 0.05);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}

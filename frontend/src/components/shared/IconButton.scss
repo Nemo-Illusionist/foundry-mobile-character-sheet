@@ -1,0 +1,97 @@
+// IconButton Component Styles
+@use '../../styles/tokens' as *;
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: $border-default;
+  border-radius: $radius-sm;
+  background: $bg-button;
+  color: var(--text-secondary, #9ca3af);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all $transition-normal;
+  line-height: 1;
+
+  &:hover:not(:disabled) {
+    background: $bg-button-hover;
+    border-color: var(--accent, #7c3aed);
+    color: var(--accent, #7c3aed);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: $shadow-focus;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+}
+
+// Size variants
+.icon-button-sm {
+  width: 24px;
+  height: 24px;
+  font-size: $font-base;
+}
+
+.icon-button-md {
+  width: 32px;
+  height: 32px;
+  font-size: $font-lg;
+}
+
+.icon-button-lg {
+  width: 40px;
+  height: 40px;
+  font-size: $font-xl;
+}
+
+// Color variants
+.icon-button-default {
+  // Default styling from base
+}
+
+.icon-button-primary {
+  background: var(--accent, #7c3aed);
+  border-color: var(--accent, #7c3aed);
+  color: #ffffff;
+
+  &:hover:not(:disabled) {
+    background: $color-accent-hover;
+    border-color: $color-accent-hover;
+    color: #ffffff;
+  }
+}
+
+.icon-button-success {
+  background: rgba($color-success, 0.15);
+  border-color: rgba($color-success, 0.3);
+  color: $color-success;
+
+  &:hover:not(:disabled) {
+    background: rgba($color-success, 0.25);
+    border-color: $color-success;
+    color: $color-success;
+  }
+}
+
+.icon-button-danger {
+  background: rgba($color-danger, 0.15);
+  border-color: rgba($color-danger, 0.3);
+  color: $color-danger;
+
+  &:hover:not(:disabled) {
+    background: rgba($color-danger, 0.25);
+    border-color: $color-danger;
+    color: $color-danger;
+  }
+}

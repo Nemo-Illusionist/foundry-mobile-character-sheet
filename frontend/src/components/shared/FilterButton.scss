@@ -1,0 +1,60 @@
+// FilterButton Component Styles
+@use '../../styles/tokens' as *;
+
+.filter-button-group {
+  display: flex;
+  gap: $spacing-xs;
+  flex-wrap: wrap;
+}
+
+.filter-button {
+  padding: $spacing-sm $spacing-md;
+  background: transparent;
+  border: $border-default;
+  border-radius: $radius-md;
+  color: var(--text-secondary, #9ca3af);
+  font-size: $font-sm;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all $transition-normal;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary, #ffffff);
+  }
+
+  &.active {
+    background: var(--accent, #7c3aed);
+    border-color: var(--accent, #7c3aed);
+    color: #ffffff;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: $shadow-focus;
+  }
+}
+
+.filter-button-count {
+  opacity: 0.8;
+}
+
+// Size variants
+.filter-button-sm {
+  .filter-button {
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-xs;
+  }
+}
+
+.filter-button-md {
+  .filter-button {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-sm;
+  }
+}

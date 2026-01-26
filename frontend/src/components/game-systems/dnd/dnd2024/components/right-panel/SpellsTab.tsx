@@ -2,6 +2,7 @@
 // Supports multiclass with multiple spellcasting abilities and Pact Magic
 
 import { useState } from 'react';
+import { FilterButton } from '../../../../../shared';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import { getAbilityModifier } from '../../../core';
 import { ABILITY_NAMES } from '../../constants';
@@ -188,26 +189,17 @@ export function SpellsTab({ character, gameId }: SpellsTabProps) {
 
 
       {/* Filter tabs */}
-      <div className="cs-spell-filters">
-        <button
-          className={`cs-filter-btn ${filter === 'all' ? 'active' : ''}`}
-          onClick={() => setFilter('all')}
-        >
-          All ({spells.length})
-        </button>
-        <button
-          className={`cs-filter-btn ${filter === 'prepared' ? 'active' : ''}`}
-          onClick={() => setFilter('prepared')}
-        >
-          Prepared ({preparedCount})
-        </button>
-        <button
-          className={`cs-filter-btn ${filter === 'ritual' ? 'active' : ''}`}
-          onClick={() => setFilter('ritual')}
-        >
-          Ritual
-        </button>
-      </div>
+      <FilterButton
+        options={[
+          { id: 'all' as const, label: 'All', count: spells.length },
+          { id: 'prepared' as const, label: 'Prepared', count: preparedCount },
+          { id: 'ritual' as const, label: 'Ritual' },
+        ]}
+        value={filter}
+        onChange={setFilter}
+        size="sm"
+        className="cs-spell-filters"
+      />
 
       {/* Spells by level */}
       <div className="cs-spells-list">

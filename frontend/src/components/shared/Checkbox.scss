@@ -1,0 +1,132 @@
+// Checkbox Component Styles
+@use '../../styles/tokens' as *;
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.checkbox-box {
+  position: relative;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  background: $bg-input;
+  border: $border-default;
+  border-radius: $radius-sm;
+  transition: all $transition-normal;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg) scale(0);
+    opacity: 0;
+    transition: all $transition-fast;
+  }
+}
+
+// Checked state
+.checkbox-input:checked + .checkbox-box {
+  background: var(--accent, #7c3aed);
+  border-color: var(--accent, #7c3aed);
+
+  &::after {
+    transform: translate(-50%, -60%) rotate(45deg) scale(1);
+    opacity: 1;
+  }
+}
+
+// Focus state
+.checkbox-input:focus + .checkbox-box {
+  box-shadow: $shadow-focus;
+}
+
+// Hover state
+.checkbox:hover .checkbox-box {
+  border-color: var(--accent, #7c3aed);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.checkbox:hover .checkbox-input:checked + .checkbox-box {
+  background: $color-accent-hover;
+}
+
+// Disabled state
+.checkbox-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+
+  &:hover .checkbox-box {
+    border-color: var(--border, #374151);
+    background: $bg-input;
+  }
+}
+
+.checkbox-label {
+  color: var(--text-primary, #ffffff);
+  font-size: $font-base;
+  line-height: 1.4;
+}
+
+// Size variants
+.checkbox-sm {
+  gap: $spacing-xs;
+
+  .checkbox-box {
+    width: 14px;
+    height: 14px;
+
+    &::after {
+      width: 4px;
+      height: 7px;
+      border-width: 0 1.5px 1.5px 0;
+    }
+  }
+
+  .checkbox-label {
+    font-size: $font-sm;
+  }
+}
+
+.checkbox-md {
+  .checkbox-box {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Variant: inline (more compact for inline use)
+.checkbox-inline {
+  gap: $spacing-xs;
+
+  .checkbox-box {
+    width: 16px;
+    height: 16px;
+
+    &::after {
+      width: 4px;
+      height: 8px;
+    }
+  }
+
+  .checkbox-label {
+    font-size: $font-md;
+  }
+}

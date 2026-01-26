@@ -1,0 +1,66 @@
+// ValueWithMax Component Styles
+@use '../../styles/tokens' as *;
+
+.value-with-max {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.value-with-max-label {
+  color: var(--text-secondary, #9ca3af);
+  font-size: $font-sm;
+  white-space: nowrap;
+}
+
+.value-with-max-input {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.value-with-max-number {
+  @include input-base;
+  width: 48px;
+  text-align: center;
+  padding: $input-padding-sm;
+  font-size: $font-base;
+  font-weight: 600;
+}
+
+.value-with-max-separator {
+  color: var(--text-secondary, #9ca3af);
+  font-size: $font-base;
+  font-weight: 500;
+}
+
+.value-with-max-total {
+  color: var(--text-secondary, #9ca3af);
+  font-size: $font-base;
+  font-weight: 600;
+  min-width: 20px;
+}
+
+// Size variants
+.value-with-max-sm {
+  .value-with-max-label {
+    font-size: $font-xs;
+  }
+
+  .value-with-max-number {
+    width: 40px;
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-md;
+  }
+
+  .value-with-max-separator,
+  .value-with-max-total {
+    font-size: $font-md;
+  }
+}
+
+.value-with-max-md {
+  .value-with-max-number {
+    width: 48px;
+  }
+}

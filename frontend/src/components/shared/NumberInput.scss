@@ -1,0 +1,63 @@
+// NumberInput Component Styles
+@use '../../styles/tokens' as *;
+
+.number-input {
+  @include input-base;
+  width: 100%;
+  box-sizing: border-box;
+
+  // Hide native spinners
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &::placeholder {
+    color: var(--text-secondary, #9ca3af);
+    opacity: 0.6;
+  }
+}
+
+// Size variants
+.number-input-sm {
+  @include input-size-sm;
+}
+
+.number-input-md {
+  @include input-size-md;
+}
+
+// Variant: default
+.number-input-default {
+  padding: $input-padding-md;
+  font-size: $font-base;
+  border-radius: $radius-md;
+}
+
+// Variant: compact
+.number-input-compact {
+  padding: $input-padding-sm;
+  font-size: $font-md;
+  border-radius: $radius-sm;
+}
+
+// Center aligned (common for number inputs)
+.number-input-center {
+  text-align: center;
+}
+
+// Unstyled variant - for use inside containers with their own border/background
+// e.g., .cs-hp-input-with-suffix
+.number-input-unstyled {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+
+  &:focus {
+    border: none !important;
+    background: transparent !important;
+  }
+}

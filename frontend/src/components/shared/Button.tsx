@@ -3,14 +3,21 @@ import { ButtonHTMLAttributes, ReactNode } from 'react';
 import './Button.scss';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
   children: ReactNode;
 }
 
-export function Button({ variant = 'primary', children, className = '', ...props }: ButtonProps) {
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  children,
+  className = '',
+  ...props
+}: ButtonProps) {
   return (
     <button
-      className={`btn btn-${variant} ${className}`}
+      className={`btn btn-${variant} btn-${size} ${className}`}
       {...props}
     >
       {children}

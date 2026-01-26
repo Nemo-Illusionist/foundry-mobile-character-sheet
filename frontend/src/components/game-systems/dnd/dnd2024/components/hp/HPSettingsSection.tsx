@@ -57,23 +57,20 @@ export function HPSettingsSection({
             defaultValue={0}
           />
 
-          {/* Hit Dice rows - label spans columns 1-3, input in column 4 */}
+          {/* Hit Dice rows */}
           {hitDiceGroups && hitDiceGroups.map((group) => {
             const remaining = group.total - group.used;
+            const label = group.className ? `${group.className} ${group.type}` : group.type;
             return (
               <React.Fragment key={group.type}>
-                {/* Label spanning columns 1-3 */}
-                <label className="cs-hp-hitdice-label">
-                  Hit Dice: {group.className ? `${group.className} ${group.type}` : group.type}
-                </label>
-                {/* Input with /total suffix in column 4 */}
+                <label className="cs-hp-hitdice-label">Hit Dice: {label}</label>
                 <div className="cs-hp-input-with-suffix">
                   <NumberInput
                     value={remaining}
                     onChange={(newRemaining) => handleRemainingChange(group.type, group.total, newRemaining)}
                     min={0}
                     max={group.total}
-                    defaultValue={group.total}
+                    variant="unstyled"
                   />
                   <span className="cs-hp-input-suffix">/{group.total}</span>
                 </div>
