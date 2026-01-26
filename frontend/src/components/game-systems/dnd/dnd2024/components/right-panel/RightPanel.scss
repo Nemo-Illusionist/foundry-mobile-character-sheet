@@ -760,6 +760,25 @@
 .cs-xp-help {
   font-size: 0.75rem;
   color: var(--text-secondary);
+  margin-top: -0.25rem;
+}
+
+/* XP Form (card variant) */
+.cs-xp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cs-xp-form > label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+}
+
+.cs-xp-form > label:first-child {
+  margin-top: 0;
 }
 
 /* Class List */

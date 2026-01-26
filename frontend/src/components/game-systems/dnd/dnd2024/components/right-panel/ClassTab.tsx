@@ -2,8 +2,7 @@
 // Full multiclassing support
 
 import { useState, useEffect, useRef } from 'react';
-import { NumberInput, Button } from '../../../../../shared';
-// NumberInput used for manual spell slots below
+import { NumberInput } from '../../../../../shared';
 import { updateCharacter } from '../../../../../../services/characters.service';
 import {
   ABILITY_ORDER,
@@ -13,10 +12,9 @@ import {
   CASTER_TYPE_NAMES,
   HIT_DICE_OPTIONS,
   getProficiencyBonus,
-  XP_THRESHOLDS,
-  calculateLevelFromXP,
 } from '../../constants';
-import { getClasses, isMulticlass } from '../../utils';
+import { useLevelXP } from '../../hooks';
+import { XPForm } from '../shared';
 import { AddClassModal } from '../modals';
 import type { SpellcasterType } from '../../constants';
 import type { Character, CharacterClass, AbilityName } from 'shared';
@@ -28,24 +26,27 @@ interface ClassTabProps {
 
 export function ClassTab({ character, gameId }: ClassTabProps) {
   const [showAddClassModal, setShowAddClassModal] = useState(false);
-  const [currentXP, setCurrentXP] = useState(character.experience || 0);
-  const [gainXPInput, setGainXPInput] = useState(0);
-  const [xpMessage, setXpMessage] = useState('');
   const [showXPSection, setShowXPSection] = useState(false);
   const [expandedClasses, setExpandedClasses] = useState<Set<number>>(new Set());
 
-  const classes = getClasses(character);
-  const hasMultipleClasses = isMulticlass(character);
+  // Use shared hook for level/XP management
+  const {
+    currentXP,
+    setCurrentXP,
+    gainXPInput,
+    setGainXPInput,
+    message,
+    clearMessage,
+    classes,
+    hasMultipleClasses,
+    globalLevel,
+    totalClassLevels,
+    xpToNextLevel,
+    handleLevelUp,
+    handleXPChange,
+    handleGainXP,
+  } = useLevelXP(character, gameId);
 
-  // Sync XP with character
-  useEffect(() => {
-    setCurrentXP(character.experience || 0);
-  }, [character.experience]);
-
-  // Global level = from XP, Class levels = sum of individual class levels
-  const globalLevel = calculateLevelFromXP(currentXP);
-  const totalClassLevels = classes.reduce((sum, c) => sum + c.level, 0);
-  const nextLevelXP = globalLevel < 20 ? XP_THRESHOLDS[globalLevel] : null;
   const prevGlobalLevelRef = useRef(globalLevel);
 
   // Update proficiency bonus and spell slots when global level changes
@@ -171,7 +172,7 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
     await updateClass(index, { level: newLevel });
 
     // Clear allocation message when levels are adjusted
-    setXpMessage('');
+    clearMessage();
   };
 
   // Handle caster type change
@@ -229,94 +230,6 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
     });
   };
 
-  // Handle XP change (single class auto-levels class to match global)
-  const handleXPChange = async () => {
-    const newGlobalLevel = calculateLevelFromXP(currentXP);
-
-    // For multiclass, don't auto-change class levels - user does it manually
-    if (hasMultipleClasses) {
-      await updateCharacter(gameId, character.id, {
-        experience: currentXP,
-        level: newGlobalLevel,
-        proficiencyBonus: getProficiencyBonus(newGlobalLevel),
-      });
-
-      setXpMessage(newGlobalLevel !== globalLevel ? `Level ${newGlobalLevel}!` : 'XP updated.');
-      return;
-    }
-
-    // Single class - auto-level class to match global
-    const updatedClasses = [...classes];
-    updatedClasses[0] = { ...updatedClasses[0], level: newGlobalLevel };
-    const spellSlotsUpdate = getSpellSlotsForCharacter(updatedClasses);
-    const warlockClass = updatedClasses.find(c => c.spellcasterType === 'warlock');
-    const pactMagic = warlockClass ? getWarlockPactMagic(warlockClass.level) : null;
-
-    await updateCharacter(gameId, character.id, {
-      classes: updatedClasses,
-      experience: currentXP,
-      level: newGlobalLevel,
-      proficiencyBonus: getProficiencyBonus(newGlobalLevel),
-      spellSlots: spellSlotsUpdate,
-      ...(pactMagic && {
-        pactMagicSlots: {
-          current: pactMagic.slots,
-          max: pactMagic.slots,
-          level: pactMagic.level,
-        },
-      }),
-    });
-    setXpMessage(newGlobalLevel !== globalLevel ? `Level ${newGlobalLevel}!` : 'XP updated.');
-  };
-
-  // Handle gaining XP (single class auto-levels class to match global)
-  const handleGainXP = async () => {
-    if (gainXPInput <= 0) return;
-
-    const newXP = currentXP + gainXPInput;
-    const newGlobalLevel = calculateLevelFromXP(newXP);
-    const xpGained = gainXPInput;
-
-    setCurrentXP(newXP);
-    setGainXPInput(0);
-
-    // For multiclass, don't auto-level class
-    if (hasMultipleClasses) {
-      await updateCharacter(gameId, character.id, {
-        experience: newXP,
-        level: newGlobalLevel,
-        proficiencyBonus: getProficiencyBonus(newGlobalLevel),
-      });
-
-      setXpMessage(newGlobalLevel !== globalLevel ? `+${xpGained} XP! Level ${newGlobalLevel}!` : `+${xpGained} XP!`);
-      return;
-    }
-
-    // Single class - auto-level class to match global
-    const updatedClasses = [...classes];
-    updatedClasses[0] = { ...updatedClasses[0], level: newGlobalLevel };
-    const spellSlotsUpdate = getSpellSlotsForCharacter(updatedClasses);
-    const warlockClass = updatedClasses.find(c => c.spellcasterType === 'warlock');
-    const pactMagic = warlockClass ? getWarlockPactMagic(warlockClass.level) : null;
-
-    await updateCharacter(gameId, character.id, {
-      classes: updatedClasses,
-      experience: newXP,
-      level: newGlobalLevel,
-      proficiencyBonus: getProficiencyBonus(newGlobalLevel),
-      spellSlots: spellSlotsUpdate,
-      ...(pactMagic && {
-        pactMagicSlots: {
-          current: pactMagic.slots,
-          max: pactMagic.slots,
-          level: pactMagic.level,
-        },
-      }),
-    });
-    setXpMessage(newGlobalLevel !== globalLevel ? `+${xpGained} XP! Level ${newGlobalLevel}!` : `+${xpGained} XP!`);
-  };
-
-  // Level up: increases global level (XP), auto-increases class only if single class
   // Toggle class card expansion
   const toggleClassExpanded = (index: number) => {
     setExpandedClasses(prev => {
@@ -328,49 +241,6 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
       }
       return next;
     });
-  };
-
-  const handleLevelUp = async () => {
-    if (globalLevel >= 20) return;
-
-    const newGlobalLevel = globalLevel + 1;
-    const newXP = XP_THRESHOLDS[globalLevel]; // XP needed for next level
-
-    // For multiclass, only increase global level (user allocates class levels manually)
-    if (hasMultipleClasses) {
-      await updateCharacter(gameId, character.id, {
-        experience: newXP,
-        level: newGlobalLevel,
-        proficiencyBonus: getProficiencyBonus(newGlobalLevel),
-      });
-      setCurrentXP(newXP);
-      setXpMessage(`Level ${newGlobalLevel}!`);
-      return;
-    }
-
-    // Single class - also increase class level
-    const updatedClasses = [...classes];
-    updatedClasses[0] = { ...updatedClasses[0], level: newGlobalLevel };
-    const spellSlotsUpdate = getSpellSlotsForCharacter(updatedClasses);
-    const warlockClass = updatedClasses.find(c => c.spellcasterType === 'warlock');
-    const pactMagic = warlockClass ? getWarlockPactMagic(warlockClass.level) : null;
-
-    await updateCharacter(gameId, character.id, {
-      classes: updatedClasses,
-      experience: newXP,
-      level: newGlobalLevel,
-      proficiencyBonus: getProficiencyBonus(newGlobalLevel),
-      spellSlots: spellSlotsUpdate,
-      ...(pactMagic && {
-        pactMagicSlots: {
-          current: pactMagic.slots,
-          max: pactMagic.slots,
-          level: pactMagic.level,
-        },
-      }),
-    });
-    setCurrentXP(newXP);
-    setXpMessage(`Level ${newGlobalLevel}!`);
   };
 
   return (
@@ -407,37 +277,18 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
         {/* Collapsible XP Section */}
         {showXPSection && (
           <div className="cs-level-card-body">
-            {/* Current XP */}
-            <label>Current Experience</label>
-            <div className="cs-xp-row">
-              <input
-                type="number"
-                value={currentXP}
-                onChange={(e) => setCurrentXP(Math.max(0, parseInt(e.target.value) || 0))}
-                min={0}
-              />
-              <Button variant="secondary" onClick={handleXPChange}>Update</Button>
-            </div>
-            {nextLevelXP && (
-              <div className="cs-xp-help">
-                {nextLevelXP - currentXP} XP until level {globalLevel + 1}
-              </div>
-            )}
-
-            {/* Add XP */}
-            <label>Gain Experience</label>
-            <div className="cs-xp-row">
-              <input
-                type="number"
-                value={gainXPInput || ''}
-                onChange={(e) => setGainXPInput(Math.max(0, parseInt(e.target.value) || 0))}
-                placeholder="0"
-                min={0}
-              />
-              <Button onClick={handleGainXP} disabled={gainXPInput <= 0}>Add</Button>
-            </div>
-
-            {xpMessage && <div className="cs-xp-message">{xpMessage}</div>}
+            <XPForm
+              currentXP={currentXP}
+              onCurrentXPChange={setCurrentXP}
+              gainXPInput={gainXPInput}
+              onGainXPChange={setGainXPInput}
+              onUpdateXP={handleXPChange}
+              onAddXP={handleGainXP}
+              xpToNextLevel={xpToNextLevel}
+              globalLevel={globalLevel}
+              message={message}
+              variant="card"
+            />
           </div>
         )}
       </div>
