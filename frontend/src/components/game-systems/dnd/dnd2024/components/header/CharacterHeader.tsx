@@ -1,8 +1,8 @@
 // D&D 2024 - Character Header Component (Refactored)
 
-import { useModalState, useCharacterMutation } from '../../../../../../hooks';
-import { getAbilityModifier } from '../../../core';
+import { useModalState } from '../../../../../../hooks';
 import { getProficiencyBonus } from '../../constants';
+import { useCharacterStats } from '../../hooks';
 import { HPBoxDesktop, HPBoxMobile, HPModal } from '../hp';
 import { LevelXPModal, ConditionsModal, CombatStatsModal } from '../modals';
 import type { Character } from 'shared';
@@ -22,21 +22,14 @@ export function CharacterHeader({ character, gameId, expanded, onToggleExpand }:
   const conditionsModal = useModalState();
   const combatStatsModal = useModalState();
 
-  // Character mutation hook
-  const { update } = useCharacterMutation(gameId, character);
-
-  const conditionsCount = character.conditions?.length || 0;
-  const dexModifier = getAbilityModifier(character.abilities.dex);
-  const totalAC = character.ac + (character.shield || 0);
-  const displayedInitiative = character.initiativeOverride ?? dexModifier;
-
-  const handleInspirationToggle = async () => {
-    await update({ inspiration: !character.inspiration });
-  };
-
-  const handleExhaustionChange = async (level: number) => {
-    await update({ exhaustion: level });
-  };
+  // Character stats hook
+  const {
+    displayedInitiative,
+    conditionsCount,
+    totalAC,
+    handleInspirationToggle,
+    handleExhaustionChange,
+  } = useCharacterStats(character, gameId);
 
   return (
     <>

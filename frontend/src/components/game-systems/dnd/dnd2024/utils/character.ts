@@ -1,5 +1,6 @@
 // D&D 2024 - Character Utility Functions
 
+import { getAbilityModifier } from '../../core';
 import type { Character, CharacterClass, AbilityName } from 'shared';
 
 /**
@@ -257,6 +258,40 @@ export function applyLongRestHitDiceRecovery(character: Character): CharacterCla
   }
 
   return classes;
+}
+
+/**
+ * Generate a random ID for new entities (items, actions, spells)
+ */
+export function generateId(): string {
+  return Math.random().toString(36).substring(2, 9);
+}
+
+/**
+ * Shorten casting time for table display
+ */
+export function formatCastingTime(time: string | undefined): string {
+  if (!time) return '—';
+  const lower = time.toLowerCase();
+  if (lower === '1 action') return '1A';
+  if (lower === '1 bonus action') return '1BA';
+  if (lower === '1 reaction') return '1R';
+  if (lower.endsWith(' minute')) return time.replace(' minute', 'm');
+  if (lower.endsWith(' minutes')) return time.replace(' minutes', 'm');
+  if (lower.endsWith(' hour')) return time.replace(' hour', 'h');
+  if (lower.endsWith(' hours')) return time.replace(' hours', 'h');
+  return time;
+}
+
+/**
+ * Calculate spellcasting stats for a given ability
+ */
+export function calculateSpellStats(character: Character, ability: AbilityName) {
+  const abilityScore = character.abilities[ability];
+  const spellModifier = getAbilityModifier(abilityScore);
+  const spellSaveDC = 8 + character.proficiencyBonus + spellModifier;
+  const spellAttackBonus = character.proficiencyBonus + spellModifier;
+  return { spellModifier, spellSaveDC, spellAttackBonus };
 }
 
 /**

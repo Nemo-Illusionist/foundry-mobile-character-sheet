@@ -1,12 +1,10 @@
 // D&D 2024 Character Sheet - Main Component
 
-import { useState, useEffect, useRef } from 'react';
 import { CharacterHeader } from './components/header';
 import { AbilitiesSection } from './components/abilities';
 import { RightPanel } from './components/right-panel';
 import { ConditionsModal } from './components/modals';
-import { updateCharacter } from '../../../../services/characters.service';
-import { getAbilityModifier } from '../core';
+import { useCharacterStats, useCharacterSheetLayout } from './hooks';
 import type { Character } from 'shared';
 
 interface CharacterSheetProps {
@@ -14,158 +12,32 @@ interface CharacterSheetProps {
   gameId: string;
 }
 
-// Threshold in pixels to trigger collapse
-const SCROLL_THRESHOLD = 50;
-
-// Breakpoints
-const MOBILE_BREAKPOINT = 650;
-const WIDE_TABLET_BREAKPOINT = 850;
-
-// Tab IDs for unified mobile navigation
-type MobileTabId = 'abilities' | 'actions' | 'spells' | 'inventory' | 'bio' | 'class';
-
 export function CharacterSheet({ character, gameId }: CharacterSheetProps) {
-  const [headerExpanded, setHeaderExpanded] = useState(true);
-  const [mobileTab, setMobileTab] = useState<MobileTabId>('abilities');
-  const [isMobileMode, setIsMobileMode] = useState(false);
-  const [isTabletMode, setIsTabletMode] = useState(false); // 650-849px
-  const [conditionsOpen, setConditionsOpen] = useState(false);
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
-  const lastScrollY = useRef(0);
-  const isManualToggle = useRef(false);
-  const waitingAtTop = useRef(false); // Flag for "stop" at top before expanding
+  const {
+    headerExpanded,
+    mobileTab,
+    setMobileTab,
+    isMobileMode,
+    isTabletMode,
+    isTrueMobile,
+    conditionsOpen,
+    setConditionsOpen,
+    moreMenuOpen,
+    setMoreMenuOpen,
+    moreMenuRef,
+    visibleMainTabs,
+    moreTabs,
+    isMoreTabActive,
+    handleToggleExpand,
+    getRightPanelTab,
+  } = useCharacterSheetLayout(character);
 
-  // Track window width for mobile/tablet mode
-  useEffect(() => {
-    const checkWidth = () => {
-      const width = window.innerWidth;
-      setIsMobileMode(width < WIDE_TABLET_BREAKPOINT);
-      setIsTabletMode(width >= MOBILE_BREAKPOINT && width < WIDE_TABLET_BREAKPOINT);
-    };
-    checkWidth();
-    window.addEventListener('resize', checkWidth);
-    return () => window.removeEventListener('resize', checkWidth);
-  }, []);
-
-  // Close more menu on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
-        setMoreMenuOpen(false);
-      }
-    };
-    if (moreMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [moreMenuOpen]);
-
-  // Stats row handlers
-  const initiativeModifier = getAbilityModifier(character.abilities.dex);
-  const displayedInitiative = character.initiativeOverride ?? initiativeModifier;
-  const activeConditions = character.conditions || [];
-
-  const handleInspirationToggle = async () => {
-    await updateCharacter(gameId, character.id, {
-      inspiration: !character.inspiration,
-    });
-  };
-
-  const handleExhaustionChange = async (level: number) => {
-    await updateCharacter(gameId, character.id, {
-      exhaustion: level,
-    });
-  };
-
-  // Auto-collapse header on scroll (mobile only)
-  useEffect(() => {
-    const isMobile = window.innerWidth < 650;
-    if (!isMobile) return;
-
-    const handleScroll = () => {
-      // Skip if user just manually toggled
-      if (isManualToggle.current) {
-        isManualToggle.current = false;
-        lastScrollY.current = window.scrollY;
-        return;
-      }
-
-      const currentScrollY = window.scrollY;
-      const scrollingUp = currentScrollY < lastScrollY.current;
-
-      // At top of page
-      if (currentScrollY <= 10) {
-        // If already waiting at top and user tries to scroll up again → expand
-        if (waitingAtTop.current && scrollingUp) {
-          setHeaderExpanded(true);
-          waitingAtTop.current = false;
-        } else if (!headerExpanded && !waitingAtTop.current) {
-          // First time reaching top while collapsed → wait for second gesture
-          waitingAtTop.current = true;
-        }
-      }
-      // Scrolled down from top → reset the waiting flag
-      else if (currentScrollY > 10) {
-        waitingAtTop.current = false;
-
-        // Collapse when scrolling down past threshold
-        if (currentScrollY > lastScrollY.current && currentScrollY > SCROLL_THRESHOLD) {
-          setHeaderExpanded(false);
-        }
-      }
-
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleToggleExpand = () => {
-    isManualToggle.current = true;
-    setHeaderExpanded(!headerExpanded);
-  };
-
-  // Build available mobile tabs - split into main and more
-  const mainTabs: { id: MobileTabId; label: string }[] = [
-    { id: 'abilities', label: 'Stats' },
-    { id: 'actions', label: 'Actions' },
-    { id: 'spells', label: 'Spells' },
-    { id: 'inventory', label: 'Items' },
-  ];
-
-  const moreTabs: { id: MobileTabId; label: string }[] = [
-    { id: 'bio', label: 'Bio' },
-    { id: 'class', label: 'Class' },
-  ];
-
-  // Filter out spells tab if hidden
-  const visibleMainTabs = mainTabs.filter(
-    (tab) => !(tab.id === 'spells' && character.hideSpellsTab)
-  );
-
-  // Check if current tab is in "more" menu
-  const isMoreTabActive = moreTabs.some((t) => t.id === mobileTab);
-
-  // All tabs for validation
-  const allTabs = [...visibleMainTabs, ...moreTabs];
-
-  // True mobile (< 650px) - show "..." menu; Tablet (>= 650px) - show all tabs
-  const isTrueMobile = isMobileMode && !isTabletMode;
-
-  // Ensure active tab is valid
-  useEffect(() => {
-    if (!allTabs.find((t) => t.id === mobileTab) && allTabs.length > 0) {
-      setMobileTab(allTabs[0].id);
-    }
-  }, [allTabs, mobileTab]);
-
-  // Map mobile tab to RightPanel tab
-  const getRightPanelTab = (): 'actions' | 'spells' | 'inventory' | 'bio' | 'class' | null => {
-    if (mobileTab === 'abilities') return null;
-    return mobileTab;
-  };
+  const {
+    displayedInitiative,
+    activeConditions,
+    handleInspirationToggle,
+    handleExhaustionChange,
+  } = useCharacterStats(character, gameId);
 
   return (
     <>

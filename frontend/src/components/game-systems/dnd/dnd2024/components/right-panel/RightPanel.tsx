@@ -1,8 +1,7 @@
 // D&D 2024 - Right Panel Component (Desktop/Wide Tablet)
 
 import { useState, useEffect } from 'react';
-import { updateCharacter } from '../../../../../../services/characters.service';
-import { getAbilityModifier } from '../../../core';
+import { useCharacterStats } from '../../hooks';
 import { ConditionsModal } from '../modals';
 import { ActionsTab } from './ActionsTab';
 import { SpellsTab } from './SpellsTab';
@@ -33,8 +32,12 @@ export function RightPanel({ character, gameId, externalTab, hideTabHeader }: Ri
     }
   };
 
-  const initiativeModifier = getAbilityModifier(character.abilities.dex);
-  const activeConditions = character.conditions || [];
+  const {
+    displayedInitiative,
+    activeConditions,
+    handleInspirationToggle,
+    handleExhaustionChange,
+  } = useCharacterStats(character, gameId);
 
   const allTabs: { id: TabId; label: string }[] = [
     { id: 'actions', label: 'Actions' },
@@ -65,11 +68,7 @@ export function RightPanel({ character, gameId, externalTab, hideTabHeader }: Ri
         <div
           className="cs-mini-stat"
           style={{ cursor: 'pointer' }}
-          onClick={async () => {
-            await updateCharacter(gameId, character.id, {
-              inspiration: !character.inspiration,
-            });
-          }}
+          onClick={handleInspirationToggle}
         >
           <div className="cs-mini-label">Inspiration</div>
           <div className="cs-mini-value">{character.inspiration ? '✓' : '—'}</div>
@@ -78,7 +77,7 @@ export function RightPanel({ character, gameId, externalTab, hideTabHeader }: Ri
         <div className="cs-mini-stat">
           <div className="cs-mini-label">Initiative</div>
           <div className="cs-mini-value">
-            {initiativeModifier >= 0 ? '+' : ''}{initiativeModifier}
+            {displayedInitiative >= 0 ? '+' : ''}{displayedInitiative}
           </div>
         </div>
 
@@ -87,11 +86,7 @@ export function RightPanel({ character, gameId, externalTab, hideTabHeader }: Ri
           <select
             className="cs-mini-value cs-exhaustion-select"
             value={character.exhaustion || 0}
-            onChange={async (e) => {
-              await updateCharacter(gameId, character.id, {
-                exhaustion: Number(e.target.value),
-              });
-            }}
+            onChange={(e) => handleExhaustionChange(Number(e.target.value))}
           >
             {[0, 1, 2, 3, 4, 5, 6].map((level) => (
               <option key={level} value={level}>{level}</option>

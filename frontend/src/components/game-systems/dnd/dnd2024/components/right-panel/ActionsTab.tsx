@@ -1,89 +1,28 @@
 // D&D 2024 - Actions Tab Component
 
-import { useState } from 'react';
-import { updateCharacter } from '../../../../../../services/characters.service';
-import { getAbilityModifier } from '../../../core';
+import { useActions } from '../../hooks';
 import { ActionModal } from './ActionModal';
-import type { Character, CharacterAction } from 'shared';
+import type { Character } from 'shared';
 
 interface ActionsTabProps {
   character: Character;
   gameId: string;
 }
 
-const ACTION_FILTERS = [
-  { id: 'all', label: 'All' },
-  { id: 'action', label: 'Action' },
-  { id: 'bonus', label: 'Bonus' },
-  { id: 'reaction', label: 'Reaction' },
-  { id: 'free', label: 'Free' },
-  { id: 'other', label: 'Other' },
-] as const;
-
-type FilterType = typeof ACTION_FILTERS[number]['id'];
-
 export function ActionsTab({ character, gameId }: ActionsTabProps) {
-  const [editingAction, setEditingAction] = useState<CharacterAction | null>(null);
-  const [filter, setFilter] = useState<FilterType>('all');
-
-  const actions = character.actions || [];
-
-  const filteredActions = filter === 'all'
-    ? actions
-    : actions.filter((action) => action.actionType === filter);
-
-  const generateId = () => Math.random().toString(36).substring(2, 9);
-
-  const addAction = async () => {
-    const newAction: CharacterAction = {
-      id: generateId(),
-      name: 'New Action',
-      actionType: 'action',
-    };
-    await updateCharacter(gameId, character.id, {
-      actions: [...actions, newAction],
-    });
-    setEditingAction(newAction);
-  };
-
-  const updateAction = async (id: string, updates: Partial<CharacterAction>) => {
-    const updatedActions = actions.map((a) =>
-      a.id === id ? { ...a, ...updates } : a
-    );
-    await updateCharacter(gameId, character.id, {
-      actions: updatedActions,
-    });
-  };
-
-  const deleteAction = async (id: string) => {
-    // Close modal immediately for responsive UI
-    setEditingAction(null);
-    // Delete in background
-    await updateCharacter(gameId, character.id, {
-      actions: actions.filter((a) => a.id !== id),
-    });
-  };
-
-  // Calculate attack bonus for display
-  const getAttackBonus = (action: CharacterAction): string => {
-    if (!action.ability) return '—';
-
-    const abilityMod = getAbilityModifier(character.abilities[action.ability]);
-    const profBonus = action.proficient ? character.proficiencyBonus : 0;
-    const extra = action.extraBonus || 0;
-    const total = abilityMod + profBonus + extra;
-
-    return total >= 0 ? `+${total}` : `${total}`;
-  };
-
-  // Format damage for display
-  const getDamageDisplay = (action: CharacterAction): string => {
-    if (!action.damage) return '—';
-
-    const bonus = action.damageBonus || 0;
-    if (bonus === 0) return action.damage;
-    return bonus > 0 ? `${action.damage}+${bonus}` : `${action.damage}${bonus}`;
-  };
+  const {
+    editingAction,
+    setEditingAction,
+    filter,
+    setFilter,
+    filteredActions,
+    addAction,
+    updateAction,
+    deleteAction,
+    getAttackBonus,
+    getDamageDisplay,
+    ACTION_FILTERS,
+  } = useActions(character, gameId);
 
   return (
     <div className="cs-actions-tab">

@@ -1,87 +1,29 @@
 // D&D 2024 - Inventory Tab Component
 
-import { useState } from 'react';
-import { updateCharacter } from '../../../../../../services/characters.service';
+import { useInventory } from '../../hooks';
 import { InventoryItemModal } from './InventoryItemModal';
-import type { Character, InventoryItem } from 'shared';
+import type { Character } from 'shared';
 
 interface InventoryTabProps {
   character: Character;
   gameId: string;
 }
 
-const ITEM_TYPES = [
-  { id: 'all', label: 'All' },
-  { id: 'weapon', label: 'Wpn' },
-  { id: 'armor', label: 'Armor' },
-  { id: 'gear', label: 'Gear' },
-  { id: 'consumable', label: 'Cons' },
-  { id: 'treasure', label: 'Treas' },
-  { id: 'other', label: 'Other' },
-] as const;
-
-type FilterType = typeof ITEM_TYPES[number]['id'];
-
 export function InventoryTab({ character, gameId }: InventoryTabProps) {
-  const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
-  const [filter, setFilter] = useState<FilterType>('all');
-
-  const items = character.inventoryItems || [];
-
-  const filteredItems = filter === 'all'
-    ? items
-    : items.filter((item) => item.type === filter);
-
-  const generateId = () => Math.random().toString(36).substring(2, 9);
-
-  const addItem = async () => {
-    const newItem: InventoryItem = {
-      id: generateId(),
-      name: 'New Item',
-      type: 'gear',
-    };
-    await updateCharacter(gameId, character.id, {
-      inventoryItems: [...items, newItem],
-    });
-    setEditingItem(newItem);
-  };
-
-  const updateItem = async (id: string, updates: Partial<InventoryItem>) => {
-    const updatedItems = items.map((item) =>
-      item.id === id ? { ...item, ...updates } : item
-    );
-    await updateCharacter(gameId, character.id, {
-      inventoryItems: updatedItems,
-    });
-  };
-
-  const deleteItem = async (id: string) => {
-    // Close modal immediately for responsive UI
-    setEditingItem(null);
-    // Delete in background
-    await updateCharacter(gameId, character.id, {
-      inventoryItems: items.filter((item) => item.id !== id),
-    });
-  };
-
-  const toggleEquipped = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const item = items.find((i) => i.id === id);
-    if (item) {
-      await updateItem(id, { equipped: !item.equipped });
-    }
-  };
-
-  // Calculate total weight (treat undefined quantity as 1)
-  const totalWeight = items.reduce((sum, item) => {
-    return sum + (item.weight || 0) * (item.quantity ?? 1);
-  }, 0);
-
-  const updateCurrency = async (coin: keyof typeof character.currency, value: number) => {
-    await updateCharacter(gameId, character.id, {
-      currency: { ...character.currency, [coin]: value },
-    });
-  };
+  const {
+    editingItem,
+    setEditingItem,
+    filter,
+    setFilter,
+    filteredItems,
+    totalWeight,
+    addItem,
+    updateItem,
+    deleteItem,
+    toggleEquipped,
+    updateCurrency,
+    ITEM_TYPES,
+  } = useInventory(character, gameId);
 
   return (
     <div className="cs-inventory-tab">
