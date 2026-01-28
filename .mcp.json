@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "jetbrains-web-storm": {
+      "type": "sse",
+      "url": "http://127.0.0.1:64343/sse"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
+    "firebase": {
+      "command": "npx",
+      "args": ["-y", "firebase-tools@latest", "mcp"]
+    }
+  }
+}
