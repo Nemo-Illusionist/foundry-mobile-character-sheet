@@ -1,6 +1,12 @@
 // Character Card Component - Shows public character info
 import { Card } from '../shared';
-import { SHEET_TYPE_SHORT_NAMES, DEFAULT_SHEET_TYPE, type PublicCharacter } from 'shared';
+import {
+  GAME_SUBSYSTEM_NAMES,
+  ENTITY_TYPE_NAMES,
+  DEFAULT_SHEET_TYPE,
+  parseSheetType,
+  type PublicCharacter,
+} from 'shared';
 import { getAvatarUrl } from '../game-systems/dnd/dnd2024/utils/avatar';
 import './CharacterCard.scss';
 
@@ -17,7 +23,12 @@ export function CharacterCard({
   showHiddenBadge,
   ownerName,
 }: CharacterCardProps) {
-  const sheetTypeName = SHEET_TYPE_SHORT_NAMES[character.sheetType || DEFAULT_SHEET_TYPE];
+  // Use new fields if available, fallback to legacy sheetType parsing
+  const entityType = character.entityType ?? parseSheetType(character.sheetType || DEFAULT_SHEET_TYPE).entityType;
+  const subsystem = character.subsystem ?? parseSheetType(character.sheetType || DEFAULT_SHEET_TYPE).subsystem;
+  const sheetTypeName = entityType === 'mob'
+    ? `${ENTITY_TYPE_NAMES[entityType]} ${GAME_SUBSYSTEM_NAMES[subsystem]}`
+    : GAME_SUBSYSTEM_NAMES[subsystem];
 
   return (
     <Card onClick={onClick} className="character-card">

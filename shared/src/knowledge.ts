@@ -7,6 +7,7 @@ import type {
   Currency,
   MagicSchool,
   CreatureSize,
+  FeatureType,
 } from './enums';
 
 // ==================== KNOWLEDGE BASE - SPELL ====================
@@ -139,7 +140,7 @@ export interface Feature {
   isGMOnly: boolean;
 
   name: string;
-  type: 'class' | 'race' | 'feat' | 'other';
+  type: FeatureType;
   description: string;
   requirements?: string;
 

@@ -1,5 +1,5 @@
 import type { Timestamp } from './timestamp';
-import type { SheetType } from './game-systems';
+import type { SheetType, GameSubsystem, EntityType } from './game-systems';
 import type {
   AbilityName,
   SkillName,
@@ -23,7 +23,9 @@ export interface PublicCharacter {
   ownerId: string;
   name: string;
   avatar?: string;
-  sheetType: SheetType;
+  sheetType: SheetType;          // @deprecated — use subsystem + entityType
+  subsystem: GameSubsystem;      // '2024' | '2014'
+  entityType: EntityType;        // 'character' | 'mob'
   publicDescription?: string;  // Публичное описание/внешность
   isHidden?: boolean;          // Скрыт ли персонаж от других игроков
   createdAt?: Timestamp;
@@ -33,6 +35,7 @@ export interface PublicCharacter {
 // Публичные поля персонажа (для разделения данных)
 export const PUBLIC_CHARACTER_FIELDS = [
   'id', 'gameId', 'ownerId', 'name', 'avatar', 'sheetType',
+  'subsystem', 'entityType',
   'publicDescription', 'isHidden', 'createdAt', 'updatedAt'
 ] as const;
 

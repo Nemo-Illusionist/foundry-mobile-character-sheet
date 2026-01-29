@@ -4,6 +4,7 @@ import type {
   PrivateCharacterSheet,
   SheetType,
 } from 'shared';
+import { parseSheetType } from 'shared';
 
 /**
  * Create default character data
@@ -62,9 +63,11 @@ export function createDefaultCharacterData(
     pp: 0,
   };
 
-  // Determine character type based on sheet type
-  const isMob = sheetType.startsWith('mob-');
-  const characterType = isMob ? 'Minion' : 'Player Character';
+  // Parse sheetType into subsystem and entityType
+  const { entityType, subsystem } = parseSheetType(sheetType);
+
+  // Determine character type based on entity type
+  const characterType = entityType === 'mob' ? 'Minion' : 'Player Character';
 
   // Public data (stored in characters/{id})
   const publicData: Omit<PublicCharacter, 'createdAt' | 'updatedAt'> = {
@@ -73,6 +76,8 @@ export function createDefaultCharacterData(
     ownerId,
     name,
     sheetType,
+    subsystem,
+    entityType,
     isHidden,
   };
 

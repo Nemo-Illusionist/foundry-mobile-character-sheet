@@ -59,3 +59,9 @@ export const ACTION_TYPE_NAMES: Record<ActionType, string> = {
 
 // Simplified spell entry attack types
 export type SpellAttackType = 'none' | 'attack' | 'save';
+
+// Magic item rarity (D&D 2024 SRD 5.2.1)
+export type MagicItemRarity = 'Common' | 'Uncommon' | 'Rare' | 'Very Rare' | 'Legendary' | 'Artifact';
+
+// Feature types for knowledge base and compendium
+export type FeatureType = 'class' | 'race' | 'feat' | 'other';

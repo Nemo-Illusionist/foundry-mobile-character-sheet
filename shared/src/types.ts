@@ -8,5 +8,6 @@ export * from './user';
 export * from './game';
 export * from './character';
 export * from './knowledge';
+export * from './compendium';
 export * from './game-items';
 export * from './calculations';
