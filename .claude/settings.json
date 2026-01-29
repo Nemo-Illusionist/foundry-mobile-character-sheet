@@ -12,6 +12,7 @@
       "Bash(npx:*)",
       "Bash(git:*)",
       "Bash(bd:*)",
+      "mcp__jetbrains",
       "mcp__*"
     ],
     "deny": [
