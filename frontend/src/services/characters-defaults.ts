@@ -84,6 +84,13 @@ export function createDefaultCharacterData(
     class: '',
     subclass: '',
     background: '',
+    classes: [{
+      name: '',
+      level: 1,
+      hitDice: 'd8',
+      hitDiceUsed: 0,
+      spellcasterType: 'none',
+    }],
     abilities: defaultAbilities,
     hp: { current: 10, max: 10, temp: 0 },
     ac: 10,

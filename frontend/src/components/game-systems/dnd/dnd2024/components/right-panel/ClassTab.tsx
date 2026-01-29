@@ -12,6 +12,8 @@ import {
   CASTER_TYPE_NAMES,
   HIT_DICE_OPTIONS,
   getProficiencyBonus,
+  STANDARD_CLASS_NAMES,
+  CLASS_DEFAULTS,
 } from '../../constants';
 import { useLevelXP } from '../../hooks';
 import { XPForm } from '../shared';
@@ -28,6 +30,7 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
   const [showAddClassModal, setShowAddClassModal] = useState(false);
   const [showXPSection, setShowXPSection] = useState(false);
   const [expandedClasses, setExpandedClasses] = useState<Set<number>>(new Set());
+  const [customClassIndices, setCustomClassIndices] = useState<Set<number>>(new Set());
 
   // Use shared hook for level/XP management
   const {
@@ -105,9 +108,34 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
       if ('spellcastingAbility' in changes) legacyUpdates.spellcastingAbility = changes.spellcastingAbility;
     }
 
+    // Recalculate spell slots if caster type changed
+    const spellUpdates: Partial<Character> = {};
+    if ('spellcasterType' in changes) {
+      const hasSpellcasting = updatedClasses.some(c =>
+        c.spellcasterType && c.spellcasterType !== 'none'
+      );
+      spellUpdates.spellSlots = hasSpellcasting ? getSpellSlotsForCharacter(updatedClasses) : {};
+      spellUpdates.hideSpellsTab = !hasSpellcasting;
+
+      const warlockClass = updatedClasses.find(c => c.spellcasterType === 'warlock');
+      if (warlockClass) {
+        const pactMagic = getWarlockPactMagic(warlockClass.level);
+        if (pactMagic) {
+          spellUpdates.pactMagicSlots = {
+            current: pactMagic.slots,
+            max: pactMagic.slots,
+            level: pactMagic.level,
+          };
+        }
+      } else if (!updatedClasses.some(c => c.spellcasterType === 'warlock')) {
+        spellUpdates.pactMagicSlots = null as unknown as undefined;
+      }
+    }
+
     await updateCharacter(gameId, character.id, {
       classes: updatedClasses,
       ...legacyUpdates,
+      ...spellUpdates,
     });
   };
 
@@ -338,18 +366,72 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
                 </div>
               </button>
 
-              {isExpanded && (
+              {isExpanded && (() => {
+                const isCustom = customClassIndices.has(index) ||
+                  (cls.name !== '' && !STANDARD_CLASS_NAMES.includes(cls.name));
+                const selectValue = STANDARD_CLASS_NAMES.includes(cls.name)
+                  ? cls.name
+                  : isCustom ? 'Custom' : '';
+
+                return (
               <div className="cs-class-card-body">
-                {/* Class Name */}
+                {/* Class Selection */}
                 <div className="cs-class-field">
                   <label>Class</label>
-                  <input
-                    type="text"
-                    value={cls.name}
-                    onChange={(e) => updateClass(index, { name: e.target.value })}
-                    placeholder="Fighter, Wizard, Rogue..."
-                  />
+                  <select
+                    value={selectValue}
+                    onChange={(e) => {
+                      const selected = e.target.value;
+                      if (selected === 'Custom') {
+                        setCustomClassIndices(prev => new Set(prev).add(index));
+                        updateClass(index, { name: '' });
+                      } else if (selected === '') {
+                        setCustomClassIndices(prev => {
+                          const next = new Set(prev);
+                          next.delete(index);
+                          return next;
+                        });
+                        updateClass(index, { name: '' });
+                      } else {
+                        setCustomClassIndices(prev => {
+                          const next = new Set(prev);
+                          next.delete(index);
+                          return next;
+                        });
+                        const defaults = CLASS_DEFAULTS[selected];
+                        if (defaults) {
+                          updateClass(index, {
+                            name: selected,
+                            hitDice: defaults.hitDice,
+                            spellcasterType: defaults.spellcasterType,
+                            ...(defaults.spellcastingAbility && { spellcastingAbility: defaults.spellcastingAbility }),
+                          });
+                        } else {
+                          updateClass(index, { name: selected });
+                        }
+                      }
+                    }}
+                  >
+                    <option value="">Select a class...</option>
+                    {STANDARD_CLASS_NAMES.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                    <option value="Custom">Custom Class</option>
+                  </select>
                 </div>
+
+                {/* Custom Class Name */}
+                {isCustom && (
+                  <div className="cs-class-field">
+                    <label>Custom Class Name</label>
+                    <input
+                      type="text"
+                      value={cls.name}
+                      onChange={(e) => updateClass(index, { name: e.target.value })}
+                      placeholder="Enter class name..."
+                    />
+                  </div>
+                )}
 
                 {/* Subclass */}
                 <div className="cs-class-field">
@@ -439,7 +521,8 @@ export function ClassTab({ character, gameId }: ClassTabProps) {
                   </button>
                 )}
               </div>
-              )}
+                );
+              })()}
             </div>
           );
         })}
